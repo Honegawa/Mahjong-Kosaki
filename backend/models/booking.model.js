@@ -1,7 +1,18 @@
 export default (sequelize, DataType) => {
   sequelize.define(
-    "Contact",
+    "Booking",
     {
+      date: {
+        type: DataType.DATE,
+        allowNull: false,
+      },
+      table: {
+        type: DataType.TINYINT,
+        allowNull: false,
+        validate: {
+            min: 1
+        }
+      },
       firstname: {
         type: DataType.STRING,
         allowNull: false,
@@ -14,23 +25,26 @@ export default (sequelize, DataType) => {
         type: DataType.STRING,
         allowNull: false,
         validate: {
-          isEmail: true
+            isEmail: true
         }
       },
-      phone: {
+      type: {
+        type: DataType.STRING,
+        allowNull: false,
+      },
+      format: {
+        type: DataType.TINYINT,
+        allowNull: false,
+        validate: {
+            isIn: [[3,4]]
+        }
+      },
+      calendarLink: {
         type: DataType.STRING,
         allowNull: false,
         validate: {
-          isNumeric: true
+            isUrl: true
         }
-      },
-      object: {
-        type: DataType.STRING,
-        allowNull: false,
-      },
-      content: {
-        type: DataType.TEXT,
-        allowNull: false,
       },
     },
     {
