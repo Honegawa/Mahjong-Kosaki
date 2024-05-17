@@ -3,16 +3,19 @@ import {
   getAll,
   getById,
   signup,
+  signin,
   updateById,
   deleteById,
 } from "../controllers/member.controller.js";
+import { verifyAdmin, verifyToken } from "../middlewares/auth.js";
 
 const router = express.Router();
 
 router.get("/", getAll);
 router.get("/:id", getById);
 router.post("/", signup);
-router.put("/:id", updateById)
-router.delete("/:id", deleteById);
+router.post("/signin", signin)
+router.put("/:id", verifyToken, updateById)
+router.delete("/:id", verifyToken, verifyAdmin, deleteById);
 
 export default router;

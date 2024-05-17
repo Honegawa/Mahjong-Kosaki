@@ -31,9 +31,14 @@ export const create = async (req, res) => {
       where: { table: req.body.table },
     });
 
-    const bookingsByTableAndEmail = bookingsByTable.filter((b) => b.dataValues.email === req.body.email).length
-    if(bookingsByTableAndEmail > 0) {
-      return res.status(400).json({message: "Booking already ready registered for this table with this email"})
+    const bookingsByTableAndEmail = bookingsByTable.filter(
+      (b) => b.dataValues.email === req.body.email
+    ).length;
+    if (bookingsByTableAndEmail > 0) {
+      return res.status(400).json({
+        message:
+          "Booking already ready registered for this table with this email",
+      });
     }
 
     if (bookingsByTable.length > 3) {
@@ -50,10 +55,49 @@ export const create = async (req, res) => {
   }
 };
 
+export const updateById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { date, table, type, format, calendarLink } = req.body;
+
+    const booking = await Booking.findByPk(id);
+
+    if (!booking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
+    await booking.update(
+      {
+        date,
+        table,
+        type,
+        format,
+        calendarLink,
+      },
+      {
+        where: {
+          id: id,
+        },
+      }
+    );
+
+    res.status(200).json({ message: "Booking has been updated", booking });
+  } catch (error) {
+    res.status(500).json({ error: "Error in updating booking" });
+  }
+};
+
 export const deleteById = async (req, res) => {
   try {
     const { id } = req.params;
     const booking = await Booking.findByPk(id);
+
+    if (
+      booking.dataValues.email !== req.body.email ||
+      (req.user && req.user.role !== "admin")
+    ) {
+      return res.status(401).json({ message: "Unable to delete booking" });
+    }
 
     if (!booking) {
       return res.status(404).json({ message: "Booking not found" });
