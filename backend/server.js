@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import { env } from "./configs/config.js";
 import ContactRouter from "./routes/contact.js";
 import BookingRouter from "./routes/booking.js";
+import MemberRouter from "./routes/member.js";
 import "./models/index.js";
 
 const app = express();
@@ -22,6 +23,7 @@ app.use(cors(corsOptions));
 // Route Middleware
 app.use("/api/contact", ContactRouter);
 app.use("/api/booking", BookingRouter);
+app.use("/api/member", MemberRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on ${PORT}`);

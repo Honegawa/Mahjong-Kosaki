@@ -1,6 +1,7 @@
 import { Sequelize } from "sequelize";
 import contactModel from "./contact.model.js";
 import bookingModel from "./booking.model.js";
+import memberModel from "./member.model.js";
 import { env } from "../configs/config.js";
 
 const sequelize = new Sequelize(
@@ -21,10 +22,11 @@ try {
 
 contactModel(sequelize, Sequelize);
 bookingModel(sequelize, Sequelize);
+memberModel(sequelize, Sequelize);
 
-const { Contact, Booking } = sequelize.models;
+const { Contact, Booking, Member } = sequelize.models;
 
 await sequelize.sync({ alter: true, force: true });
 console.log("Sync ok");
 
-export { Contact, Booking };
+export { Contact, Booking, Member };
