@@ -5,6 +5,7 @@ import { env } from "./configs/config.js";
 import ContactRouter from "./routes/contact.js";
 import BookingRouter from "./routes/booking.js";
 import MemberRouter from "./routes/member.js";
+import ArticleRouter from "./routes/article.js";
 import "./models/index.js";
 
 const app = express();
@@ -24,6 +25,7 @@ app.use(cors(corsOptions));
 app.use("/api/contact", ContactRouter);
 app.use("/api/booking", BookingRouter);
 app.use("/api/member", MemberRouter);
+app.use("/api/article", ArticleRouter)
 
 app.listen(PORT, () => {
   console.log(`Server is running on ${PORT}`);
