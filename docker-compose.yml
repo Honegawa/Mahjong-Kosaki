@@ -14,13 +14,14 @@ services:
       - DB_TYPE=${MYSQL_TYPE}
     volumes:
       - ./backend:/usr/local/apps/backend
+      - node_modules_back:/usr/local/apps/backend/node_modules
     depends_on:
       - mysql
     networks:
       - app-network
 
   frontend:
-    build: 
+    build:
       context: ./frontend
       args:
         - VITE_APP_API_BASE_URL=${CLIENT_API_BASE_URL}
@@ -28,7 +29,7 @@ services:
       - ${VITE_LOCAL_PORT}:${VITE_DOCKER_PORT}
     volumes:
       - ./frontend:/usr/local/apps/frontend
-      - node_modules:/usr/local/apps/frontend/node_modules
+      - node_modules_front:/usr/local/apps/frontend/node_modules
     depends_on:
       - backend
     networks:
@@ -59,7 +60,9 @@ services:
 
 volumes:
   mysql-data:
-  node_modules:
+  node_modules_front:
+  node_modules_back:
+
 
 networks:
   app-network:
