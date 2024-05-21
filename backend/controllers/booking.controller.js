@@ -92,19 +92,21 @@ export const deleteById = async (req, res) => {
     const { id } = req.params;
     const booking = await Booking.findByPk(id);
 
-    if (
-      booking.dataValues.email !== req.body.email ||
-      (req.user && req.user.role !== "admin")
-    ) {
-      return res.status(401).json({ message: "Unable to delete booking" });
-    }
-
     if (!booking) {
       return res.status(404).json({ message: "Booking not found" });
     }
+    
+    if (
+      booking.dataValues.email === req.body.email ||
+      (req.user && req.user.role === "admin")
+    ) {
+      await booking.destroy();
+      return res.status(200).json({ message: "Booking has been deleted" });
+    }
 
-    await booking.destroy();
-    res.status(200).json({ message: "Booking has been deleted" });
+    res
+      .status(401)
+      .json({ message: "Unable to delete booking with your privilege" });
   } catch (error) {
     res.status(500).json({ error: "Error in deleting booking" });
   }
