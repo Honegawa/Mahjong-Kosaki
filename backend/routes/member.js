@@ -16,6 +16,6 @@ router.get("/:id", getById);
 router.post("/", signup);
 router.post("/signin", signin)
 router.put("/:id", verifyToken, updateById)
-router.delete("/:id", verifyToken, verifyAdmin, deleteById);
+router.delete("/:id", verifyAdmin, deleteById);
 
 export default router;
