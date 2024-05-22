@@ -1,3 +1,4 @@
+import { env } from "../configs/config.js";
 import { Sequelize } from "sequelize";
 import contactModel from "./contact.model.js";
 import bookingModel from "./booking.model.js";
@@ -5,7 +6,7 @@ import memberModel from "./member.model.js";
 import articleModel from "./article.model.js";
 import articlePictureModel from "./articlePicture.model.js";
 import tournamentModel from "./tournament.model.js";
-import { env } from "../configs/config.js";
+import participantModel from "./participant.model.js";
 
 const sequelize = new Sequelize(env.DB_NAME, env.DB_USER, env.DB_PASSWORD, {
   host: env.DB_HOST,
@@ -24,9 +25,17 @@ memberModel(sequelize, Sequelize);
 articleModel(sequelize, Sequelize);
 articlePictureModel(sequelize, Sequelize);
 tournamentModel(sequelize, Sequelize);
+participantModel(sequelize, Sequelize);
 
-const { Contact, Booking, Member, Article, ArticlePicture, Tournament } =
-  sequelize.models;
+const {
+  Contact,
+  Booking,
+  Member,
+  Article,
+  ArticlePicture,
+  Tournament,
+  Participant,
+} = sequelize.models;
 
 Article.hasMany(ArticlePicture, {
   as: "pictures",
@@ -37,7 +46,22 @@ Article.hasMany(ArticlePicture, {
 });
 ArticlePicture.belongsTo(Article);
 
+Member.belongsToMany(Tournament, { through: Participant, as: "tournaments" });
+Tournament.belongsToMany(Member, { through: Participant, as: "members" });
+Member.hasMany(Participant);
+Tournament.hasMany(Participant);
+Participant.belongsTo(Member);
+Participant.belongsTo(Tournament);
+
 await sequelize.sync({ alter: false, force: false });
 console.log("Sync ok");
 
-export { Contact, Booking, Member, Article, ArticlePicture, Tournament };
+export {
+  Contact,
+  Booking,
+  Member,
+  Article,
+  ArticlePicture,
+  Tournament,
+  Participant,
+};
