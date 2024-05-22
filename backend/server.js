@@ -6,6 +6,7 @@ import ContactRouter from "./routes/contact.js";
 import BookingRouter from "./routes/booking.js";
 import MemberRouter from "./routes/member.js";
 import ArticleRouter from "./routes/article.js";
+import ArticlePictureRouter from "./routes/articlePicture.js";
 import "./models/index.js";
 
 const app = express();
@@ -26,6 +27,7 @@ app.use("/api/contact", ContactRouter);
 app.use("/api/booking", BookingRouter);
 app.use("/api/member", MemberRouter);
 app.use("/api/article", ArticleRouter)
+app.use("/api/articlePicture", ArticlePictureRouter)
 
 app.listen(PORT, () => {
   console.log(`Server is running on ${PORT}`);
