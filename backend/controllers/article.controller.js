@@ -2,7 +2,7 @@ import { Article } from "../models/index.js";
 
 export const getAll = async (req, res) => {
   try {
-    const articles = await Article.findAll();
+    const articles = await Article.findAll({ include: "pictures" });
 
     res.status(200).json(articles);
   } catch (error) {
@@ -13,7 +13,7 @@ export const getAll = async (req, res) => {
 export const getById = async (req, res) => {
   try {
     const { id } = req.params;
-    const article = await Article.findByPk(id);
+    const article = await Article.findByPk(id, {include: "pictures"});
 
     if (!article) {
       return res.status(404).json({ message: "Article not found" });
