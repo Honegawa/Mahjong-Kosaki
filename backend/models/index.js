@@ -8,6 +8,7 @@ import articlePictureModel from "./articlePicture.model.js";
 import tournamentModel from "./tournament.model.js";
 import participantModel from "./participant.model.js";
 import gameModel from "./game.model.js";
+import roundModel from "./round.model.js";
 
 const sequelize = new Sequelize(env.DB_NAME, env.DB_USER, env.DB_PASSWORD, {
   host: env.DB_HOST,
@@ -28,6 +29,7 @@ articlePictureModel(sequelize, Sequelize);
 tournamentModel(sequelize, Sequelize);
 participantModel(sequelize, Sequelize);
 gameModel(sequelize, Sequelize);
+roundModel(sequelize, Sequelize);
 
 const {
   Contact,
@@ -38,6 +40,7 @@ const {
   Tournament,
   Participant,
   Game,
+  Round,
 } = sequelize.models;
 
 // Article => Picture
@@ -64,6 +67,14 @@ Tournament.hasMany(Game, {
 });
 Game.belongsTo(Tournament);
 
+// Game => Round
+Game.hasMany(Round, {
+  as: "rounds",
+  foreignKey: { allowNull: false },
+  onDelete: "CASCADE",
+});
+Round.belongsTo(Game);
+
 await sequelize.sync({ alter: false, force: false });
 console.log("Sync ok");
 
@@ -76,4 +87,5 @@ export {
   Tournament,
   Participant,
   Game,
+  Round,
 };
