@@ -9,6 +9,7 @@ import ArticleRouter from "./routes/article.js";
 import ArticlePictureRouter from "./routes/articlePicture.js";
 import TournamentRouter from "./routes/tournament.js";
 import ParticipantRouter from "./routes/participant.js";
+import GameRouter from "./routes/game.js";
 import "./models/index.js";
 
 const app = express();
@@ -28,10 +29,11 @@ app.use(cors(corsOptions));
 app.use("/api/contact", ContactRouter);
 app.use("/api/booking", BookingRouter);
 app.use("/api/member", MemberRouter);
-app.use("/api/article", ArticleRouter)
-app.use("/api/articlePicture", ArticlePictureRouter)
-app.use("/api/tournament", TournamentRouter)
-app.use("/api/participant", ParticipantRouter)
+app.use("/api/article", ArticleRouter);
+app.use("/api/articlePicture", ArticlePictureRouter);
+app.use("/api/tournament", TournamentRouter);
+app.use("/api/participant", ParticipantRouter);
+app.use("/api/game", GameRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on ${PORT}`);
