@@ -10,6 +10,7 @@ import ArticlePictureRouter from "./routes/articlePicture.js";
 import TournamentRouter from "./routes/tournament.js";
 import ParticipantRouter from "./routes/participant.js";
 import GameRouter from "./routes/game.js";
+import RoundRouter from "./routes/round.js";
 import "./models/index.js";
 
 const app = express();
@@ -34,6 +35,7 @@ app.use("/api/articlePicture", ArticlePictureRouter);
 app.use("/api/tournament", TournamentRouter);
 app.use("/api/participant", ParticipantRouter);
 app.use("/api/game", GameRouter);
+app.use("/api/round", RoundRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on ${PORT}`);

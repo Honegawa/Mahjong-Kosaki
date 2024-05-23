@@ -17,6 +17,13 @@ export default (sequelize, DataType) => {
           max: 4,
         },
       },
+      length: {
+        type: DataType.STRING,
+        allowNull: false,
+        validate: {
+          isIn: [["Tonpuusen", "Hanchan", "1-Round"]]
+        }
+      },
       date: {
         type: DataType.DATE,
         allowNull: false,

@@ -28,7 +28,7 @@ export const getById = async (req, res) => {
 
 export const create = async (req, res) => {
   try {
-    const { date, type, format, TournamentId } = req.body;
+    const { date, type, format, length, TournamentId } = req.body;
 
     if (TournamentId) {
       const tournament = await Tournament.findByPk(TournamentId);
@@ -42,6 +42,7 @@ export const create = async (req, res) => {
       date,
       type,
       format,
+      length,
       TournamentId,
     });
 
@@ -53,7 +54,7 @@ export const create = async (req, res) => {
 
 export const updateById = async (req, res) => {
   try {
-    const { date, type, format, TournamentId } = req.body;
+    const { date, type, format, length, TournamentId } = req.body;
     const { id } = req.params;
 
     if (TournamentId) {
@@ -70,11 +71,10 @@ export const updateById = async (req, res) => {
       return res.status(404).json({ message: "Game not found" });
     }
 
-    await game.update({ date, type, format, TournamentId }, { where: { id: id } });
+    await game.update({ date, type, format, length, TournamentId }, { where: { id: id } });
 
     res.status(200).json({ message: "Game has been updated", game });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: "Error in updating game" });
   }
 };
