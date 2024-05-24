@@ -9,11 +9,15 @@ import tournamentModel from "./tournament.model.js";
 import participantModel from "./participant.model.js";
 import gameModel from "./game.model.js";
 import roundModel from "./round.model.js";
-import winningHandModel from "./winningHand.model.js";
+//import winningHandModel from "./winningHand.model.js";
+import playerRoundModel from "./playerRound.model.js";
 
 const sequelize = new Sequelize(env.DB_NAME, env.DB_USER, env.DB_PASSWORD, {
   host: env.DB_HOST,
   dialect: env.DB_TYPE,
+  dialectOptions: {
+    charset: "utf8mb4_general_ci"
+  }
 });
 try {
   await sequelize.authenticate();
@@ -31,7 +35,8 @@ tournamentModel(sequelize, Sequelize);
 participantModel(sequelize, Sequelize);
 gameModel(sequelize, Sequelize);
 roundModel(sequelize, Sequelize);
-winningHandModel(sequelize, Sequelize);
+// winningHandModel(sequelize, Sequelize);
+playerRoundModel(sequelize, Sequelize);
 
 const {
   Contact,
@@ -43,7 +48,8 @@ const {
   Participant,
   Game,
   Round,
-  WinningHand,
+  // WinningHand,
+  PlayerRound,
 } = sequelize.models;
 
 // Article => Picture
@@ -79,12 +85,21 @@ Game.hasMany(Round, {
 Round.belongsTo(Game);
 
 // Member => WinningHand <= Round
-Member.belongsToMany(Round, { through: WinningHand, as: "rounds" });
-Round.belongsToMany(Member, { through: WinningHand, as: "rounds" });
+// TODO : refacto PLayerRound = WinningHand?
+/* Member.belongsToMany(Round, { through: WinningHand, as: "WH_rounds" });
+Round.belongsToMany(Member, { through: WinningHand, as: "members" });
 Member.hasMany(WinningHand, { as: "winningHands" });
 Round.hasMany(WinningHand, { as: "winningHands" });
 WinningHand.belongsTo(Member);
-WinningHand.belongsTo(Round);
+WinningHand.belongsTo(Round); */
+
+// Member => PlayerRound <= Round
+Member.belongsToMany(Round, { through: PlayerRound, as: "rounds" });
+Round.belongsToMany(Member, { through: PlayerRound, as: "members" });
+Member.hasMany(PlayerRound, { as: "playerRounds" });
+Round.hasMany(PlayerRound, { as: "playerRounds" });
+PlayerRound.belongsTo(Member);
+PlayerRound.belongsTo(Round);
 
 await sequelize.sync({ alter: false, force: false });
 console.log("Sync ok");
@@ -99,5 +114,6 @@ export {
   Participant,
   Game,
   Round,
-  WinningHand,
+  // WinningHand,
+  PlayerRound,
 };
