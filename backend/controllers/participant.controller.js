@@ -1,4 +1,3 @@
-import { Op } from "sequelize";
 import { Member, Participant, Tournament } from "../models/index.js";
 
 export const getAll = async (req, res) => {

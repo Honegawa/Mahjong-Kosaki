@@ -9,6 +9,7 @@ import tournamentModel from "./tournament.model.js";
 import participantModel from "./participant.model.js";
 import gameModel from "./game.model.js";
 import roundModel from "./round.model.js";
+import winningHandModel from "./winningHand.model.js";
 
 const sequelize = new Sequelize(env.DB_NAME, env.DB_USER, env.DB_PASSWORD, {
   host: env.DB_HOST,
@@ -30,6 +31,7 @@ tournamentModel(sequelize, Sequelize);
 participantModel(sequelize, Sequelize);
 gameModel(sequelize, Sequelize);
 roundModel(sequelize, Sequelize);
+winningHandModel(sequelize, Sequelize);
 
 const {
   Contact,
@@ -41,6 +43,7 @@ const {
   Participant,
   Game,
   Round,
+  WinningHand,
 } = sequelize.models;
 
 // Article => Picture
@@ -75,6 +78,14 @@ Game.hasMany(Round, {
 });
 Round.belongsTo(Game);
 
+// Member => WinningHand <= Round
+Member.belongsToMany(Round, { through: WinningHand, as: "rounds" });
+Round.belongsToMany(Member, { through: WinningHand, as: "rounds" });
+Member.hasMany(WinningHand, { as: "winningHands" });
+Round.hasMany(WinningHand, { as: "winningHands" });
+WinningHand.belongsTo(Member);
+WinningHand.belongsTo(Round);
+
 await sequelize.sync({ alter: false, force: false });
 console.log("Sync ok");
 
@@ -88,4 +99,5 @@ export {
   Participant,
   Game,
   Round,
+  WinningHand,
 };
