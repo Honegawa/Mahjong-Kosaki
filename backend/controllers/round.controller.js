@@ -1,8 +1,13 @@
-import { Game, Round } from "../models/index.js";
+import { Game, Round, WinningHand } from "../models/index.js";
 
 export const getAll = async (req, res) => {
   try {
-    const rounds = await Round.findAll();
+    const rounds = await Round.findAll({
+      include: {
+        model: WinningHand,
+        as: "winningHands",
+      },
+    });
 
     res.status(200).json(rounds);
   } catch (error) {
@@ -14,7 +19,12 @@ export const getById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const round = await Round.findByPk(id);
+    const round = await Round.findByPk(id, {
+      include: {
+        model: WinningHand,
+        as: "winningHands",
+      },
+    });
 
     if (!round) {
       return res.status(404).json({ message: "Round not found" });
@@ -41,7 +51,7 @@ export const create = async (req, res) => {
       roundNb,
       homba,
       draw,
-      GameId
+      GameId,
     });
 
     res.status(201).json({ message: "Round has been created", round });

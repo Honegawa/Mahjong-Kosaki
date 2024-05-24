@@ -1,11 +1,21 @@
-import { Tournament, Game } from "../models/index.js";
+import { Tournament, Game, Round, WinningHand } from "../models/index.js";
 
 export const getAll = async (req, res) => {
   try {
-    const games = await Game.findAll();
+    const games = await Game.findAll({
+      include: {
+        model: Round,
+        as: "rounds",
+        include: {
+          model: WinningHand,
+          as: "winningHands",
+        },
+      },
+    });
 
     res.status(200).json(games);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: "Error in fetching game" });
   }
 };
@@ -14,11 +24,48 @@ export const getById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const game = await Game.findByPk(id);
+    const game = await Game.findByPk(id, {
+      include: {
+        model: Round,
+        as: "rounds",
+        include: {
+          model: WinningHand,
+          as: "winningHands",
+        },
+      },
+    });
 
     if (!game) {
       return res.status(404).json({ message: "Game not found" });
     }
+
+    res.status(200).json(game);
+  } catch (error) {
+    res.status(500).json({ error: "Error in fetching game" });
+  }
+};
+
+export const getByIdT = async (req, res) => {
+  try {
+    const { idT } = req.params;
+
+    const tournament = await Tournament.findByPk(idT);
+
+    if(!tournament) {
+      return res.status(404).json({ message: "Tournament not found" });
+    }
+
+    const game = await Game.findAll({
+      where: { TournamentId: idT },
+      include: {
+        model: Round,
+        as: "rounds",
+        include: {
+          model: WinningHand,
+          as: "winningHands",
+        },
+      },
+    });
 
     res.status(200).json(game);
   } catch (error) {
@@ -71,7 +118,10 @@ export const updateById = async (req, res) => {
       return res.status(404).json({ message: "Game not found" });
     }
 
-    await game.update({ date, type, format, length, TournamentId }, { where: { id: id } });
+    await game.update(
+      { date, type, format, length, TournamentId },
+      { where: { id: id } }
+    );
 
     res.status(200).json({ message: "Game has been updated", game });
   } catch (error) {
