@@ -11,7 +11,8 @@ import TournamentRouter from "./routes/tournament.js";
 import ParticipantRouter from "./routes/participant.js";
 import GameRouter from "./routes/game.js";
 import RoundRouter from "./routes/round.js";
-import WinningHandRouter from "./routes/winningHand.js";
+import PlayerRoundRouter from "./routes/playerRound.js";
+// import WinningHandRouter from "./routes/winningHand.js";
 import "./models/index.js";
 
 const app = express();
@@ -37,7 +38,8 @@ app.use("/api/tournament", TournamentRouter);
 app.use("/api/participant", ParticipantRouter);
 app.use("/api/game", GameRouter);
 app.use("/api/round", RoundRouter);
-app.use("/api/winningHand", WinningHandRouter);
+app.use("/api/playerRound", PlayerRoundRouter);
+// app.use("/api/winningHand", WinningHandRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on ${PORT}`);

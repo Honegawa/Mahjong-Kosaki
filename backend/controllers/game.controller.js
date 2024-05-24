@@ -1,4 +1,4 @@
-import { Tournament, Game, Round, WinningHand } from "../models/index.js";
+import { Tournament, Game, Round } from "../models/index.js";
 
 export const getAll = async (req, res) => {
   try {
@@ -28,10 +28,6 @@ export const getById = async (req, res) => {
       include: {
         model: Round,
         as: "rounds",
-        include: {
-          model: WinningHand,
-          as: "winningHands",
-        },
       },
     });
 
@@ -59,11 +55,7 @@ export const getByIdT = async (req, res) => {
       where: { TournamentId: idT },
       include: {
         model: Round,
-        as: "rounds",
-        include: {
-          model: WinningHand,
-          as: "winningHands",
-        },
+        as: "rounds"
       },
     });
 

@@ -155,7 +155,6 @@ export const deleteByIdTAndIdM = async (req, res) => {
       .status(403)
       .json({ message: "Unable to delete participant with your privilege" });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: "Error in deleting participant" });
   }
 };
