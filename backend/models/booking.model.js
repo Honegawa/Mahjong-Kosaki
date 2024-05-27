@@ -10,8 +10,8 @@ export default (sequelize, DataType) => {
         type: DataType.TINYINT,
         allowNull: false,
         validate: {
-            min: 1
-        }
+          min: 1,
+        },
       },
       firstname: {
         type: DataType.STRING,
@@ -25,8 +25,8 @@ export default (sequelize, DataType) => {
         type: DataType.STRING,
         allowNull: false,
         validate: {
-            isEmail: true
-        }
+          isEmail: true,
+        },
       },
       type: {
         type: DataType.STRING,
@@ -36,15 +36,16 @@ export default (sequelize, DataType) => {
         type: DataType.TINYINT,
         allowNull: false,
         validate: {
-            isIn: [[3,4]]
-        }
+          min: 2,
+          max: 4,
+        },
       },
       calendarLink: {
         type: DataType.STRING,
         allowNull: false,
         validate: {
-            isUrl: true
-        }
+          isUrl: true,
+        },
       },
     },
     {

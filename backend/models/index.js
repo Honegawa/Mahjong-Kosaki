@@ -14,10 +14,7 @@ import playerRoundModel from "./playerRound.model.js";
 
 const sequelize = new Sequelize(env.DB_NAME, env.DB_USER, env.DB_PASSWORD, {
   host: env.DB_HOST,
-  dialect: env.DB_TYPE,
-  dialectOptions: {
-    charset: "utf8mb4_general_ci",
-  },
+  dialect: env.DB_TYPE
 });
 try {
   await sequelize.authenticate();

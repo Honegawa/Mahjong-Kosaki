@@ -36,7 +36,7 @@ export const getGamesById = async (req, res) => {
         model: Game,
         as: "games",
         through: {
-          attributes: []
+          attributes: [],
         },
         include: {
           model: Round,
@@ -57,7 +57,6 @@ export const getGamesById = async (req, res) => {
 
     res.status(200).json(games);
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: "Error in fetching member games" });
   }
 };
@@ -106,7 +105,7 @@ export const signup = async (req, res) => {
       password,
       phone,
       subscription,
-      licenceEMA,
+      EMANumber,
     } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
     const member = await Member.create({
@@ -116,7 +115,7 @@ export const signup = async (req, res) => {
       password: hashedPassword,
       phone,
       subscription,
-      licenceEMA,
+      EMANumber,
     });
 
     res.status(201).json({ message: "member has been created.", member });
@@ -135,7 +134,7 @@ export const updateById = async (req, res) => {
       password,
       phone,
       subscription,
-      licenceEMA,
+      EMANumber,
     } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -149,22 +148,15 @@ export const updateById = async (req, res) => {
       return res.status(403).json({ message: "Token not valid" });
     }
 
-    await member.update(
-      {
-        firstname,
-        lastname,
-        email,
-        password: hashedPassword,
-        phone,
-        subscription,
-        licenceEMA,
-      },
-      {
-        where: {
-          id: id,
-        },
-      }
-    );
+    await member.update({
+      firstname,
+      lastname,
+      email,
+      password: hashedPassword,
+      phone,
+      subscription,
+      EMANumber,
+    });
 
     res.status(200).json({ message: "Member has been updated", member });
   } catch (error) {

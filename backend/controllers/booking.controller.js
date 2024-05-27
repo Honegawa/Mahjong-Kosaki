@@ -66,20 +66,7 @@ export const updateById = async (req, res) => {
       return res.status(404).json({ message: "Booking not found" });
     }
 
-    await booking.update(
-      {
-        date,
-        table,
-        type,
-        format,
-        calendarLink,
-      },
-      {
-        where: {
-          id: id,
-        },
-      }
-    );
+    await booking.update({ date, table, type, format, calendarLink });
 
     res.status(200).json({ message: "Booking has been updated", booking });
   } catch (error) {
@@ -95,7 +82,7 @@ export const deleteById = async (req, res) => {
     if (!booking) {
       return res.status(404).json({ message: "Booking not found" });
     }
-    
+
     if (
       booking.dataValues.email === req.body.email ||
       (req.user && req.user.role === "admin")

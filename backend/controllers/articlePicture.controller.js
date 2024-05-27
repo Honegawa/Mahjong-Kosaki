@@ -60,14 +60,13 @@ export const updateById = async (req, res) => {
 
     const { picture } = req.body;
 
-    const articlePictures = await article.getPictures({ where: { id: id } });
-    const articlePicture = articlePictures[0];
+    const articlePicture = await ArticlePicture.findByPk(id);
 
     if (!articlePicture) {
       return res.status(404).json({ message: "ArticlePicture not found" });
     }
 
-    await articlePicture.update({ picture }, { where: { id: id } });
+    await articlePicture.update({ picture });
 
     res
       .status(200)

@@ -8,7 +8,14 @@ import {
 
 export const getAll = async (req, res) => {
   try {
-    const tournaments = await Tournament.findAll();
+    const tournaments = await Tournament.findAll({
+      include: {
+        model: Member,
+        as: "members",
+        attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
+        through: { attributes: [] },
+      },
+    });
 
     res.status(200).json(tournaments);
   } catch (error) {
@@ -19,7 +26,14 @@ export const getAll = async (req, res) => {
 export const getById = async (req, res) => {
   try {
     const { id } = req.params;
-    const tournament = await Tournament.findByPk(id);
+    const tournament = await Tournament.findByPk(id, {
+      include: {
+        model: Member,
+        as: "members",
+        attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
+        through: { attributes: [] },
+      },
+    });
 
     if (!tournament) {
       return res.status(404).json({ message: "Tournament not found" });
@@ -44,10 +58,10 @@ export const getGamesById = async (req, res) => {
           include: {
             model: PlayerRound,
             as: "playerRounds",
-            include:  {
+            include: {
               model: Member,
-              attributes: ["firstname", "lastname", "email", "licenceEMA"],
-            }
+              attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
+            },
           },
         },
       },
@@ -88,10 +102,13 @@ export const updateById = async (req, res) => {
       return res.status(404).json({ message: "Tournament not found" });
     }
 
-    await tournament.update(
-      { name, description, startDate, endDate, entryFee },
-      { where: { id: id } }
-    );
+    await tournament.update({
+      name,
+      description,
+      startDate,
+      endDate,
+      entryFee,
+    });
 
     res
       .status(200)
