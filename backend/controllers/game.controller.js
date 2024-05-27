@@ -1,4 +1,10 @@
-import { Tournament, Game, Round } from "../models/index.js";
+import {
+  Tournament,
+  Game,
+  Round,
+  PlayerRound,
+  Member,
+} from "../models/index.js";
 
 export const getAll = async (req, res) => {
   try {
@@ -7,15 +13,18 @@ export const getAll = async (req, res) => {
         model: Round,
         as: "rounds",
         include: {
-          model: WinningHand,
-          as: "winningHands",
+          model: PlayerRound,
+          as: "playerRounds",
+          include: {
+            model: Member,
+            attributes: ["firstname", "lastname", "email", "licenceEMA"],
+          },
         },
       },
     });
 
     res.status(200).json(games);
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: "Error in fetching game" });
   }
 };
@@ -28,6 +37,14 @@ export const getById = async (req, res) => {
       include: {
         model: Round,
         as: "rounds",
+        include: {
+          model: PlayerRound,
+          as: "playerRounds",
+          include: {
+            model: Member,
+            attributes: ["firstname", "lastname", "email", "licenceEMA"],
+          },
+        },
       },
     });
 
@@ -47,7 +64,7 @@ export const getByIdT = async (req, res) => {
 
     const tournament = await Tournament.findByPk(idT);
 
-    if(!tournament) {
+    if (!tournament) {
       return res.status(404).json({ message: "Tournament not found" });
     }
 
@@ -55,7 +72,15 @@ export const getByIdT = async (req, res) => {
       where: { TournamentId: idT },
       include: {
         model: Round,
-        as: "rounds"
+        as: "rounds",
+        include: {
+          model: PlayerRound,
+          as: "playerRounds",
+          include: {
+            model: Member,
+            attributes: ["firstname", "lastname", "email", "licenceEMA"],
+          },
+        },
       },
     });
 

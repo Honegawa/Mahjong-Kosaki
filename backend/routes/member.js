@@ -2,6 +2,7 @@ import express from "express";
 import {
   getAll,
   getById,
+  getGamesById,
   signup,
   signin,
   updateById,
@@ -13,6 +14,7 @@ const router = express.Router();
 
 router.get("/", getAll);
 router.get("/:id", getById);
+router.get("/:id/games", getGamesById);
 router.post("/", signup);
 router.post("/signin", signin)
 router.put("/:id", verifyToken, updateById)

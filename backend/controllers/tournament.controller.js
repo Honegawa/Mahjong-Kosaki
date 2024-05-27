@@ -1,4 +1,10 @@
-import { Tournament } from "../models/index.js";
+import {
+  Game,
+  Member,
+  PlayerRound,
+  Round,
+  Tournament,
+} from "../models/index.js";
 
 export const getAll = async (req, res) => {
   try {
@@ -25,6 +31,38 @@ export const getById = async (req, res) => {
   }
 };
 
+export const getGamesById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const tournament = await Tournament.findByPk(id, {
+      include: {
+        model: Game,
+        as: "games",
+        include: {
+          model: Round,
+          as: "rounds",
+          include: {
+            model: PlayerRound,
+            as: "playerRounds",
+            include:  {
+              model: Member,
+              attributes: ["firstname", "lastname", "email", "licenceEMA"],
+            }
+          },
+        },
+      },
+    });
+
+    if (!tournament) {
+      return res.status(404).json({ message: "Tournament not found" });
+    }
+
+    res.status(200).json(tournament);
+  } catch (error) {
+    res.status(500).json({ error: "Error in fetching tournament" });
+  }
+};
+
 export const create = async (req, res) => {
   try {
     const tournament = await Tournament.create(req.body);
@@ -33,7 +71,6 @@ export const create = async (req, res) => {
       .status(201)
       .json({ message: "Tournament has been created", tournament });
   } catch (error) {
-    console.log(error)
     res.status(500).json({ error: "Error in sending tournament" });
   }
 };
