@@ -57,7 +57,9 @@ export const getGamesById = async (req, res) => {
       return res.status(404).json({ message: "Tournament not found" });
     }
 
-    res.status(200).json(tournament);
+    const games = tournament.games;
+
+    res.status(200).json(games);
   } catch (error) {
     res.status(500).json({ error: "Error in fetching tournament" });
   }

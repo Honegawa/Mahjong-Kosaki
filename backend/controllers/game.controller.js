@@ -9,22 +9,31 @@ import {
 export const getAll = async (req, res) => {
   try {
     const games = await Game.findAll({
-      include: {
-        model: Round,
-        as: "rounds",
-        include: {
-          model: PlayerRound,
-          as: "playerRounds",
+      include: [
+        {
+          model: Member,
+          as: "members",
+          attributes: ["id", "firstname", "lastname", "email", "licenceEMA"],
+          through: { attributes: [] },
+        },
+        {
+          model: Round,
+          as: "rounds",
           include: {
-            model: Member,
-            attributes: ["firstname", "lastname", "email", "licenceEMA"],
+            model: PlayerRound,
+            as: "playerRounds",
+            include: {
+              model: Member,
+              attributes: ["firstname", "lastname", "email", "licenceEMA"],
+            },
           },
         },
-      },
+      ],
     });
 
     res.status(200).json(games);
   } catch (error) {
+    console.log(error)
     res.status(500).json({ error: "Error in fetching game" });
   }
 };
@@ -34,18 +43,26 @@ export const getById = async (req, res) => {
     const { id } = req.params;
 
     const game = await Game.findByPk(id, {
-      include: {
-        model: Round,
-        as: "rounds",
-        include: {
-          model: PlayerRound,
-          as: "playerRounds",
+      include: [
+        {
+          model: Member,
+          as: "members",
+          attributes: ["id", "firstname", "lastname", "email", "licenceEMA"],
+          through: { attributes: [] },
+        },
+        {
+          model: Round,
+          as: "rounds",
           include: {
-            model: Member,
-            attributes: ["firstname", "lastname", "email", "licenceEMA"],
+            model: PlayerRound,
+            as: "playerRounds",
+            include: {
+              model: Member,
+              attributes: ["firstname", "lastname", "email", "licenceEMA"],
+            },
           },
         },
-      },
+      ],
     });
 
     if (!game) {
@@ -70,22 +87,71 @@ export const getByIdT = async (req, res) => {
 
     const game = await Game.findAll({
       where: { TournamentId: idT },
-      include: {
-        model: Round,
-        as: "rounds",
-        include: {
-          model: PlayerRound,
-          as: "playerRounds",
+      include: [
+        {
+          model: Member,
+          as: "members",
+          attributes: ["id", "firstname", "lastname", "email", "licenceEMA"],
+          through: { attributes: [] },
+        },
+        {
+          model: Round,
+          as: "rounds",
           include: {
-            model: Member,
-            attributes: ["firstname", "lastname", "email", "licenceEMA"],
+            model: PlayerRound,
+            as: "playerRounds",
+            include: {
+              model: Member,
+              attributes: ["firstname", "lastname", "email", "licenceEMA"],
+            },
           },
         },
-      },
+      ],
     });
 
     res.status(200).json(game);
   } catch (error) {
+    res.status(500).json({ error: "Error in fetching game" });
+  }
+};
+
+export const getByIdM = async (req, res) => {
+  try {
+    const { idM } = req.params;
+
+    const member = await Member.findByPk(idM);
+
+    if (!member) {
+      return res.status(404).json({ message: "Member not found" });
+    }
+
+    const game = await Game.findAll({
+      include: [
+        {
+          model: Member,
+          as: "members",
+          where: { id: idM },
+          attributes: ["id", "firstname", "lastname", "email", "licenceEMA"],
+          through: { attributes: [] },
+        },
+        {
+          model: Round,
+          as: "rounds",
+          include: {
+            model: PlayerRound,
+            as: "playerRounds",
+            include: {
+              model: Member,
+              attributes: ["firstname", "lastname", "email", "licenceEMA"],
+            },
+          },
+        },
+      ],
+    });
+
+    res.status(200).json(game);
+  } catch (error) {
+    console.log(error);
     res.status(500).json({ error: "Error in fetching game" });
   }
 };
