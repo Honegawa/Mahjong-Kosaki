@@ -2,7 +2,6 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { Game, Member, PlayerRound, Round } from "../models/index.js";
 import { env } from "../configs/config.js";
-import { Op } from "sequelize";
 
 export const getAll = async (req, res) => {
   try {
@@ -32,33 +31,33 @@ export const getById = async (req, res) => {
 export const getGamesById = async (req, res) => {
   try {
     const { id } = req.params;
-    const member = await Member.findByPk(id);
-
-    if (!member) {
-      return res.status(404).json({ message: "Member not found" });
-    }
-
-    const games = await Game.findAll({
+    const member = await Member.findByPk(id, {
       include: {
-        model: Round,
-        as: "rounds",
-        where: {
-          rounds: { [Op.not]: [] },
+        model: Game,
+        as: "games",
+        through: {
+          attributes: []
         },
         include: {
-          model: PlayerRound,
-          as: "playerRounds",
-          where: { MemberId: id },
+          model: Round,
+          as: "rounds",
           include: {
-            model: Member,
-            attributes: ["firstname", "lastname", "email", "licenceEMA"],
+            model: PlayerRound,
+            as: "playerRounds",
           },
         },
       },
     });
 
+    if (!member) {
+      return res.status(404).json({ message: "Member not found" });
+    }
+
+    const games = member.games;
+
     res.status(200).json(games);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: "Error in fetching member games" });
   }
 };
