@@ -7,7 +7,7 @@ export const getAll = async (req, res) => {
         Game,
         {
           model: Member,
-          attributes: ["firstname", "lastname", "email", "licenceEMA"],
+          attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
         },
       ],
     });
@@ -34,7 +34,7 @@ export const getByIdG = async (req, res) => {
         Game,
         {
           model: Member,
-          attributes: ["firstname", "lastname", "email", "licenceEMA"],
+          attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
         },
       ],
     });
@@ -61,7 +61,7 @@ export const getByIdM = async (req, res) => {
         Game,
         {
           model: Member,
-          attributes: ["firstname", "lastname", "email", "licenceEMA"],
+          attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
         },
       ],
     });
@@ -94,7 +94,7 @@ export const getByIdMAndIdG = async (req, res) => {
         Game,
         {
           model: Member,
-          attributes: ["firstname", "lastname", "email", "licenceEMA"],
+          attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
         },
       ],
     });

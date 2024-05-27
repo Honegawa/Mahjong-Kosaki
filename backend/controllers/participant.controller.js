@@ -10,7 +10,7 @@ export const getAll = async (req, res) => {
         },
         {
           model: Member,
-          attributes: ["firstname", "lastname", "email", "licenceEMA"],
+          attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
         },
       ],
     });
@@ -46,7 +46,7 @@ export const getByIdTAndIdM = async (req, res) => {
         },
         {
           model: Member,
-          attributes: ["firstname", "lastname", "email", "licenceEMA"],
+          attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
         },
       ],
     });
@@ -80,7 +80,7 @@ export const getByTournamentId = async (req, res) => {
         },
         {
           model: Member,
-          attributes: ["firstname", "lastname", "email", "licenceEMA"],
+          attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
         },
       ],
     });

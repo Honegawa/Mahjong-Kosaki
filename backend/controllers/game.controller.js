@@ -13,7 +13,7 @@ export const getAll = async (req, res) => {
         {
           model: Member,
           as: "members",
-          attributes: ["id", "firstname", "lastname", "email", "licenceEMA"],
+          attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
           through: { attributes: [] },
         },
         {
@@ -24,7 +24,7 @@ export const getAll = async (req, res) => {
             as: "playerRounds",
             include: {
               model: Member,
-              attributes: ["firstname", "lastname", "email", "licenceEMA"],
+              attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
             },
           },
         },
@@ -33,7 +33,6 @@ export const getAll = async (req, res) => {
 
     res.status(200).json(games);
   } catch (error) {
-    console.log(error)
     res.status(500).json({ error: "Error in fetching game" });
   }
 };
@@ -47,7 +46,7 @@ export const getById = async (req, res) => {
         {
           model: Member,
           as: "members",
-          attributes: ["id", "firstname", "lastname", "email", "licenceEMA"],
+          attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
           through: { attributes: [] },
         },
         {
@@ -58,7 +57,7 @@ export const getById = async (req, res) => {
             as: "playerRounds",
             include: {
               model: Member,
-              attributes: ["firstname", "lastname", "email", "licenceEMA"],
+              attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
             },
           },
         },
@@ -91,7 +90,7 @@ export const getByIdT = async (req, res) => {
         {
           model: Member,
           as: "members",
-          attributes: ["id", "firstname", "lastname", "email", "licenceEMA"],
+          attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
           through: { attributes: [] },
         },
         {
@@ -102,7 +101,7 @@ export const getByIdT = async (req, res) => {
             as: "playerRounds",
             include: {
               model: Member,
-              attributes: ["firstname", "lastname", "email", "licenceEMA"],
+              attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
             },
           },
         },
@@ -131,7 +130,7 @@ export const getByIdM = async (req, res) => {
           model: Member,
           as: "members",
           where: { id: idM },
-          attributes: ["id", "firstname", "lastname", "email", "licenceEMA"],
+          attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
           through: { attributes: [] },
         },
         {
@@ -142,7 +141,7 @@ export const getByIdM = async (req, res) => {
             as: "playerRounds",
             include: {
               model: Member,
-              attributes: ["firstname", "lastname", "email", "licenceEMA"],
+              attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
             },
           },
         },
@@ -151,7 +150,6 @@ export const getByIdM = async (req, res) => {
 
     res.status(200).json(game);
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: "Error in fetching game" });
   }
 };
@@ -201,10 +199,7 @@ export const updateById = async (req, res) => {
       return res.status(404).json({ message: "Game not found" });
     }
 
-    await game.update(
-      { date, type, format, length, TournamentId },
-      { where: { id: id } }
-    );
+    await game.update({ date, type, format, length, TournamentId });
 
     res.status(200).json({ message: "Game has been updated", game });
   } catch (error) {

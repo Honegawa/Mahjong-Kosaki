@@ -21,8 +21,8 @@ export default (sequelize, DataType) => {
         type: DataType.STRING,
         allowNull: false,
         validate: {
-          isIn: [["Tonpuusen", "Hanchan", "1-Round", "Chinitsu Challenge"]]
-        }
+          isIn: [["Tonpuusen", "Hanchan", "1-Round", "Chinitsu Challenge"]],
+        },
       },
       date: {
         type: DataType.DATE,

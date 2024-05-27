@@ -33,9 +33,12 @@ export default (sequelize, DataType) => {
         type: DataType.DATE,
         allowNull: false,
       },
-      licenceEMA: {
+      EMANumber: {
         type: DataType.STRING,
-        allowNull: false,
+        allowNull: true,
+        validate: {
+          is: /^\d{8}$/
+        }
       },
       role: {
         type: DataType.STRING,

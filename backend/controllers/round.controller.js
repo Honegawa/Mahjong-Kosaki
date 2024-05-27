@@ -8,7 +8,7 @@ export const getAll = async (req, res) => {
         as: "playerRounds",
         include: {
           model: Member,
-          attributes: ["firstname", "lastname", "email", "licenceEMA"],
+          attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
         },
       },
     });
@@ -29,7 +29,7 @@ export const getById = async (req, res) => {
         as: "playerRounds",
         include: {
           model: Member,
-          attributes: ["firstname", "lastname", "email", "licenceEMA"],
+          attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
         },
       },
     });
@@ -79,7 +79,7 @@ export const updateById = async (req, res) => {
       return res.status(404).json({ message: "Round not found" });
     }
 
-    await round.update({ wind, roundNb, homba, draw }, { where: { id: id } });
+    await round.update({ wind, roundNb, homba, draw });
 
     res.status(200).json({ message: "Round has been updated", round });
   } catch (error) {
