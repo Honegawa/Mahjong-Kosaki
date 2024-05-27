@@ -3,21 +3,19 @@ import {
   getAll,
   getById,
   getGamesById,
-  signup,
-  signin,
+  create,
   updateById,
   deleteById,
-} from "../controllers/member.controller.js";
-import { verifyAdmin, verifyToken } from "../middlewares/auth.js";
+} from "../controllers/tournament.controller.js";
+import { verifyAdmin } from "../middlewares/auth.js";
 
 const router = express.Router();
 
 router.get("/", getAll);
 router.get("/:id", getById);
 router.get("/:id/games", getGamesById);
-router.post("/", signup);
-router.post("/signin", signin)
-router.put("/:id", verifyToken, updateById)
+router.post("/", verifyAdmin, create);
+router.put("/:id", verifyAdmin, updateById)
 router.delete("/:id", verifyAdmin, deleteById);
 
 export default router;

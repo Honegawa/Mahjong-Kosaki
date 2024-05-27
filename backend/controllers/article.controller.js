@@ -13,7 +13,7 @@ export const getAll = async (req, res) => {
 export const getById = async (req, res) => {
   try {
     const { id } = req.params;
-    const article = await Article.findByPk(id, {include: "pictures"});
+    const article = await Article.findByPk(id, { include: "pictures" });
 
     if (!article) {
       return res.status(404).json({ message: "Article not found" });
@@ -46,17 +46,7 @@ export const updateById = async (req, res) => {
       return res.status(404).json({ message: "Article not found" });
     }
 
-    await article.update(
-      {
-        title,
-        content,
-      },
-      {
-        where: {
-          id: id,
-        },
-      }
-    );
+    await article.update({ title, content });
 
     res.status(200).json({ message: "Article has been updated", article });
   } catch (error) {
