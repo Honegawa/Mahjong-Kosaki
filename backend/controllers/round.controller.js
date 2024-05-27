@@ -1,8 +1,17 @@
-import { Game, Round } from "../models/index.js";
+import { Game, Member, PlayerRound, Round } from "../models/index.js";
 
 export const getAll = async (req, res) => {
   try {
-    const rounds = await Round.findAll();
+    const rounds = await Round.findAll({
+      include: {
+        model: PlayerRound,
+        as: "playerRounds",
+        include: {
+          model: Member,
+          attributes: ["firstname", "lastname", "email", "licenceEMA"],
+        },
+      },
+    });
 
     res.status(200).json(rounds);
   } catch (error) {
@@ -14,7 +23,16 @@ export const getById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const round = await Round.findByPk(id);
+    const round = await Round.findByPk(id, {
+      include: {
+        model: PlayerRound,
+        as: "playerRounds",
+        include: {
+          model: Member,
+          attributes: ["firstname", "lastname", "email", "licenceEMA"],
+        },
+      },
+    });
 
     if (!round) {
       return res.status(404).json({ message: "Round not found" });

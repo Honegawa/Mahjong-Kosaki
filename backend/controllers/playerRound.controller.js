@@ -56,7 +56,17 @@ export const getByIdRAndIdM = async (req, res) => {
 
 export const create = async (req, res) => {
   try {
-    const { seatWind, roundScore, tenpai, RoundId, MemberId } = req.body;
+    const {
+      seatWind,
+      roundScore,
+      tenpai,
+      han,
+      fu,
+      yaku,
+      handValue,
+      RoundId,
+      MemberId,
+    } = req.body;
 
     const round = await Round.findByPk(RoundId);
 
@@ -74,6 +84,10 @@ export const create = async (req, res) => {
       seatWind,
       roundScore,
       tenpai,
+      han,
+      fu,
+      yaku,
+      handValue,
       RoundId,
       MemberId,
     });
@@ -89,7 +103,7 @@ export const create = async (req, res) => {
 export const updateByIdRAndIdM = async (req, res) => {
   try {
     const { idR, idM } = req.params;
-    const { seatWind, roundScore, tenpai } = req.body;
+    const { seatWind, roundScore, tenpai, han, fu, yaku, handValue } = req.body;
 
     const round = await Round.findByPk(idR);
 
@@ -111,9 +125,15 @@ export const updateByIdRAndIdM = async (req, res) => {
       return res.status(404).json({ message: "PlayerRound not found" });
     }
 
-    await playerRound.update(
-      { seatWind, roundScore, tenpai },
-    );
+    await playerRound.update({
+      seatWind,
+      roundScore,
+      tenpai,
+      han,
+      fu,
+      yaku,
+      handValue,
+    });
 
     res
       .status(200)

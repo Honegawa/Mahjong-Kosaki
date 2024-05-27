@@ -9,15 +9,14 @@ import tournamentModel from "./tournament.model.js";
 import participantModel from "./participant.model.js";
 import gameModel from "./game.model.js";
 import roundModel from "./round.model.js";
-//import winningHandModel from "./winningHand.model.js";
 import playerRoundModel from "./playerRound.model.js";
 
 const sequelize = new Sequelize(env.DB_NAME, env.DB_USER, env.DB_PASSWORD, {
   host: env.DB_HOST,
   dialect: env.DB_TYPE,
   dialectOptions: {
-    charset: "utf8mb4_general_ci"
-  }
+    charset: "utf8mb4_general_ci",
+  },
 });
 try {
   await sequelize.authenticate();
@@ -35,7 +34,6 @@ tournamentModel(sequelize, Sequelize);
 participantModel(sequelize, Sequelize);
 gameModel(sequelize, Sequelize);
 roundModel(sequelize, Sequelize);
-// winningHandModel(sequelize, Sequelize);
 playerRoundModel(sequelize, Sequelize);
 
 const {
@@ -48,7 +46,6 @@ const {
   Participant,
   Game,
   Round,
-  // WinningHand,
   PlayerRound,
 } = sequelize.models;
 
@@ -84,15 +81,6 @@ Game.hasMany(Round, {
 });
 Round.belongsTo(Game);
 
-// Member => WinningHand <= Round
-// TODO : refacto PLayerRound = WinningHand?
-/* Member.belongsToMany(Round, { through: WinningHand, as: "WH_rounds" });
-Round.belongsToMany(Member, { through: WinningHand, as: "members" });
-Member.hasMany(WinningHand, { as: "winningHands" });
-Round.hasMany(WinningHand, { as: "winningHands" });
-WinningHand.belongsTo(Member);
-WinningHand.belongsTo(Round); */
-
 // Member => PlayerRound <= Round
 Member.belongsToMany(Round, { through: PlayerRound, as: "rounds" });
 Round.belongsToMany(Member, { through: PlayerRound, as: "members" });
@@ -114,6 +102,5 @@ export {
   Participant,
   Game,
   Round,
-  // WinningHand,
   PlayerRound,
 };

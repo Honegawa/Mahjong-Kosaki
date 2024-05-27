@@ -1,7 +1,8 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { Member } from "../models/index.js";
+import { Game, Member, PlayerRound, Round } from "../models/index.js";
 import { env } from "../configs/config.js";
+import { Op } from "sequelize";
 
 export const getAll = async (req, res) => {
   try {
@@ -28,6 +29,40 @@ export const getById = async (req, res) => {
   }
 };
 
+export const getGamesById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const member = await Member.findByPk(id);
+
+    if (!member) {
+      return res.status(404).json({ message: "Member not found" });
+    }
+
+    const games = await Game.findAll({
+      include: {
+        model: Round,
+        as: "rounds",
+        where: {
+          rounds: { [Op.not]: [] },
+        },
+        include: {
+          model: PlayerRound,
+          as: "playerRounds",
+          where: { MemberId: id },
+          include: {
+            model: Member,
+            attributes: ["firstname", "lastname", "email", "licenceEMA"],
+          },
+        },
+      },
+    });
+
+    res.status(200).json(games);
+  } catch (error) {
+    res.status(500).json({ error: "Error in fetching member games" });
+  }
+};
+
 export const signin = async (req, res) => {
   try {
     const member = await Member.findOne({
@@ -49,7 +84,9 @@ export const signin = async (req, res) => {
       return res.status(400).json({ message: "Wrong Credentials" });
     }
 
-    const token = jwt.sign({ id: member.id, role: member.role }, env.TOKEN, { expiresIn: "24h" });
+    const token = jwt.sign({ id: member.id, role: member.role }, env.TOKEN, {
+      expiresIn: "24h",
+    });
     const { password, ...other } = member.dataValues;
 
     res
