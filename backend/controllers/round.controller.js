@@ -1,4 +1,4 @@
-import { Game, Member, PlayerRound, Round } from "../models/index.js";
+import { Game, Member, Person, PlayerRound, Round } from "../models/index.js";
 
 export const getAll = async (req, res) => {
   try {
@@ -8,7 +8,11 @@ export const getAll = async (req, res) => {
         as: "playerRounds",
         include: {
           model: Member,
-          attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
+          attributes: ["EMANumber"],
+          include: {
+            model: Person,
+            attributes: ["firstname", "lastname"],
+          },
         },
       },
     });
@@ -29,7 +33,11 @@ export const getById = async (req, res) => {
         as: "playerRounds",
         include: {
           model: Member,
-          attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
+          attributes: ["EMANumber"],
+          include: {
+            model: Person,
+            attributes: ["firstname", "lastname"],
+          },
         },
       },
     });

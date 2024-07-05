@@ -1,4 +1,4 @@
-import { Member, Participant, Tournament } from "../models/index.js";
+import { Member, Participant, Person, Tournament } from "../models/index.js";
 
 export const getAll = async (req, res) => {
   try {
@@ -10,13 +10,18 @@ export const getAll = async (req, res) => {
         },
         {
           model: Member,
-          attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
+          attributes: ["id"],
+          include: {
+            model: Person,
+            attributes: ["firstname", "lastname", "email"],
+          },
         },
       ],
     });
 
     res.status(200).json(participants);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: "Error in fetching participant" });
   }
 };
@@ -46,7 +51,11 @@ export const getByIdTAndIdM = async (req, res) => {
         },
         {
           model: Member,
-          attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
+          attributes: ["id"],
+          include: {
+            model: Person,
+            attributes: ["firstname", "lastname", "email"],
+          },
         },
       ],
     });
@@ -80,7 +89,11 @@ export const getByTournamentId = async (req, res) => {
         },
         {
           model: Member,
-          attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
+          attributes: ["id"],
+          include: {
+            model: Person,
+            attributes: ["firstname", "lastname", "email"],
+          },
         },
       ],
     });

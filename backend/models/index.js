@@ -15,7 +15,7 @@ import playerRoundModel from "./playerRound.model.js";
 
 const sequelize = new Sequelize(env.DB_NAME, env.DB_USER, env.DB_PASSWORD, {
   host: env.DB_HOST,
-  dialect: env.DB_TYPE
+  dialect: env.DB_TYPE,
 });
 try {
   await sequelize.authenticate();
@@ -60,6 +60,10 @@ Article.hasMany(ArticlePicture, {
 });
 ArticlePicture.belongsTo(Article);
 
+// Person = Member
+Person.hasOne(Member);
+Member.belongsTo(Person);
+
 // Member => Participant <= Tournament
 Member.belongsToMany(Tournament, { through: Participant, as: "tournaments" });
 Tournament.belongsToMany(Member, { through: Participant, as: "members" });
@@ -71,8 +75,6 @@ Participant.belongsTo(Tournament);
 // Tournament => Game
 Tournament.hasMany(Game, {
   as: "games",
-  foreignKey: { allowNull: true },
-  onDelete: "CASCADE",
 });
 Game.belongsTo(Tournament);
 

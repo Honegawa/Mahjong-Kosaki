@@ -1,11 +1,16 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { Game, Member, PlayerRound, Round } from "../models/index.js";
+import { Game, Member, Person, PlayerRound, Round } from "../models/index.js";
 import { env } from "../configs/config.js";
 
 export const getAll = async (req, res) => {
   try {
-    const members = await Member.findAll();
+    const members = await Member.findAll({
+      include: {
+        model: Person,
+        attributes: ["firstname", "lastname", "email", "phone"],
+      },
+    });
 
     res.status(200).json(members);
   } catch (error) {
@@ -16,7 +21,12 @@ export const getAll = async (req, res) => {
 export const getById = async (req, res) => {
   try {
     const { id } = req.params;
-    const member = await Member.findByPk(id);
+    const member = await Member.findByPk(id, {
+      include: {
+        model: Person,
+        attributes: ["firstname", "lastname", "email", "phone"],
+      },
+    });
 
     if (!member) {
       return res.status(404).json({ message: "Member not found" });
@@ -32,21 +42,23 @@ export const getGamesById = async (req, res) => {
   try {
     const { id } = req.params;
     const member = await Member.findByPk(id, {
-      include: {
-        model: Game,
-        as: "games",
-        through: {
-          attributes: [],
-        },
-        include: {
-          model: Round,
-          as: "rounds",
+      include: [
+        {
+          model: Game,
+          as: "games",
+          through: {
+            attributes: [],
+          },
           include: {
-            model: PlayerRound,
-            as: "playerRounds",
+            model: Round,
+            as: "rounds",
+            include: {
+              model: PlayerRound,
+              as: "playerRounds",
+            },
           },
         },
-      },
+      ],
     });
 
     if (!member) {
@@ -63,9 +75,19 @@ export const getGamesById = async (req, res) => {
 
 export const signin = async (req, res) => {
   try {
-    const member = await Member.findOne({
+    const person = await Person.findOne({
       where: {
         email: req.body.email,
+      },
+    });
+
+    if (!person) {
+      return res.status(404).json({ message: "Person not found" });
+    }
+
+    const member = await Member.findOne({
+      where: {
+        PersonId: person.id,
       },
     });
 
@@ -108,18 +130,41 @@ export const signup = async (req, res) => {
       EMANumber,
     } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
-    const member = await Member.create({
-      firstname,
-      lastname,
-      email,
-      password: hashedPassword,
-      phone,
-      subscription,
-      EMANumber,
+
+    const person = await Person.findOne({
+      where: {
+        email: email,
+      },
     });
 
-    res.status(201).json({ message: "member has been created.", member });
+    if (!person) {
+      const newPerson = await Person.create({
+        firstname,
+        lastname,
+        email,
+        phone,
+      });
+
+      const member = await Member.create({
+        password: hashedPassword,
+        subscription,
+        EMANumber,
+        PersonId: newPerson.id,
+      });
+
+      res.status(201).json({ message: "Member has been created.", member });
+    } else {
+      const member = await Member.create({
+        password: hashedPassword,
+        subscription,
+        EMANumber,
+        PersonId: person.id,
+      });
+
+      res.status(201).json({ message: "Member has been created.", member });
+    }
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: "Error in creating member" });
   }
 };
@@ -144,21 +189,41 @@ export const updateById = async (req, res) => {
       return res.status(404).json({ message: "Member not found" });
     }
 
+    const person = await Person.findByPk(member.PersonId);
+    if (!person) {
+      return res.status(404).json({ message: "Person not found" });
+    }
+
     if (member.id !== req.user.id) {
       return res.status(403).json({ message: "Token not valid" });
     }
 
-    await member.update({
+    const updatedPerson = await person.update({
       firstname,
       lastname,
       email,
-      password: hashedPassword,
       phone,
-      subscription,
-      EMANumber,
     });
 
-    res.status(200).json({ message: "Member has been updated", member });
+    const updatedMember = await member.update(
+      {
+        password: hashedPassword,
+        subscription,
+        EMANumber,
+      },
+      {
+        new: true,
+      },
+      {
+        include: Person,
+      }
+    );
+
+    res.status(200).json({
+      message: "Member has been updated",
+      updatedMember,
+      updatedPerson,
+    });
   } catch (error) {
     res.status(500).json({ error: "Error in updating member" });
   }
