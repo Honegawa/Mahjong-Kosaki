@@ -2,6 +2,7 @@ import { env } from "../configs/config.js";
 import { Sequelize } from "sequelize";
 import contactModel from "./contact.model.js";
 import bookingModel from "./booking.model.js";
+import personModel from "./person.model.js";
 import memberModel from "./member.model.js";
 import articleModel from "./article.model.js";
 import articlePictureModel from "./articlePicture.model.js";
@@ -26,6 +27,7 @@ try {
 contactModel(sequelize, Sequelize);
 bookingModel(sequelize, Sequelize);
 memberModel(sequelize, Sequelize);
+personModel(sequelize, Sequelize);
 articleModel(sequelize, Sequelize);
 articlePictureModel(sequelize, Sequelize);
 tournamentModel(sequelize, Sequelize);
@@ -39,6 +41,7 @@ const {
   Contact,
   Booking,
   Member,
+  Person,
   Article,
   ArticlePicture,
   Tournament,
@@ -104,6 +107,7 @@ export {
   Contact,
   Booking,
   Member,
+  Person,
   Article,
   ArticlePicture,
   Tournament,
