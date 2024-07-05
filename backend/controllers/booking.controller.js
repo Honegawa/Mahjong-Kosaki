@@ -27,26 +27,6 @@ export const getById = async (req, res) => {
 
 export const create = async (req, res) => {
   try {
-    const bookingsByTable = await Booking.findAll({
-      where: { table: req.body.table },
-    });
-
-    const bookingsByTableAndEmail = bookingsByTable.filter(
-      (b) => b.dataValues.email === req.body.email
-    ).length;
-    if (bookingsByTableAndEmail > 0) {
-      return res.status(400).json({
-        message:
-          "Booking already ready registered for this table with this email",
-      });
-    }
-
-    if (bookingsByTable.length > 3) {
-      return res
-        .status(400)
-        .json({ message: "Booking for this table is full" });
-    }
-
     const booking = await Booking.create(req.body);
 
     res.status(201).json({ message: "Booking has been created", booking });

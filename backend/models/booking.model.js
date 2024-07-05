@@ -13,21 +13,6 @@ export default (sequelize, DataType) => {
           min: 1,
         },
       },
-      firstname: {
-        type: DataType.STRING,
-        allowNull: false,
-      },
-      lastname: {
-        type: DataType.STRING,
-        allowNull: false,
-      },
-      email: {
-        type: DataType.STRING,
-        allowNull: false,
-        validate: {
-          isEmail: true,
-        },
-      },
       type: {
         type: DataType.STRING,
         allowNull: false,
