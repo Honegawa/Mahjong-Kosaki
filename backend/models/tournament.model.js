@@ -22,6 +22,17 @@ export default (sequelize, DataType) => {
         type: DataType.DECIMAL(10, 2),
         allowNull: false,
       },
+      registerLimitDate: {
+        type: DataType.DATE,
+        allowNull: false,
+      },
+      playerLimit: {
+        type: DataType.TINYINT,
+        allowNull: false,
+        validate: {
+          min: 8,
+        },
+      },
     },
     {
       timestamps: true,
