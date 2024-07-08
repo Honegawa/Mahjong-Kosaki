@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import { env } from "./configs/config.js";
 import ContactRouter from "./routes/contact.js";
 import BookingRouter from "./routes/booking.js";
+import AttendeeRouter from "./routes/attendee.js";
 import MemberRouter from "./routes/member.js";
 import PersonRouter from "./routes/person.js";
 import ArticleRouter from "./routes/article.js";
@@ -32,6 +33,7 @@ app.use(cors(corsOptions));
 // Route Middleware
 app.use("/api/contact", ContactRouter);
 app.use("/api/booking", BookingRouter);
+app.use("/api/attendee", AttendeeRouter);
 app.use("/api/member", MemberRouter);
 app.use("/api/person", PersonRouter);
 app.use("/api/article", ArticleRouter);
