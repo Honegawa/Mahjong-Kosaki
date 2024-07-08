@@ -1,6 +1,7 @@
 import {
   Game,
   Member,
+  Person,
   PlayerRound,
   Round,
   Tournament,
@@ -12,8 +13,12 @@ export const getAll = async (req, res) => {
       include: {
         model: Member,
         as: "members",
-        attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
+        attributes: ["EMANumber"],
         through: { attributes: [] },
+        include: {
+          model: Person,
+          attributes: ["firstname", "lastname", "email"],
+        },
       },
     });
 
@@ -30,8 +35,12 @@ export const getById = async (req, res) => {
       include: {
         model: Member,
         as: "members",
-        attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
+        attributes: ["EMANumber"],
         through: { attributes: [] },
+        include: {
+          model: Person,
+          attributes: ["firstname", "lastname", "email"],
+        },
       },
     });
 
@@ -60,7 +69,15 @@ export const getGamesById = async (req, res) => {
             as: "playerRounds",
             include: {
               model: Member,
-              attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
+              attributes: ["EMANumber"],
+              include: {
+                model: Person,
+                attributes: [
+                  "firstname",
+                  "lastname",
+                  "email",
+                ],
+              },
             },
           },
         },
@@ -75,6 +92,7 @@ export const getGamesById = async (req, res) => {
 
     res.status(200).json(games);
   } catch (error) {
+    console.log(error)
     res.status(500).json({ error: "Error in fetching tournament" });
   }
 };

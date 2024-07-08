@@ -4,6 +4,7 @@ import {
   Round,
   PlayerRound,
   Member,
+  Person,
 } from "../models/index.js";
 
 export const getAll = async (req, res) => {
@@ -13,8 +14,12 @@ export const getAll = async (req, res) => {
         {
           model: Member,
           as: "members",
-          attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
+          attributes: ["EMANumber"],
           through: { attributes: [] },
+          include: {
+            model: Person,
+            attributes: ["firstname", "lastname"],
+          },
         },
         {
           model: Round,
@@ -24,7 +29,11 @@ export const getAll = async (req, res) => {
             as: "playerRounds",
             include: {
               model: Member,
-              attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
+              attributes: ["EMANumber"],
+              include: {
+                model: Person,
+                attributes: ["firstname", "lastname"],
+              },
             },
           },
         },
@@ -33,6 +42,7 @@ export const getAll = async (req, res) => {
 
     res.status(200).json(games);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: "Error in fetching game" });
   }
 };
@@ -46,8 +56,12 @@ export const getById = async (req, res) => {
         {
           model: Member,
           as: "members",
-          attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
+          attributes: ["EMANumber"],
           through: { attributes: [] },
+          include: {
+            model: Person,
+            attributes: ["firstname", "lastname"],
+          },
         },
         {
           model: Round,
@@ -57,7 +71,11 @@ export const getById = async (req, res) => {
             as: "playerRounds",
             include: {
               model: Member,
-              attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
+              attributes: ["EMANumber"],
+              include: {
+                model: Person,
+                attributes: ["firstname", "lastname"],
+              },
             },
           },
         },
@@ -90,8 +108,12 @@ export const getByIdT = async (req, res) => {
         {
           model: Member,
           as: "members",
-          attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
+          attributes: ["EMANumber"],
           through: { attributes: [] },
+          include: {
+            model: Person,
+            attributes: ["firstname", "lastname"],
+          },
         },
         {
           model: Round,
@@ -101,7 +123,11 @@ export const getByIdT = async (req, res) => {
             as: "playerRounds",
             include: {
               model: Member,
-              attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
+              attributes: ["EMANumber"],
+              include: {
+                model: Person,
+                attributes: ["firstname", "lastname"],
+              },
             },
           },
         },
@@ -129,9 +155,12 @@ export const getByIdM = async (req, res) => {
         {
           model: Member,
           as: "members",
-          where: { id: idM },
-          attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
+          attributes: ["EMANumber"],
           through: { attributes: [] },
+          include: {
+            model: Person,
+            attributes: ["firstname", "lastname"],
+          },
         },
         {
           model: Round,
@@ -141,7 +170,11 @@ export const getByIdM = async (req, res) => {
             as: "playerRounds",
             include: {
               model: Member,
-              attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
+              attributes: ["EMANumber"],
+              include: {
+                model: Person,
+                attributes: ["firstname", "lastname"],
+              },
             },
           },
         },

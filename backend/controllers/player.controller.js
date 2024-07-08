@@ -1,4 +1,4 @@
-import { Member, Player, Game } from "../models/index.js";
+import { Member, Player, Game, Person } from "../models/index.js";
 
 export const getAll = async (req, res) => {
   try {
@@ -7,7 +7,11 @@ export const getAll = async (req, res) => {
         Game,
         {
           model: Member,
-          attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
+          attributes: ["EMANumber"],
+          include: {
+            model: Person,
+            attributes: ["firstname", "lastname"]
+          }
         },
       ],
     });
@@ -34,7 +38,11 @@ export const getByIdG = async (req, res) => {
         Game,
         {
           model: Member,
-          attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
+          attributes: ["EMANumber"],
+          include: {
+            model: Person,
+            attributes: ["firstname", "lastname"]
+          }
         },
       ],
     });
@@ -61,7 +69,11 @@ export const getByIdM = async (req, res) => {
         Game,
         {
           model: Member,
-          attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
+          attributes: ["EMANumber"],
+          include: {
+            model: Person,
+            attributes: ["firstname", "lastname"]
+          }
         },
       ],
     });
@@ -94,7 +106,11 @@ export const getByIdMAndIdG = async (req, res) => {
         Game,
         {
           model: Member,
-          attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
+          attributes: ["EMANumber"],
+          include: {
+            model: Person,
+            attributes: ["firstname", "lastname"]
+          }
         },
       ],
     });
