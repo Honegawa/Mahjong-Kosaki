@@ -60,6 +60,10 @@ Article.hasMany(ArticlePicture, {
 });
 ArticlePicture.belongsTo(Article);
 
+// Person => Contact
+Person.hasMany(Contact, {as: "contacts"});
+Contact.belongsTo(Person)
+
 // Person = Member
 Person.hasOne(Member);
 Member.belongsTo(Person);
@@ -73,9 +77,7 @@ Participant.belongsTo(Member);
 Participant.belongsTo(Tournament);
 
 // Tournament => Game
-Tournament.hasMany(Game, {
-  as: "games",
-});
+Tournament.hasMany(Game, { as: "games" });
 Game.belongsTo(Tournament);
 
 // Game => Round
