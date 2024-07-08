@@ -1,6 +1,5 @@
 import {
   Game,
-  Member,
   Person,
   PlayerRound,
   Round,
@@ -11,14 +10,10 @@ export const getAll = async (req, res) => {
   try {
     const tournaments = await Tournament.findAll({
       include: {
-        model: Member,
-        as: "members",
-        attributes: ["EMANumber"],
+        model: Person,
+        as: "people",
+        attributes: ["firstname", "lastname", "email", "EMANumber"],
         through: { attributes: [] },
-        include: {
-          model: Person,
-          attributes: ["firstname", "lastname", "email"],
-        },
       },
     });
 
@@ -33,14 +28,10 @@ export const getById = async (req, res) => {
     const { id } = req.params;
     const tournament = await Tournament.findByPk(id, {
       include: {
-        model: Member,
-        as: "members",
-        attributes: ["EMANumber"],
+        model: Person,
+        as: "people",
+        attributes: ["firstname", "lastname", "email", "EMANumber"],
         through: { attributes: [] },
-        include: {
-          model: Person,
-          attributes: ["firstname", "lastname", "email"],
-        },
       },
     });
 
@@ -68,16 +59,8 @@ export const getGamesById = async (req, res) => {
             model: PlayerRound,
             as: "playerRounds",
             include: {
-              model: Member,
-              attributes: ["EMANumber"],
-              include: {
-                model: Person,
-                attributes: [
-                  "firstname",
-                  "lastname",
-                  "email",
-                ],
-              },
+              model: Person,
+              attributes: ["firstname", "lastname", "email", "EMANumber"],
             },
           },
         },
@@ -92,7 +75,7 @@ export const getGamesById = async (req, res) => {
 
     res.status(200).json(games);
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(500).json({ error: "Error in fetching tournament" });
   }
 };

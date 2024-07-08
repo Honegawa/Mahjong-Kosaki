@@ -4,7 +4,6 @@ import contactModel from "./contact.model.js";
 import bookingModel from "./booking.model.js";
 import attendeeModel from "./attendee.model.js";
 import personModel from "./person.model.js";
-import memberModel from "./member.model.js";
 import articleModel from "./article.model.js";
 import articlePictureModel from "./articlePicture.model.js";
 import tournamentModel from "./tournament.model.js";
@@ -27,7 +26,6 @@ try {
 contactModel(sequelize, Sequelize);
 bookingModel(sequelize, Sequelize);
 attendeeModel(sequelize, Sequelize);
-memberModel(sequelize, Sequelize);
 personModel(sequelize, Sequelize);
 articleModel(sequelize, Sequelize);
 articlePictureModel(sequelize, Sequelize);
@@ -41,7 +39,6 @@ const {
   Contact,
   Booking,
   Attendee,
-  Member,
   Person,
   Article,
   ArticlePicture,
@@ -72,16 +69,12 @@ Booking.hasMany(Attendee);
 Attendee.belongsTo(Person);
 Attendee.belongsTo(Booking);
 
-// Person = Member
-Person.hasOne(Member);
-Member.belongsTo(Person);
-
-// Member => Participant <= Tournament
-Member.belongsToMany(Tournament, { through: Participant, as: "tournaments" });
-Tournament.belongsToMany(Member, { through: Participant, as: "members" });
-Member.hasMany(Participant);
+// Person => Participant <= Tournament
+Person.belongsToMany(Tournament, { through: Participant, as: "tournaments" });
+Tournament.belongsToMany(Person, { through: Participant, as: "people" });
+Person.hasMany(Participant);
 Tournament.hasMany(Participant);
-Participant.belongsTo(Member);
+Participant.belongsTo(Person);
 Participant.belongsTo(Tournament);
 
 // Tournament => Game
@@ -96,12 +89,12 @@ Game.hasMany(Round, {
 });
 Round.belongsTo(Game);
 
-// Member => PlayerRound <= Round
-Member.belongsToMany(Round, { through: PlayerRound, as: "rounds" });
-Round.belongsToMany(Member, { through: PlayerRound, as: "members" });
-Member.hasMany(PlayerRound, { as: "playerRounds" });
+// Person => PlayerRound <= Round
+Person.belongsToMany(Round, { through: PlayerRound, as: "rounds" });
+Round.belongsToMany(Person, { through: PlayerRound, as: "people" });
+Person.hasMany(PlayerRound, { as: "playerRounds" });
 Round.hasMany(PlayerRound, { as: "playerRounds" });
-PlayerRound.belongsTo(Member);
+PlayerRound.belongsTo(Person);
 PlayerRound.belongsTo(Round);
 
 await sequelize.sync({ alter: false, force: false });
@@ -111,7 +104,6 @@ export {
   Contact,
   Booking,
   Attendee,
-  Member,
   Person,
   Article,
   ArticlePicture,

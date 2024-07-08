@@ -1,14 +1,14 @@
-import memberModel from "./member.model.js";
+import personModel from "./person.model.js";
 import roundModel from "./round.model.js";
 
 export default (sequelize, DataType) => {
   sequelize.define(
     "PlayerRound",
     {
-      MemberId: {
+      PersonId: {
         type: DataType.INTEGER,
         references: {
-          model: memberModel,
+          model: personModel,
           key: "id",
         },
       },

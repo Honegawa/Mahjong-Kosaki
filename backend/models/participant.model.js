@@ -1,14 +1,14 @@
-import memberModel from "./member.model.js";
+import personModel from "./person.model.js";
 import tournamentModel from "./tournament.model.js";
 
 export default (sequelize, DataType) => {
   sequelize.define(
     "Participant",
     {
-      MemberId: {
+      PersonId: {
         type: DataType.INTEGER,
         references: {
-          model: memberModel,
+          model: personModel,
           key: "id",
         },
       },
