@@ -1,4 +1,4 @@
-import { Member, Participant, Person, Tournament } from "../models/index.js";
+import { Participant, Person, Tournament } from "../models/index.js";
 
 export const getAll = async (req, res) => {
   try {
@@ -9,12 +9,8 @@ export const getAll = async (req, res) => {
           attributes: ["name", "startDate", "endDate"],
         },
         {
-          model: Member,
-          attributes: ["id"],
-          include: {
-            model: Person,
-            attributes: ["firstname", "lastname", "email"],
-          },
+          model: Person,
+          attributes: ["firstname", "lastname", "email"],
         },
       ],
     });
@@ -26,9 +22,9 @@ export const getAll = async (req, res) => {
   }
 };
 
-export const getByIdTAndIdM = async (req, res) => {
+export const getByIdTAndIdP = async (req, res) => {
   try {
-    const { idT, idM } = req.params;
+    const { idT, idP } = req.params;
 
     const tournament = await Tournament.findByPk(idT);
 
@@ -36,26 +32,22 @@ export const getByIdTAndIdM = async (req, res) => {
       return res.status(404).json({ message: "Tournament not found" });
     }
 
-    const member = await Member.findByPk(idM);
+    const person = await Person.findByPk(idP);
 
-    if (!member) {
-      return res.status(404).json({ message: "Member not found" });
+    if (!person) {
+      return res.status(404).json({ message: "Person not founds" });
     }
 
     const participant = await Participant.findOne({
-      where: { TournamentId: idT, MemberId: idM },
+      where: { TournamentId: idT, PersonId: idP },
       include: [
         {
           model: Tournament,
           attributes: ["name", "startDate", "endDate"],
         },
         {
-          model: Member,
-          attributes: ["id"],
-          include: {
-            model: Person,
-            attributes: ["firstname", "lastname", "email"],
-          },
+          model: Person,
+          attributes: ["firstname", "lastname", "email"],
         },
       ],
     });
@@ -88,12 +80,8 @@ export const getByTournamentId = async (req, res) => {
           attributes: ["name", "startDate", "endDate"],
         },
         {
-          model: Member,
-          attributes: ["id"],
-          include: {
-            model: Person,
-            attributes: ["firstname", "lastname", "email"],
-          },
+          model: Person,
+          attributes: ["firstname", "lastname", "email"],
         },
       ],
     });
@@ -106,7 +94,7 @@ export const getByTournamentId = async (req, res) => {
 
 export const create = async (req, res) => {
   try {
-    const { TournamentId, MemberId } = req.body;
+    const { TournamentId, PersonId } = req.body;
 
     const tournament = await Tournament.findByPk(TournamentId);
 
@@ -114,13 +102,13 @@ export const create = async (req, res) => {
       return res.status(404).json({ message: "Tournament not found" });
     }
 
-    const member = await Member.findByPk(MemberId);
+    const person = await Person.findByPk(PersonId);
 
-    if (!member) {
-      return res.status(404).json({ message: "Member not found" });
+    if (!person) {
+      return res.status(404).json({ message: "Person not found" });
     }
 
-    if (member.id === req.user.id || req.user.role === "admin") {
+    if (person.id === req.user.id || req.user.role === "admin") {
       const participant = await Participant.create(req.body);
       return res
         .status(201)
@@ -135,9 +123,9 @@ export const create = async (req, res) => {
   }
 };
 
-export const deleteByIdTAndIdM = async (req, res) => {
+export const deleteByIdTAndIdP = async (req, res) => {
   try {
-    const { idT, idM } = req.params;
+    const { idT, idP } = req.params;
 
     const tournament = await Tournament.findByPk(idT);
 
@@ -145,21 +133,21 @@ export const deleteByIdTAndIdM = async (req, res) => {
       return res.status(404).json({ message: "Tournament not found" });
     }
 
-    const member = await Member.findByPk(idM);
+    const person = await Person.findByPk(idP);
 
-    if (!member) {
-      return res.status(404).json({ message: "Member not found" });
+    if (!person) {
+      return res.status(404).json({ message: "Person not found" });
     }
 
     const participant = await Participant.findOne({
-      where: { TournamentId: idT, MemberId: idM },
+      where: { TournamentId: idT, PersonId: idP },
     });
 
     if (!participant) {
       return res.status(404).json({ message: "Participant not found" });
     }
 
-    if (member.id === req.user.id || req.user.role === "admin") {
+    if (person.id === req.user.id || req.user.role === "admin") {
       await participant.destroy();
       return res.status(200).json({ message: "Participant has been deleted" });
     }

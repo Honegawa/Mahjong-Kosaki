@@ -1,4 +1,4 @@
-import { Member, PlayerRound, Round } from "../models/index.js";
+import { Person, PlayerRound, Round } from "../models/index.js";
 
 export const getAll = async (req, res) => {
   try {
@@ -28,9 +28,9 @@ export const getByIdR = async (req, res) => {
   }
 };
 
-export const getByIdRAndIdM = async (req, res) => {
+export const getByIdRAndIdP = async (req, res) => {
   try {
-    const { idR, idM } = req.params;
+    const { idR, idP } = req.params;
 
     const round = await Round.findByPk(idR);
 
@@ -38,14 +38,14 @@ export const getByIdRAndIdM = async (req, res) => {
       return res.status(404).json({ message: "Round not found" });
     }
 
-    const member = await Member.findByPk(idM);
+    const person = await Person.findByPk(idP);
 
-    if (!member) {
-      return res.status(404).json({ message: "Member not found" });
+    if (!person) {
+      return res.status(404).json({ message: "Person not found" });
     }
 
     const playerRound = await PlayerRound.findOne({
-      where: { RoundId: idR, MemberId: idM },
+      where: { RoundId: idR, PersonId: idP },
     });
 
     res.status(200).json(playerRound);
@@ -65,7 +65,7 @@ export const create = async (req, res) => {
       yaku,
       handValue,
       RoundId,
-      MemberId,
+      PersonId,
     } = req.body;
 
     const round = await Round.findByPk(RoundId);
@@ -74,10 +74,10 @@ export const create = async (req, res) => {
       return res.status(404).json({ message: "Round not found" });
     }
 
-    const member = await Member.findByPk(MemberId);
+    const person = await Person.findByPk(PersonId);
 
-    if (!member) {
-      return res.status(404).json({ message: "Member not found" });
+    if (!person) {
+      return res.status(404).json({ message: "Person not found" });
     }
 
     const playerRound = await PlayerRound.create({
@@ -89,7 +89,7 @@ export const create = async (req, res) => {
       yaku,
       handValue,
       RoundId,
-      MemberId,
+      PersonId,
     });
 
     res
@@ -100,9 +100,9 @@ export const create = async (req, res) => {
   }
 };
 
-export const updateByIdRAndIdM = async (req, res) => {
+export const updateByIdRAndIdP = async (req, res) => {
   try {
-    const { idR, idM } = req.params;
+    const { idR, idP } = req.params;
     const { seatWind, roundScore, tenpai, han, fu, yaku, handValue } = req.body;
 
     const round = await Round.findByPk(idR);
@@ -111,14 +111,14 @@ export const updateByIdRAndIdM = async (req, res) => {
       return res.status(404).json({ message: "Round not found" });
     }
 
-    const member = await Member.findByPk(idM);
+    const person = await Person.findByPk(idP);
 
-    if (!member) {
-      return res.status(404).json({ message: "Member not found" });
+    if (!person) {
+      return res.status(404).json({ message: "Person not found" });
     }
 
     const playerRound = await PlayerRound.findOne({
-      where: { RoundId: idR, MemberId: idM },
+      where: { RoundId: idR, PersonId: idP },
     });
 
     if (!playerRound) {
@@ -143,9 +143,9 @@ export const updateByIdRAndIdM = async (req, res) => {
   }
 };
 
-export const deleteByIdRAndIdM = async (req, res) => {
+export const deleteByIdRAndIdP = async (req, res) => {
   try {
-    const { idR, idM } = req.params;
+    const { idR, idP } = req.params;
 
     const round = await Round.findByPk(idR);
 
@@ -153,14 +153,14 @@ export const deleteByIdRAndIdM = async (req, res) => {
       return res.status(404).json({ message: "Round not found" });
     }
 
-    const member = await Member.findByPk(idM);
+    const person = await Person.findByPk(idP);
 
-    if (!member) {
-      return res.status(404).json({ message: "Member not found" });
+    if (!person) {
+      return res.status(404).json({ message: "Person not found" });
     }
 
     const playerRound = await PlayerRound.findOne({
-      where: { RoundId: idR, MemberId: idM },
+      where: { RoundId: idR, PersonId: idP },
     });
 
     if (!playerRound) {

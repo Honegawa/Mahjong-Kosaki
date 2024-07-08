@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import { env } from "../configs/config.js";
 import { createError } from "../error.js";
-import { Member } from "../models/index.js";
+import { Person } from "../models/index.js";
 
 export const verifyToken = (req, res, next) => {
   const token = req.cookies.access_token;
@@ -33,7 +33,7 @@ export const verifyAdmin = async (req, res, next) => {
   });
 
   try {
-    const admin = await Member.findByPk(req.user.id);
+    const admin = await Person.findByPk(req.user.id);
 
     if (admin.role !== "admin") {
       return next(

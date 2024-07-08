@@ -3,41 +3,24 @@ import {
   Game,
   Round,
   PlayerRound,
-  Member,
   Person,
 } from "../models/index.js";
 
 export const getAll = async (req, res) => {
   try {
     const games = await Game.findAll({
-      include: [
-        {
-          model: Member,
-          as: "members",
-          attributes: ["EMANumber"],
-          through: { attributes: [] },
+      include: {
+        model: Round,
+        as: "rounds",
+        include: {
+          model: PlayerRound,
+          as: "playerRounds",
           include: {
             model: Person,
-            attributes: ["firstname", "lastname"],
+            attributes: ["firstname", "lastname", "EMANumber"],
           },
         },
-        {
-          model: Round,
-          as: "rounds",
-          include: {
-            model: PlayerRound,
-            as: "playerRounds",
-            include: {
-              model: Member,
-              attributes: ["EMANumber"],
-              include: {
-                model: Person,
-                attributes: ["firstname", "lastname"],
-              },
-            },
-          },
-        },
-      ],
+      },
     });
 
     res.status(200).json(games);
@@ -52,34 +35,18 @@ export const getById = async (req, res) => {
     const { id } = req.params;
 
     const game = await Game.findByPk(id, {
-      include: [
-        {
-          model: Member,
-          as: "members",
-          attributes: ["EMANumber"],
-          through: { attributes: [] },
+      include: {
+        model: Round,
+        as: "rounds",
+        include: {
+          model: PlayerRound,
+          as: "playerRounds",
           include: {
             model: Person,
-            attributes: ["firstname", "lastname"],
+            attributes: ["firstname", "lastname", "EMANumber"],
           },
         },
-        {
-          model: Round,
-          as: "rounds",
-          include: {
-            model: PlayerRound,
-            as: "playerRounds",
-            include: {
-              model: Member,
-              attributes: ["EMANumber"],
-              include: {
-                model: Person,
-                attributes: ["firstname", "lastname"],
-              },
-            },
-          },
-        },
-      ],
+      },
     });
 
     if (!game) {
@@ -104,34 +71,18 @@ export const getByIdT = async (req, res) => {
 
     const game = await Game.findAll({
       where: { TournamentId: idT },
-      include: [
-        {
-          model: Member,
-          as: "members",
-          attributes: ["EMANumber"],
-          through: { attributes: [] },
+      include: {
+        model: Round,
+        as: "rounds",
+        include: {
+          model: PlayerRound,
+          as: "playerRounds",
           include: {
             model: Person,
-            attributes: ["firstname", "lastname"],
+            attributes: ["firstname", "lastname", "EMANumber"],
           },
         },
-        {
-          model: Round,
-          as: "rounds",
-          include: {
-            model: PlayerRound,
-            as: "playerRounds",
-            include: {
-              model: Member,
-              attributes: ["EMANumber"],
-              include: {
-                model: Person,
-                attributes: ["firstname", "lastname"],
-              },
-            },
-          },
-        },
-      ],
+      },
     });
 
     res.status(200).json(game);
@@ -140,45 +91,30 @@ export const getByIdT = async (req, res) => {
   }
 };
 
-export const getByIdM = async (req, res) => {
+// check toutes les games d'un persone
+export const getByIdP = async (req, res) => {
   try {
-    const { idM } = req.params;
+    const { idP } = req.params;
 
-    const member = await Member.findByPk(idM);
+    const person = await Person.findByPk(idP);
 
-    if (!member) {
-      return res.status(404).json({ message: "Member not found" });
+    if (!person) {
+      return res.status(404).json({ message: "Person not found" });
     }
 
     const game = await Game.findAll({
-      include: [
-        {
-          model: Member,
-          as: "members",
-          attributes: ["EMANumber"],
-          through: { attributes: [] },
+      include: {
+        model: Round,
+        as: "rounds",
+        include: {
+          model: PlayerRound,
+          as: "playerRounds",
           include: {
             model: Person,
-            attributes: ["firstname", "lastname"],
+            attributes: ["firstname", "lastname", "EMANumber"],
           },
         },
-        {
-          model: Round,
-          as: "rounds",
-          include: {
-            model: PlayerRound,
-            as: "playerRounds",
-            include: {
-              model: Member,
-              attributes: ["EMANumber"],
-              include: {
-                model: Person,
-                attributes: ["firstname", "lastname"],
-              },
-            },
-          },
-        },
-      ],
+      },
     });
 
     res.status(200).json(game);
