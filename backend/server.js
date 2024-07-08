@@ -13,7 +13,6 @@ import TournamentRouter from "./routes/tournament.js";
 import ParticipantRouter from "./routes/participant.js";
 import GameRouter from "./routes/game.js";
 import RoundRouter from "./routes/round.js";
-import PlayerRouter from "./routes/player.js";
 import PlayerRoundRouter from "./routes/playerRound.js";
 import "./models/index.js";
 
@@ -42,7 +41,6 @@ app.use("/api/tournament", TournamentRouter);
 app.use("/api/participant", ParticipantRouter);
 app.use("/api/game", GameRouter);
 app.use("/api/round", RoundRouter);
-app.use("/api/player", PlayerRouter);
 app.use("/api/playerRound", PlayerRoundRouter);
 
 app.listen(PORT, () => {
