@@ -2,6 +2,7 @@ import { env } from "../configs/config.js";
 import { Sequelize } from "sequelize";
 import contactModel from "./contact.model.js";
 import bookingModel from "./booking.model.js";
+import attendeeModel from "./attendee.model.js";
 import personModel from "./person.model.js";
 import memberModel from "./member.model.js";
 import articleModel from "./article.model.js";
@@ -26,6 +27,7 @@ try {
 
 contactModel(sequelize, Sequelize);
 bookingModel(sequelize, Sequelize);
+attendeeModel(sequelize, Sequelize);
 memberModel(sequelize, Sequelize);
 personModel(sequelize, Sequelize);
 articleModel(sequelize, Sequelize);
@@ -40,6 +42,7 @@ playerRoundModel(sequelize, Sequelize);
 const {
   Contact,
   Booking,
+  Attendee,
   Member,
   Person,
   Article,
@@ -61,8 +64,16 @@ Article.hasMany(ArticlePicture, {
 ArticlePicture.belongsTo(Article);
 
 // Person => Contact
-Person.hasMany(Contact, {as: "contacts"});
-Contact.belongsTo(Person)
+Person.hasMany(Contact, { as: "contacts" });
+Contact.belongsTo(Person);
+
+// Person => Attendee <= Booking
+Person.belongsToMany(Booking, { through: Attendee, as: "attendees" });
+Booking.belongsToMany(Person, { through: Attendee, as: "attendees" });
+Person.hasMany(Attendee);
+Booking.hasMany(Attendee);
+Attendee.belongsTo(Person);
+Attendee.belongsTo(Booking);
 
 // Person = Member
 Person.hasOne(Member);
@@ -110,6 +121,7 @@ console.log("Sync ok");
 export {
   Contact,
   Booking,
+  Attendee,
   Member,
   Person,
   Article,
