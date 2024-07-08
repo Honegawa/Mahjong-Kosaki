@@ -38,7 +38,7 @@ export const create = async (req, res) => {
 export const updateById = async (req, res) => {
   try {
     const { id } = req.params;
-    const { date, table, type, format, calendarLink } = req.body;
+    const { date, type, format } = req.body;
 
     const booking = await Booking.findByPk(id);
 
@@ -46,7 +46,7 @@ export const updateById = async (req, res) => {
       return res.status(404).json({ message: "Booking not found" });
     }
 
-    await booking.update({ date, table, type, format, calendarLink });
+    await booking.update({ date, type, format });
 
     res.status(200).json({ message: "Booking has been updated", booking });
   } catch (error) {
