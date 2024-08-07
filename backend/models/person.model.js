@@ -20,14 +20,14 @@ export default (sequelize, DataType) => {
       },
       phone: {
         type: DataType.STRING,
-        allowNull: false,
+        allowNull: true,
         validate: {
           is: /^0\d{9}$/,
         },
       },
       password: {
         type: DataType.STRING,
-        allowNull: true,
+        allowNull: false,
       },
       subscription: {
         type: DataType.DATE,
