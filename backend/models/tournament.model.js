@@ -10,9 +10,22 @@ export default (sequelize, DataType) => {
         type: DataType.TEXT,
         allowNull: false,
       },
+      setup: {
+        type: DataType.TEXT,
+        allowNull: false,
+      },
       startDate: {
         type: DataType.DATE,
         allowNull: false,
+        validate: {
+          isBeforeEndDate(value) {
+            if (
+              new Date(value).getTime() >= new Date(this.endDate).getTime()
+            ) {
+              throw new Error("startDate must be before endDate.");
+            }
+          },
+        },
       },
       endDate: {
         type: DataType.DATE,
@@ -25,6 +38,15 @@ export default (sequelize, DataType) => {
       registerLimitDate: {
         type: DataType.DATE,
         allowNull: false,
+        validate: {
+          isBeforeStartDate(value) {
+            if (
+              new Date(value).getTime() >= new Date(this.startDate).getTime()
+            ) {
+              throw new Error("registerLimitDate must be before startDate.");
+            }
+          },
+        },
       },
       playerLimit: {
         type: DataType.TINYINT,
@@ -32,6 +54,10 @@ export default (sequelize, DataType) => {
         validate: {
           min: 8,
         },
+      },
+      location: {
+        type: DataType.STRING,
+        allowNull: false,
       },
     },
     {

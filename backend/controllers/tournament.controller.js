@@ -75,14 +75,35 @@ export const getGamesById = async (req, res) => {
 
     res.status(200).json(games);
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: "Error in fetching tournament" });
   }
 };
 
 export const create = async (req, res) => {
   try {
-    const tournament = await Tournament.create(req.body);
+    const {
+      name,
+      description,
+      setup,
+      startDate,
+      endDate,
+      entryFee,
+      registerLimitDate,
+      playerLimit,
+      location,
+    } = req.body;
+
+    const tournament = await Tournament.create({
+      name,
+      description,
+      setup,
+      startDate,
+      endDate,
+      entryFee,
+      registerLimitDate,
+      playerLimit,
+      location,
+    });
 
     res
       .status(201)
@@ -98,11 +119,13 @@ export const updateById = async (req, res) => {
     const {
       name,
       description,
+      setup,
       startDate,
       endDate,
       entryFee,
       registerLimitDate,
       playerLimit,
+      location,
     } = req.body;
 
     const tournament = await Tournament.findByPk(id);
@@ -114,11 +137,13 @@ export const updateById = async (req, res) => {
     await tournament.update({
       name,
       description,
+      setup,
       startDate,
       endDate,
       entryFee,
       registerLimitDate,
       playerLimit,
+      location,
     });
 
     res
