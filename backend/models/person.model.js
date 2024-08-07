@@ -37,11 +37,11 @@ export default (sequelize, DataType) => {
         type: DataType.STRING,
         allowNull: true,
         validate: {
-          is: /^\d{8}$/
-        }
+          is: /^\d{8}$/,
+        },
       },
       role: {
-        type: DataType.STRING,
+        type: DataType.ENUM(["user", "admin"]),
         allowNull: false,
         defaultValue: "user",
       },
