@@ -90,7 +90,7 @@ Round.hasMany(PlayerRound, { as: "playerRounds" });
 PlayerRound.belongsTo(Person);
 PlayerRound.belongsTo(Round);
 
-await sequelize.sync({ alter: false, force: false });
+await sequelize.sync({ alter: true, force: false });
 console.log("Sync ok");
 
 export {

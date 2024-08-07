@@ -46,7 +46,7 @@ export const getById = async (req, res) => {
 
 export const create = async (req, res) => {
   try {
-    const { wind, roundNb, homba, draw, GameId } = req.body;
+    const { wind, roundNb, honba, stick, draw, GameId } = req.body;
 
     const game = await Game.findByPk(GameId);
 
@@ -57,8 +57,9 @@ export const create = async (req, res) => {
     const round = await Round.create({
       wind,
       roundNb,
-      homba,
+      honba,
       draw,
+      stick,
       GameId,
     });
 
@@ -70,7 +71,7 @@ export const create = async (req, res) => {
 
 export const updateById = async (req, res) => {
   try {
-    const { wind, roundNb, homba, draw } = req.body;
+    const { wind, roundNb, honba, stick, draw } = req.body;
     const { id } = req.params;
 
     const round = await Round.findByPk(id);
@@ -79,7 +80,7 @@ export const updateById = async (req, res) => {
       return res.status(404).json({ message: "Round not found" });
     }
 
-    await round.update({ wind, roundNb, homba, draw });
+    await round.update({ wind, roundNb, honba, stick, draw });
 
     res.status(200).json({ message: "Round has been updated", round });
   } catch (error) {

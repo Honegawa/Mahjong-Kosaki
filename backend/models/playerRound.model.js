@@ -20,11 +20,8 @@ export default (sequelize, DataType) => {
         },
       },
       seatWind: {
-        type: DataType.STRING,
+        type: DataType.ENUM(["Est", "Sud", "Ouest", "Nord"]),
         allowNull: false,
-        validate: {
-          isIn: [["east", "south", "west", "north"]],
-        },
       },
       roundScore: {
         type: DataType.INTEGER,

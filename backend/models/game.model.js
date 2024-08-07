@@ -3,11 +3,8 @@ export default (sequelize, DataType) => {
     "Game",
     {
       type: {
-        type: DataType.STRING,
+        type: DataType.ENUM(["Casual", "Classée", "Entrainement", "Tournoi"]),
         allowNull: false,
-        validate: {
-          isIn: [["casual", "ranked", "tournament", "training"]],
-        },
       },
       format: {
         type: DataType.TINYINT,
@@ -18,11 +15,8 @@ export default (sequelize, DataType) => {
         },
       },
       length: {
-        type: DataType.STRING,
+        type: DataType.ENUM(["Tonpuusen", "Hanchan", "1-Round", "Chinitsu Challenge"]),
         allowNull: false,
-        validate: {
-          isIn: [["Tonpuusen", "Hanchan", "1-Round", "Chinitsu Challenge"]],
-        },
       },
       date: {
         type: DataType.DATE,
