@@ -1,17 +1,18 @@
 import jwt from "jsonwebtoken";
 import { env } from "../configs/config.js";
-import { createError } from "../error.js";
 import { Person } from "../models/index.js";
 
 export const verifyToken = (req, res, next) => {
   const token = req.cookies.access_token;
   if (!token) {
-    return next(createError(401, "Acces Denied"));
+    return next(res.status(401).json({ error: "Acces Denied" }));
   }
 
   jwt.verify(token, env.TOKEN, (err, user) => {
     if (err) {
-      return next(createError(403, { message: "Token not valid", error: err }));
+      return next(
+        res.status(403).json({ error: "Token not valid", info: err })
+      );
     }
     req.user = user;
 
@@ -22,12 +23,14 @@ export const verifyToken = (req, res, next) => {
 export const verifyAdmin = async (req, res, next) => {
   const token = req.cookies.access_token;
   if (!token) {
-    return next(createError(401, "Acces Denied"));
+    return next(res.status(401).json({ error: "Acces Denied" }));
   }
 
   jwt.verify(token, env.TOKEN, (err, user) => {
     if (err) {
-      return next(createError(403, { message: "Token not valid", error: err }));
+      return next(
+        res.status(403).json({ error: "Token not valid", info: err })
+      );
     }
     req.user = user;
   });
@@ -37,27 +40,14 @@ export const verifyAdmin = async (req, res, next) => {
 
     if (admin.role !== "admin") {
       return next(
-        createError(403, { message: "User doesn't have enough privilege" })
+        res.status(403).json({ error: "User doesn't have enough privilege" })
       );
     }
 
     next();
   } catch (error) {
     return next(
-      createError(500, { message: "Can't retrieve user", error: error })
+      res.status(500).json({ error: "Can't retrieve user", info: error })
     );
   }
-};
-
-export const optionalVerify = async (req, res, next) => {
-  const token = req.cookies.access_token;
-
-  jwt.verify(token, env.TOKEN, (err, user) => {
-    if (err) {
-      return next(createError(403, { message: "Token not valid", error: err }));
-    }
-    req.user = user;
-
-  });
-  next()
 };

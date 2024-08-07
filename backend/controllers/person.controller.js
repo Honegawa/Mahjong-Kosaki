@@ -116,7 +116,12 @@ export const updateById = async (req, res) => {
       subscription,
       EMANumber,
     } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
+
+    let hashedPassword;
+
+    if (password) {
+      hashedPassword = await bcrypt.hash(password, 10);
+    }
 
     const person = await Person.findByPk(id);
 
@@ -124,34 +129,36 @@ export const updateById = async (req, res) => {
       return res.status(404).json({ message: "Person not found" });
     }
 
-    const emailPerson = await Person.findOne({ where: { email: email } });
-    if (emailPerson) {
-      return res.status(400).json({ message: "Email is already used" });
-    }
-
-    if (person.id !== req.user.id) {
-      return res.status(403).json({ message: "Token not valid" });
-    }
-
-    const updatedPerson = await person.update(
-      {
-        firstname,
-        lastname,
-        email,
-        phone,
-        password: hashedPassword,
-        subscription,
-        EMANumber,
-      },
-      {
-        new: true,
+    if (email) {
+      const emailPerson = await Person.findOne({ where: { email: email } });
+      if (emailPerson) {
+        return res.status(400).json({ message: "Email is already used" });
       }
-    );
+    }
 
-    res.status(200).json({
-      message: "Person has been updated",
-      updatedPerson,
-    });
+    if (person.id === req.user.id || req.user.role === "admin") {
+      const updatedPerson = await person.update(
+        {
+          firstname,
+          lastname,
+          email,
+          phone,
+          password: hashedPassword,
+          subscription,
+          EMANumber,
+        },
+        {
+          new: true,
+        }
+      );
+
+      return res.status(200).json({
+        message: "Person has been updated",
+        updatedPerson,
+      });
+    }
+
+    res.status(403).json({ message: "Unauthorized to update person" });
   } catch (error) {
     res.status(500).json({ error: "Error in updating person" });
   }
