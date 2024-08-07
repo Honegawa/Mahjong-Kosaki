@@ -7,7 +7,7 @@ export default (sequelize, DataType) => {
         allowNull: false,
       },
       type: {
-        type: DataType.STRING,
+        type: DataType.ENUM(["Casual", "Classée", "Entrainement"]),
         allowNull: false,
       },
       format: {
