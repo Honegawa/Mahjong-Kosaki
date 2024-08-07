@@ -64,7 +64,7 @@ export const updateById = async (req, res) => {
 
     res
       .status(401)
-      .json({ message: "Unable to delete booking with your privilege" });
+      .json({ message: "Unable to update booking with your privilege" });
   } catch (error) {
     res.status(500).json({ error: "Error in updating booking" });
   }
