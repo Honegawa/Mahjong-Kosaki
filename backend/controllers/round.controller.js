@@ -46,7 +46,8 @@ export const getById = async (req, res) => {
 
 export const create = async (req, res) => {
   try {
-    const { wind, roundNb, honba, stick, draw, GameId } = req.body;
+    const { wind, roundNb, honba, stick, draw, playerRounds, GameId } =
+      req.body;
 
     const game = await Game.findByPk(GameId);
 
@@ -54,18 +55,44 @@ export const create = async (req, res) => {
       return res.status(404).json({ message: "Game not found" });
     }
 
-    const round = await Round.create({
-      wind,
-      roundNb,
-      honba,
-      draw,
-      stick,
-      GameId,
-    });
+    if (typeof playerRounds !== "object") {
+      return res.status(404).json({ message: "PlayerRounds is not valid" });
+    }
+
+    if (playerRounds.length != game.format) {
+      return res
+        .status(404)
+        .json({
+          message: "PlayerRounds length doesn't match with game format",
+        });
+    }
+
+    const round = await Round.create(
+      {
+        wind,
+        roundNb,
+        honba,
+        draw,
+        stick,
+        playerRounds,
+        GameId,
+      },
+      {
+        include: {
+          model: PlayerRound,
+          as: "playerRounds",
+          include: {
+            model: Person,
+            attributes: ["firstname", "lastname", "EMANumber"],
+          },
+        },
+      }
+    );
 
     res.status(201).json({ message: "Round has been created", round });
   } catch (error) {
     res.status(500).json({ error: "Error in creating round" });
+    console.log(error)
   }
 };
 
@@ -74,7 +101,16 @@ export const updateById = async (req, res) => {
     const { wind, roundNb, honba, stick, draw } = req.body;
     const { id } = req.params;
 
-    const round = await Round.findByPk(id);
+    const round = await Round.findByPk(id, {
+      include: {
+        model: PlayerRound,
+        as: "playerRounds",
+        include: {
+          model: Person,
+          attributes: ["firstname", "lastname", "EMANumber"],
+        },
+      },
+    });
 
     if (!round) {
       return res.status(404).json({ message: "Round not found" });

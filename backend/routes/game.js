@@ -3,7 +3,6 @@ import {
   getAll,
   getById,
   getByIdT,
-  getByIdP,
   create,
   updateById,
   deleteById,
@@ -14,7 +13,6 @@ const router = express.Router();
 
 router.get("/", getAll);
 router.get("/:id", getById);
-router.get("/person/:idP", getByIdP)
 router.get("/tournament/:idT", getByIdT)
 router.post("/", verifyAdmin, create);
 router.put("/:id", verifyAdmin, updateById)

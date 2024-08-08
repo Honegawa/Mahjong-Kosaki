@@ -9,7 +9,6 @@ import {
 export const getAll = async (req, res) => {
   try {
     const { type, format, length, person } = req.query;
-    console.log(type, format, length, person);
 
     const gameFilter = {};
     if (type) {
@@ -128,41 +127,9 @@ export const getByIdT = async (req, res) => {
   }
 };
 
-// check toutes les games d'une personne
-export const getByIdP = async (req, res) => {
-  try {
-    const { idP } = req.params;
-
-    const person = await Person.findByPk(idP);
-
-    if (!person) {
-      return res.status(404).json({ message: "Person not found" });
-    }
-
-    const game = await Game.findAll({
-      include: {
-        model: Round,
-        as: "rounds",
-        include: {
-          model: PlayerRound,
-          as: "playerRounds",
-          include: {
-            model: Person,
-            attributes: ["firstname", "lastname", "EMANumber"],
-          },
-        },
-      },
-    });
-
-    res.status(200).json(game);
-  } catch (error) {
-    res.status(500).json({ error: "Error in fetching game" });
-  }
-};
-
 export const create = async (req, res) => {
   try {
-    const { date, type, format, length, TournamentId } = req.body;
+    const { date, type, format, length, TournamentId, rounds } = req.body;
 
     if (TournamentId) {
       const tournament = await Tournament.findByPk(TournamentId);
@@ -172,13 +139,43 @@ export const create = async (req, res) => {
       }
     }
 
-    const game = await Game.create({
-      date,
-      type,
-      format,
-      length,
-      TournamentId,
-    });
+    if (typeof rounds !== "object") {
+      return res.status(404).json({ message: "Round is not valid" });
+    }
+    if (rounds.find((round) => round.playerRounds.length !== Number(format))) {
+      return res.status(404).json({
+        message: "PlayerRounds length doesn't match with game format",
+      });
+    }
+
+    const game = await Game.create(
+      {
+        date,
+        type,
+        format,
+        length,
+        TournamentId,
+        rounds,
+      },
+      {
+        include: [
+          {
+            model: Round,
+            as: "rounds",
+            include: [
+              {
+                model: PlayerRound,
+                as: "playerRounds",
+                include: {
+                  model: Person,
+                  attributes: ["firstname", "lastname", "EMANumber"],
+                },
+              },
+            ],
+          },
+        ],
+      }
+    );
 
     res.status(201).json({ message: "Game has been created", game });
   } catch (error) {
@@ -188,7 +185,7 @@ export const create = async (req, res) => {
 
 export const updateById = async (req, res) => {
   try {
-    const { date, type, format, length, TournamentId } = req.body;
+    const { date, type, length, TournamentId } = req.body;
     const { id } = req.params;
 
     if (TournamentId) {
@@ -199,13 +196,30 @@ export const updateById = async (req, res) => {
       }
     }
 
-    const game = await Game.findByPk(id);
+    const game = await Game.findByPk(id, {
+      include: [
+        {
+          model: Round,
+          as: "rounds",
+          include: [
+            {
+              model: PlayerRound,
+              as: "playerRounds",
+              include: {
+                model: Person,
+                attributes: ["firstname", "lastname", "EMANumber"],
+              },
+            },
+          ],
+        },
+      ],
+    });
 
     if (!game) {
       return res.status(404).json({ message: "Game not found" });
     }
 
-    await game.update({ date, type, format, length, TournamentId });
+    await game.update({ date, type, length, TournamentId });
 
     res.status(200).json({ message: "Game has been updated", game });
   } catch (error) {
