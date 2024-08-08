@@ -1,3 +1,4 @@
+import { FU, SEAT_WINDS } from "../utils/constants/game.constants.js";
 import personModel from "./person.model.js";
 import roundModel from "./round.model.js";
 
@@ -20,7 +21,7 @@ export default (sequelize, DataType) => {
         },
       },
       seatWind: {
-        type: DataType.ENUM(["Est", "Sud", "Ouest", "Nord"]),
+        type: DataType.ENUM(SEAT_WINDS),
         allowNull: false,
       },
       roundScore: {
@@ -42,7 +43,7 @@ export default (sequelize, DataType) => {
         type: DataType.TINYINT,
         allowNull: true,
         validate: {
-          isIn: [[20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 110]],
+          isIn: [FU],
         },
       },
       yaku: {

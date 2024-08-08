@@ -1,9 +1,11 @@
+import { LENGTHS, TYPES } from "../utils/constants/game.constants.js";
+
 export default (sequelize, DataType) => {
   sequelize.define(
     "Game",
     {
       type: {
-        type: DataType.ENUM(["Casual", "Classée", "Entrainement", "Tournoi"]),
+        type: DataType.ENUM(TYPES),
         allowNull: false,
       },
       format: {
@@ -15,7 +17,7 @@ export default (sequelize, DataType) => {
         },
       },
       length: {
-        type: DataType.ENUM(["Tonpuusen", "Hanchan", "1-Round", "Chinitsu Challenge"]),
+        type: DataType.ENUM(LENGTHS),
         allowNull: false,
       },
       date: {

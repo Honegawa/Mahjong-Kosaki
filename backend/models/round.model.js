@@ -1,9 +1,11 @@
+import { DRAWS, ROUND_WINDS } from "../utils/constants/game.constants.js";
+
 export default (sequelize, DataType) => {
   sequelize.define(
     "Round",
     {
       wind: {
-        type: DataType.ENUM(["Est", "Sud", "Ouest"]),
+        type: DataType.ENUM(ROUND_WINDS),
         allowNull: false,
       },
       roundNb: {
@@ -29,14 +31,7 @@ export default (sequelize, DataType) => {
         },
       },
       draw: {
-        type: DataType.ENUM([
-          "Suufon renda",
-          "Kyuushu kyuuhai",
-          "Suucha riichi",
-          "Suukaikan",
-          "Sanchahou",
-          "Ryuukyoku",
-        ]),
+        type: DataType.ENUM(DRAWS),
         allowNull: true,
       },
     },
