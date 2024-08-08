@@ -8,7 +8,28 @@ import {
 
 export const getAll = async (req, res) => {
   try {
-    const games = await Game.findAll({
+    const { type, format, length, person } = req.query;
+    console.log(type, format, length, person);
+
+    const gameFilter = {};
+    if (type) {
+      gameFilter.type = type;
+    }
+
+    if (format) {
+      gameFilter.format = format;
+    }
+
+    if (length) {
+      gameFilter.length = length;
+    }
+
+    if (person) {
+      gameFilter["$rounds.playerRounds.PersonId$"] = person;
+    }
+
+    const filteredGames = await Game.findAll({
+      where: gameFilter,
       include: {
         model: Round,
         as: "rounds",
@@ -23,7 +44,23 @@ export const getAll = async (req, res) => {
       },
     });
 
-    res.status(200).json(games);
+    const resultGames = await Game.findAll({
+      where: { id: filteredGames.map((g) => g.id) },
+      include: {
+        model: Round,
+        as: "rounds",
+        include: {
+          model: PlayerRound,
+          as: "playerRounds",
+          include: {
+            model: Person,
+            attributes: ["firstname", "lastname", "EMANumber"],
+          },
+        },
+      },
+    });
+
+    res.status(200).json(resultGames);
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Error in fetching game" });
@@ -91,7 +128,7 @@ export const getByIdT = async (req, res) => {
   }
 };
 
-// check toutes les games d'un persone
+// check toutes les games d'une personne
 export const getByIdP = async (req, res) => {
   try {
     const { idP } = req.params;
