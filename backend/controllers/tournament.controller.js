@@ -1,6 +1,6 @@
 import {
   Game,
-  Member,
+  Person,
   PlayerRound,
   Round,
   Tournament,
@@ -10,9 +10,9 @@ export const getAll = async (req, res) => {
   try {
     const tournaments = await Tournament.findAll({
       include: {
-        model: Member,
-        as: "members",
-        attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
+        model: Person,
+        as: "people",
+        attributes: ["firstname", "lastname", "email", "EMANumber"],
         through: { attributes: [] },
       },
     });
@@ -28,9 +28,9 @@ export const getById = async (req, res) => {
     const { id } = req.params;
     const tournament = await Tournament.findByPk(id, {
       include: {
-        model: Member,
-        as: "members",
-        attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
+        model: Person,
+        as: "people",
+        attributes: ["firstname", "lastname", "email", "EMANumber"],
         through: { attributes: [] },
       },
     });
@@ -59,8 +59,8 @@ export const getGamesById = async (req, res) => {
             model: PlayerRound,
             as: "playerRounds",
             include: {
-              model: Member,
-              attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
+              model: Person,
+              attributes: ["firstname", "lastname", "email", "EMANumber"],
             },
           },
         },
@@ -81,7 +81,29 @@ export const getGamesById = async (req, res) => {
 
 export const create = async (req, res) => {
   try {
-    const tournament = await Tournament.create(req.body);
+    const {
+      name,
+      description,
+      setup,
+      startDate,
+      endDate,
+      entryFee,
+      registerLimitDate,
+      playerLimit,
+      location,
+    } = req.body;
+
+    const tournament = await Tournament.create({
+      name,
+      description,
+      setup,
+      startDate,
+      endDate,
+      entryFee,
+      registerLimitDate,
+      playerLimit,
+      location,
+    });
 
     res
       .status(201)
@@ -94,7 +116,17 @@ export const create = async (req, res) => {
 export const updateById = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, startDate, endDate, entryFee } = req.body;
+    const {
+      name,
+      description,
+      setup,
+      startDate,
+      endDate,
+      entryFee,
+      registerLimitDate,
+      playerLimit,
+      location,
+    } = req.body;
 
     const tournament = await Tournament.findByPk(id);
 
@@ -105,9 +137,13 @@ export const updateById = async (req, res) => {
     await tournament.update({
       name,
       description,
+      setup,
       startDate,
       endDate,
       entryFee,
+      registerLimitDate,
+      playerLimit,
+      location,
     });
 
     res

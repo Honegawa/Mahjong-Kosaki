@@ -1,4 +1,4 @@
-import { Game, Member, PlayerRound, Round } from "../models/index.js";
+import { Game, Person, PlayerRound, Round } from "../models/index.js";
 
 export const getAll = async (req, res) => {
   try {
@@ -7,8 +7,8 @@ export const getAll = async (req, res) => {
         model: PlayerRound,
         as: "playerRounds",
         include: {
-          model: Member,
-          attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
+          model: Person,
+          attributes: ["firstname", "lastname", "EMANumber"],
         },
       },
     });
@@ -28,8 +28,8 @@ export const getById = async (req, res) => {
         model: PlayerRound,
         as: "playerRounds",
         include: {
-          model: Member,
-          attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
+          model: Person,
+          attributes: ["firstname", "lastname", "EMANumber"],
         },
       },
     });
@@ -46,7 +46,8 @@ export const getById = async (req, res) => {
 
 export const create = async (req, res) => {
   try {
-    const { wind, roundNb, homba, draw, GameId } = req.body;
+    const { wind, roundNb, honba, stick, draw, playerRounds, GameId } =
+      req.body;
 
     const game = await Game.findByPk(GameId);
 
@@ -54,32 +55,68 @@ export const create = async (req, res) => {
       return res.status(404).json({ message: "Game not found" });
     }
 
-    const round = await Round.create({
-      wind,
-      roundNb,
-      homba,
-      draw,
-      GameId,
-    });
+    if (typeof playerRounds !== "object") {
+      return res.status(404).json({ message: "PlayerRounds is not valid" });
+    }
+
+    if (playerRounds.length != game.format) {
+      return res
+        .status(404)
+        .json({
+          message: "PlayerRounds length doesn't match with game format",
+        });
+    }
+
+    const round = await Round.create(
+      {
+        wind,
+        roundNb,
+        honba,
+        draw,
+        stick,
+        playerRounds,
+        GameId,
+      },
+      {
+        include: {
+          model: PlayerRound,
+          as: "playerRounds",
+          include: {
+            model: Person,
+            attributes: ["firstname", "lastname", "EMANumber"],
+          },
+        },
+      }
+    );
 
     res.status(201).json({ message: "Round has been created", round });
   } catch (error) {
     res.status(500).json({ error: "Error in creating round" });
+    console.log(error)
   }
 };
 
 export const updateById = async (req, res) => {
   try {
-    const { wind, roundNb, homba, draw } = req.body;
+    const { wind, roundNb, honba, stick, draw } = req.body;
     const { id } = req.params;
 
-    const round = await Round.findByPk(id);
+    const round = await Round.findByPk(id, {
+      include: {
+        model: PlayerRound,
+        as: "playerRounds",
+        include: {
+          model: Person,
+          attributes: ["firstname", "lastname", "EMANumber"],
+        },
+      },
+    });
 
     if (!round) {
       return res.status(404).json({ message: "Round not found" });
     }
 
-    await round.update({ wind, roundNb, homba, draw });
+    await round.update({ wind, roundNb, honba, stick, draw });
 
     res.status(200).json({ message: "Round has been updated", round });
   } catch (error) {

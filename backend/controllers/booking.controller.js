@@ -1,4 +1,4 @@
-import { Booking } from "../models/index.js";
+import { Booking, Person } from "../models/index.js";
 
 export const getAll = async (req, res) => {
   try {
@@ -27,27 +27,13 @@ export const getById = async (req, res) => {
 
 export const create = async (req, res) => {
   try {
-    const bookingsByTable = await Booking.findAll({
-      where: { table: req.body.table },
+    const { date, type, format } = req.body;
+    const booking = await Booking.create({
+      date,
+      type,
+      format,
+      PersonId: req.user.id,
     });
-
-    const bookingsByTableAndEmail = bookingsByTable.filter(
-      (b) => b.dataValues.email === req.body.email
-    ).length;
-    if (bookingsByTableAndEmail > 0) {
-      return res.status(400).json({
-        message:
-          "Booking already ready registered for this table with this email",
-      });
-    }
-
-    if (bookingsByTable.length > 3) {
-      return res
-        .status(400)
-        .json({ message: "Booking for this table is full" });
-    }
-
-    const booking = await Booking.create(req.body);
 
     res.status(201).json({ message: "Booking has been created", booking });
   } catch (error) {
@@ -58,7 +44,7 @@ export const create = async (req, res) => {
 export const updateById = async (req, res) => {
   try {
     const { id } = req.params;
-    const { date, table, type, format, calendarLink } = req.body;
+    const { date, type, format } = req.body;
 
     const booking = await Booking.findByPk(id);
 
@@ -66,9 +52,19 @@ export const updateById = async (req, res) => {
       return res.status(404).json({ message: "Booking not found" });
     }
 
-    await booking.update({ date, table, type, format, calendarLink });
+    if (
+      (req.user && req.user.id === booking.PersonId) ||
+      (req.user && req.user.role === "admin")
+    ) {
+      await booking.update({ date, type, format });
+      return res
+        .status(200)
+        .json({ message: "Booking has been updated", booking });
+    }
 
-    res.status(200).json({ message: "Booking has been updated", booking });
+    res
+      .status(401)
+      .json({ message: "Unable to update booking with your privilege" });
   } catch (error) {
     res.status(500).json({ error: "Error in updating booking" });
   }
@@ -84,7 +80,7 @@ export const deleteById = async (req, res) => {
     }
 
     if (
-      booking.dataValues.email === req.body.email ||
+      (req.user && req.user.id === booking.PersonId)||
       (req.user && req.user.role === "admin")
     ) {
       await booking.destroy();

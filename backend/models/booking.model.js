@@ -6,30 +6,8 @@ export default (sequelize, DataType) => {
         type: DataType.DATE,
         allowNull: false,
       },
-      table: {
-        type: DataType.TINYINT,
-        allowNull: false,
-        validate: {
-          min: 1,
-        },
-      },
-      firstname: {
-        type: DataType.STRING,
-        allowNull: false,
-      },
-      lastname: {
-        type: DataType.STRING,
-        allowNull: false,
-      },
-      email: {
-        type: DataType.STRING,
-        allowNull: false,
-        validate: {
-          isEmail: true,
-        },
-      },
       type: {
-        type: DataType.STRING,
+        type: DataType.ENUM(["Casual", "Classée", "Entrainement"]),
         allowNull: false,
       },
       format: {
@@ -38,13 +16,6 @@ export default (sequelize, DataType) => {
         validate: {
           min: 2,
           max: 4,
-        },
-      },
-      calendarLink: {
-        type: DataType.STRING,
-        allowNull: false,
-        validate: {
-          isUrl: true,
         },
       },
     },

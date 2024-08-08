@@ -1,6 +1,6 @@
 export default (sequelize, DataType) => {
   sequelize.define(
-    "Member",
+    "Person",
     {
       firstname: {
         type: DataType.STRING,
@@ -18,30 +18,30 @@ export default (sequelize, DataType) => {
           isEmail: true,
         },
       },
-      password: {
-        type: DataType.STRING,
-        allowNull: true,
-      },
       phone: {
         type: DataType.STRING,
-        allowNull: false,
+        allowNull: true,
         validate: {
           is: /^0\d{9}$/,
         },
       },
+      password: {
+        type: DataType.STRING,
+        allowNull: false,
+      },
       subscription: {
         type: DataType.DATE,
-        allowNull: false,
+        allowNull: true,
       },
       EMANumber: {
         type: DataType.STRING,
         allowNull: true,
         validate: {
-          is: /^\d{8}$/
-        }
+          is: /^\d{8}$/,
+        },
       },
       role: {
-        type: DataType.STRING,
+        type: DataType.ENUM(["user", "admin"]),
         allowNull: false,
         defaultValue: "user",
       },

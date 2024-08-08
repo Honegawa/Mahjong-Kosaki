@@ -1,17 +1,21 @@
 import express from "express";
 import {
   getAll,
-  create,
-  deleteById,
   getById,
-} from "../controllers/contact.controller.js";
+  getByIdT,
+  create,
+  updateById,
+  deleteById,
+} from "../controllers/game.controller.js";
 import { verifyAdmin } from "../middlewares/auth.js";
 
 const router = express.Router();
 
 router.get("/", getAll);
 router.get("/:id", getById);
-router.post("/", create);
+router.get("/tournament/:idT", getByIdT)
+router.post("/", verifyAdmin, create);
+router.put("/:id", verifyAdmin, updateById)
 router.delete("/:id", verifyAdmin, deleteById);
 
 export default router;

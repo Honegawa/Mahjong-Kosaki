@@ -1,14 +1,15 @@
-import memberModel from "./member.model.js";
+import { FU, SEAT_WINDS } from "../utils/constants/game.constants.js";
+import personModel from "./person.model.js";
 import roundModel from "./round.model.js";
 
 export default (sequelize, DataType) => {
   sequelize.define(
     "PlayerRound",
     {
-      MemberId: {
+      PersonId: {
         type: DataType.INTEGER,
         references: {
-          model: memberModel,
+          model: personModel,
           key: "id",
         },
       },
@@ -20,11 +21,8 @@ export default (sequelize, DataType) => {
         },
       },
       seatWind: {
-        type: DataType.STRING,
+        type: DataType.ENUM(SEAT_WINDS),
         allowNull: false,
-        validate: {
-          isIn: [["east", "south", "west", "north"]],
-        },
       },
       roundScore: {
         type: DataType.INTEGER,
@@ -45,7 +43,7 @@ export default (sequelize, DataType) => {
         type: DataType.TINYINT,
         allowNull: true,
         validate: {
-          isIn: [[20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 110]],
+          isIn: [FU],
         },
       },
       yaku: {
