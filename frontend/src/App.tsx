@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import "./App.css";
+import "./styles/App.css";
 import Home from "./pages/Home";
 import ErrorPage from "./pages/ErrorPage";
 import Article from "./pages/Article";
@@ -18,12 +18,13 @@ import Tournaments from "./pages/Tournaments";
 import TournamentDetail from "./pages/TournamentDetail";
 import Documentation from "./pages/Documentation";
 import RulesFormat from "./pages/RulesFormat";
+import BaseTemplate from "./templates/BaseTemplate";
 
 function App() {
   return (
     <Routes>
       <Route>
-        <Route path="/">
+        <Route path="/" element={<BaseTemplate />}>
           {/*Access: always*/}
           <Route path="" element={<Home />} />
           <Route path="rules-formats" element={<RulesFormat />} />
