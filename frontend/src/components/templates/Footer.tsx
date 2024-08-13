@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material"
-import "../styles/Footer.module.css"
+import "../../styles/Footer.module.css"
 import { Link } from "react-router-dom"
 
 function Footer() {

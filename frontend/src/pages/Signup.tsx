@@ -1,23 +1,22 @@
-import React, { useState } from "react"
-import { Box, Button, Card, CardContent, TextField, Typography } from "@mui/material"
-import { Link, useNavigate } from "react-router-dom"
-import { red } from "@mui/material/colors";
-import "../styles/Signup.css"
+import React, { useState } from "react";
+import { Alert, Box, Button, Card, CardContent, TextField, Typography } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
+import styles from "../styles/Signup.module.css";
 
-import { Person } from "../interfaces/person";
+import { User } from "../interfaces/user";
 
 import ENDPOINTS from "../utils/contants/endpoints";
 import axios, { AxiosError, AxiosResponse } from "axios";
 
 function Signup() {
-  const [person, setPerson] = useState<Person>({ firstname: "", lastname: "", email: "", password: "" });
+  const [user, setUser] = useState<User>({ firstname: "", lastname: "", email: "", password: "" });
   const [confPwd, setConfPwd] = useState<string>("");
   const [error, setError] = useState({ email: false, server: false })
   const navigate = useNavigate();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setPerson((person: Person) => ({ ...person, [name]: value }))
+    setUser((user: User) => ({ ...user, [name]: value }))
   }
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -25,7 +24,7 @@ function Signup() {
     setError({ email: false, server: false })
 
     try {
-      const response: AxiosResponse = await axios.post(ENDPOINTS.PERSON, person);
+      const response: AxiosResponse = await axios.post(ENDPOINTS.PERSON, user);
       const { status } = response;
 
       if (status === 201) {
@@ -44,98 +43,101 @@ function Signup() {
   }
 
   return (
-    <Card
-      className="signup"
-      sx={{ minWidth: { xs: "100%", md: 720 }, backgroundColor: "rgba(33, 150, 243, 0.32)" }}
-    >
-      <CardContent
-        className="signup-content"
-        sx={{ backgroundColor: "white", gap: { xs: 1, md: 3 } }}
+    <Box>
+      <Card
+        className={styles.signup}
+        sx={{ minWidth: { xs: "100%", md: 720 }, backgroundColor: "rgba(33, 150, 243, 0.32)" }}
       >
-        <Typography variant="h4" component={"h1"}>Inscription</Typography>
-
-        <Box
-          component="form"
-          display="flex"
-          flexDirection="column"
-          sx={{ gap: { xs: 1, md: 3 } }}
-          onSubmit={handleSubmit}
+        <CardContent
+          className={styles.signupContent}
+          sx={{ backgroundColor: "white", gap: { xs: 1, md: 3 } }}
         >
+          <Typography variant="h4" component={"h1"}>Inscription</Typography>
+
           <Box
+            component="form"
             display="flex"
-            sx={{ flexDirection: { xs: "column", md: "row" }, gap: { xs: 1, md: 3 } }}
+            flexDirection="column"
+            sx={{ gap: { xs: 1, md: 3 } }}
+            onSubmit={handleSubmit}
           >
             <Box
               display="flex"
-              flexDirection="column" sx={{ gap: { xs: 1, md: 3 } }}
+              sx={{ flexDirection: { xs: "column", md: "row" }, gap: { xs: 1, md: 3 } }}
             >
               <Box
                 display="flex"
-                sx={{ flexDirection: { xs: "column", md: "row" }, gap: { xs: 1, md: 3 } }}
+                flexDirection="column" sx={{ gap: { xs: 1, md: 3 } }}
               >
-                <TextField label="Nom" name="lastname" required onChange={handleChange} />
-                <TextField label="Prénom" name="firstname" required onChange={handleChange} />
+                <Box
+                  display="flex"
+                  sx={{ flexDirection: { xs: "column", md: "row" }, gap: { xs: 1, md: 3 } }}
+                >
+                  <TextField label="Nom" name="lastname" required onChange={handleChange} />
+                  <TextField label="Prénom" name="firstname" required onChange={handleChange} />
+                </Box>
+                <TextField
+                  label="Numéro EMA"
+                  name="EMANumber"
+                  inputMode="numeric"
+                  inputProps={{ pattern: "[0-9]{8}", title: "Exemple: 42123456" }}
+                  onChange={handleChange}
+                />
+                <TextField label="Téléphone" name="phone" onChange={handleChange} />
               </Box>
-              <TextField
-                label="Numéro EMA"
-                name="EMANumber"
-                inputMode="numeric"
-                inputProps={{ pattern: "[0-9]{8}", title: "Exemple: 42123456" }}
-                onChange={handleChange}
-              />
-              <TextField label="Téléphone" name="phone" onChange={handleChange} />
+
+              <Box
+                display="flex"
+                flexDirection="column" sx={{ gap: { xs: 1, md: 3 } }}
+              >
+                <TextField
+                  label="Email"
+                  name="email"
+                  type="email"
+                  required
+                  onChange={handleChange}
+                  helperText={error.email ? "Cette adresse email est déjà utilisée." : ""}
+                  error={error.email}
+                />
+                <TextField
+                  label="Mot de passe"
+                  name="password"
+                  type="password"
+                  inputProps={{ minLength: 8 }}
+                  required
+                  onChange={handleChange}
+                />
+                <TextField
+                  label="Confirmer mot de passe"
+                  name="confirmPassword"
+                  type="password"
+                  required
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => setConfPwd(event.target.value)}
+                  error={confPwd ? user.password !== confPwd : false}
+                />
+              </Box>
             </Box>
 
-            <Box
-              display="flex"
-              flexDirection="column" sx={{ gap: { xs: 1, md: 3 } }}
-            >
-              <TextField
-                label="Email"
-                name="email"
-                type="email"
-                required
-                onChange={handleChange}
-                helperText={error.email ? "Cette adresse email est déjà utilisée." : ""}
-                error={error.email}
-              />
-              <TextField
-                label="Mot de passe"
-                name="password"
-                type="password"
-                inputProps={{ minLength: 8 }}
-                required
-                onChange={handleChange}
-              />
-              <TextField
-                label="Confirmer mot de passe"
-                name="confirmPassword"
-                type="password"
-                required
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => setConfPwd(event.target.value)}
-                error={confPwd ? person.password !== confPwd : false}
-              />
-            </Box>
-          </Box>
-
-          <Box>
             <Button
               type="submit"
               variant="contained"
               color="primary"
-              disabled={!person.firstname || !person.lastname || !person.email || !person.password || person.password !== confPwd}
-            >S'inscrire</Button>
-            {error.server && <Typography color={red}>Une erreur est survenue lors de l'envoi du formulaire.</Typography>}
-          </Box>
-        </Box>
+              disabled={!user.firstname || !user.lastname || !user.email || !user.password || user.password !== confPwd}
+            >
+              S'inscrire
+            </Button>
 
-        <div>
-          <Typography>Vous avez déjà un compte?</Typography>
-          <Typography><Link to="/login">Connectez-vous ici.</Link></Typography>
-        </div>
-      </CardContent>
-    </Card >
+            {error.server && <Alert severity="warning">Une erreur est survenue lors de l'envoi du formulaire.</Alert>}
+          </Box>
+
+          <div>
+            <Typography>Vous avez déjà un compte?</Typography>
+            <Typography><Link to="/login">Connectez-vous ici.</Link></Typography>
+          </div>
+        </CardContent>
+      </Card >
+    </Box>
   )
 }
 
-export default Signup
+export default Signup;

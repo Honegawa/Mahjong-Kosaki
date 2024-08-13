@@ -19,6 +19,9 @@ import TournamentDetail from "./pages/TournamentDetail";
 import Documentation from "./pages/Documentation";
 import RulesFormat from "./pages/RulesFormat";
 import BaseTemplate from "./templates/BaseTemplate";
+import UnLoggedRoute from "./components/routes/UnLoggedRoute";
+import PrivateRoute from "./components/routes/PrivateRoute";
+import { USER_ROLE } from "./interfaces/user";
 
 function App() {
   return (
@@ -43,11 +46,16 @@ function App() {
           <Route path="conditions-generales-utilisation" element={<Cgu />} />
 
           {/*Access: not logged*/}
-          <Route path="login" element={<Login />} />
-          <Route path="signup" element={<Signup />} />
+          <Route element={<UnLoggedRoute />}>
+            <Route path="login" element={<Login />} />
+            <Route path="signup" element={<Signup />} />
+          </Route>
 
           {/*Access: logged*/}
-          <Route path="dashboard" element={<Dashboard />} />
+          <Route element={<PrivateRoute roles={[USER_ROLE.USER, USER_ROLE.ADMIN]} />}>
+            <Route path="dashboard" element={<Dashboard />}>
+            </Route>
+          </Route>
         </Route>
         <Route path="*" element={<ErrorPage />} />
       </Route>

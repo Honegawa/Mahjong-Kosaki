@@ -3,7 +3,7 @@
   padding: 20px;
 }
 
-.signup-content {
+.signupContent {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -25,6 +25,6 @@
   }
 
   a {
-    color: #0288D1;
+    color: #0288d1;
   }
 }
