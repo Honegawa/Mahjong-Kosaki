@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   AppBar,
   Box,
@@ -17,8 +17,12 @@ import { Img } from "./Img";
 import logo from "../assets/logo.svg";
 import { PAGES } from "../utils/contants/navbarLinks";
 
+import { AuthContext } from "../utils/contexts/Auth.context";
+import { AuthContextType } from "../interfaces/user";
+
 function Header() {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+  const { user, logout } = useContext(AuthContext) as AuthContextType;
   const navigate = useNavigate();
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -40,7 +44,7 @@ function Header() {
             sx={{ display: { xs: "none", md: "flex" } }}
             onClick={() => navigate("/")}
           />
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+          <Box sx={{ flexGrow: {xs:0, md: 1}, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -101,28 +105,35 @@ function Header() {
           </Box>
 
           <Box sx={{ flexGrow: 0, display: "flex" }}>
-            <Button
-              onClick={() => navigate("dashboard")}
-              sx={{ my: 2, color: "white", display: "block" }}
-            >
-              Dashboard
-            </Button>
-            <Button
-              onClick={() => navigate("login")}
-              variant="contained"
-              color="inherit"
-              sx={{ my: 2, color: "black", display: "block" }}
-            >
-              Connexion
-            </Button>
-            <Button
-              onClick={() => console.log("logout")}
-              variant="contained"
-              color="inherit"
-              sx={{ my: 2, color: "black", display: "block" }}
-            >
-              Déconnexion
-            </Button>
+            {user && (
+              <>
+                <Button
+                  onClick={() => navigate("dashboard")}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                >
+                  Dashboard
+                </Button>
+                <Button
+                  onClick={() => logout()}
+                  variant="contained"
+                  color="inherit"
+                  sx={{ my: 2, color: "black", display: "block" }}
+                >
+                  Déconnexion
+                </Button>
+              </>
+            )}
+
+            {!user &&
+              <Button
+                onClick={() => navigate("/login")}
+                variant="contained"
+                color="inherit"
+                sx={{ my: 2, color: "black", display: "block" }}
+              >
+                Connexion
+              </Button>
+            }
           </Box>
         </Toolbar>
       </Container>
