@@ -1,0 +1,30 @@
+.signup {
+  box-sizing: border-box;
+  padding: 20px;
+}
+
+.signup-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  box-sizing: border-box;
+  border-radius: 4px;
+
+  form {
+    width: 100%;
+    align-items: center;
+
+    div {
+      width: 100%;
+    }
+    button {
+      width: fit-content;
+    }
+  }
+
+  a {
+    color: #0288D1;
+  }
+}

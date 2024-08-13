@@ -4,6 +4,10 @@
     min-height: 100vh;
 
     section {
+        display: flex;
+        justify-content: center;
         flex-grow: 1;
+        box-sizing: border-box;
+        width: 100%;
     }
 }
