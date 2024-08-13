@@ -16,7 +16,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const login = async (dataForm: UserLogin) => {
-    let isLogged;
+    let isLogged = false;
     try {
       const response = await axios.post(`${ENDPOINTS.PERSON}/signin`, dataForm);
       const { data, status } = response;

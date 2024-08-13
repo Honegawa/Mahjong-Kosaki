@@ -14,11 +14,11 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate } from "react-router-dom";
 import { Img } from "./Img";
 
-import logo from "../assets/logo.svg";
-import { PAGES } from "../utils/contants/navbarLinks";
+import logo from "../../assets/logo.svg";
+import { PAGES } from "../../utils/contants/navbarLinks";
 
-import { AuthContext } from "../utils/contexts/Auth.context";
-import { AuthContextType } from "../interfaces/user";
+import { AuthContext } from "../../utils/contexts/Auth.context";
+import { AuthContextType } from "../../interfaces/user";
 
 function Header() {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
