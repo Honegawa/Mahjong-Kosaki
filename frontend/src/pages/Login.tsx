@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "../utils/contexts/Auth.context";
 import { AuthContextType } from "../interfaces/user";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { Alert, Box, Button, Card, CardContent, IconButton, InputAdornment, TextField, Typography } from "@mui/material";
 import styles from "../styles/Login.module.css";
@@ -100,6 +100,11 @@ function Login() {
 
             {error && <Alert severity="warning">La connexion a échouée. Email ou mot de passe incorrecte(s).</Alert>}
           </Box>
+
+          <div>
+            <Typography>Vous n'avez pas encore un compte?</Typography>
+            <Typography><Link to="/signup">Inscrivez-vous ici.</Link></Typography>
+          </div>
 
         </CardContent>
       </Card>
