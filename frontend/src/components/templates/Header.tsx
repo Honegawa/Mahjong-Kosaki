@@ -31,7 +31,9 @@ function Header() {
 
   const handleCloseNavMenu = (link: string) => {
     setAnchorElNav(null);
-    navigate(link);
+    if(link) {
+      navigate(link);
+    }
   };
 
   return (
@@ -44,7 +46,12 @@ function Header() {
             sx={{ display: { xs: "none", md: "flex" } }}
             onClick={() => navigate("/")}
           />
-          <Box sx={{ flexGrow: {xs:0, md: 1}, display: { xs: "flex", md: "none" } }}>
+          <Box
+            sx={{
+              flexGrow: { xs: 0, md: 1 },
+              display: { xs: "flex", md: "none" },
+            }}
+          >
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -68,7 +75,7 @@ function Header() {
                 horizontal: "left",
               }}
               open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
+              onClose={() => handleCloseNavMenu("")}
               sx={{
                 display: { xs: "block", md: "none" },
               }}
@@ -89,7 +96,7 @@ function Header() {
           <Img
             src={logo}
             alt="logo"
-            sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
+            sx={{ flexGrow: 1, display: { xs: "flex", md: "none" }, height: "68px" }}
             onClick={() => navigate("/")}
           />
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
@@ -124,7 +131,7 @@ function Header() {
               </>
             )}
 
-            {!user &&
+            {!user && (
               <Button
                 onClick={() => navigate("/login")}
                 variant="contained"
@@ -133,7 +140,7 @@ function Header() {
               >
                 Connexion
               </Button>
-            }
+            )}
           </Box>
         </Toolbar>
       </Container>
