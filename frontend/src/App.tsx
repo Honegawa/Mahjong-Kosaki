@@ -9,7 +9,7 @@ import Signup from "./pages/Signup";
 import Cgu from "./pages/Cgu";
 import LegalMentions from "./pages/LegalMentions";
 import Calendar from "./pages/Calendar";
-import Contact from "./pages/Contact";
+import Contact from "./pages/ContactForm";
 import Dashboard from "./pages/Dashboard";
 import Games from "./pages/Games";
 import GameDetail from "./pages/GameDetail";
