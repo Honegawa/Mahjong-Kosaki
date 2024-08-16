@@ -9,7 +9,7 @@ export interface Article {
 
 export type ArticleDetailData = {
   id: number;
-  data: Article[];
+  data: Article;
 };
 
 export interface ArticlePicture {
