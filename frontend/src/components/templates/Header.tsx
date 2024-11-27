@@ -36,6 +36,11 @@ function Header() {
     }
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
+
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -125,7 +130,7 @@ function Header() {
                   Dashboard
                 </Button>
                 <Button
-                  onClick={() => logout()}
+                  onClick={handleLogout}
                   variant="contained"
                   color="inherit"
                   sx={{ my: 2, color: "black", display: "block" }}
