@@ -18,6 +18,7 @@ const app = express();
 
 const corsOptions = {
   origin: env.CLIENT_ORIGIN || "http://localhost:8081",
+  credentials: true,
 };
 
 // Middleware

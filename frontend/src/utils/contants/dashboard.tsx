@@ -53,3 +53,9 @@ export const TABS = {
     },
   },
 };
+
+export enum MODAL_TABS {
+  password = "password",
+  email = "email",
+  userInfos = "infos",
+}

@@ -152,15 +152,24 @@ export const updateById = async (req, res) => {
         }
       );
 
-      return res.status(200).json({
-        message: "Person has been updated",
-        updatedPerson,
+      const token = jwt.sign({ id: person.id, role: person.role }, env.TOKEN, {
+        expiresIn: "24h",
       });
+      const { password, ...other } = updatedPerson.dataValues;
+
+      return res
+        .cookie("access_token", token, { httpOnly: true })
+        .status(200)
+        .json({
+          message: "Person has been updated",
+          updatedPerson: other,
+        });
     }
 
     res.status(403).json({ message: "Unauthorized to update person" });
   } catch (error) {
     res.status(500).json({ error: "Error in updating person" });
+    console.log(error)
   }
 };
 
