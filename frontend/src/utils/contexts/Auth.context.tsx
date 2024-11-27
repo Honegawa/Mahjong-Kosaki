@@ -18,7 +18,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const login = async (dataForm: UserLogin) => {
     let isLogged = false;
     try {
-      const response = await axios.post(`${ENDPOINTS.PERSON}/signin`, dataForm);
+      const response = await axios.post(
+        `${ENDPOINTS.PERSON}/signin`,
+        dataForm,
+        { withCredentials: true }
+      );
       const { data, status } = response;
 
       if (status === 200) {
