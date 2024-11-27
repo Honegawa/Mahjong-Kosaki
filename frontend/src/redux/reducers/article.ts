@@ -32,7 +32,7 @@ export const ArticleSlice = createSlice({
       action: PayloadAction<ArticleDetailData>
     ) => {
       draft.loading = false;
-      draft.data = action.payload.data.filter((a) => a.id == action.payload.id);
+      draft.data = [action.payload.data];
     },
     FETCH_FAILURE: (draft: ArticleInitialeState) => {
       draft.loading = false;

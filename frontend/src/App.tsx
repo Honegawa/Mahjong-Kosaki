@@ -2,7 +2,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import "./styles/App.css";
 import Home from "./pages/Home";
 import ErrorPage from "./pages/ErrorPage";
-import Article from "./pages/Article";
+import ArticleDetail from "./pages/ArticleDetail";
 import News from "./pages/News";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -34,7 +34,7 @@ function App() {
           <Route path="documentation" element={<Documentation />} />
           <Route path="news" element={<News />} />
           <Route path="articles" element={<Navigate to="../news" replace />} />
-          <Route path="articles/:id" element={<Article />} />
+          <Route path="articles/:id" element={<ArticleDetail />} />
           <Route path="games" element={<Games />} />
           <Route path="games/:id" element={<GameDetail />} />
           <Route path="tournaments" element={<Tournaments />} />

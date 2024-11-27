@@ -31,7 +31,7 @@ function Header() {
 
   const handleCloseNavMenu = (link: string) => {
     setAnchorElNav(null);
-    if(link) {
+    if (link) {
       navigate(link);
     }
   };
@@ -96,7 +96,11 @@ function Header() {
           <Img
             src={logo}
             alt="logo"
-            sx={{ flexGrow: 1, display: { xs: "flex", md: "none" }, height: "68px" }}
+            sx={{
+              flexGrow: 1,
+              display: { xs: "flex", md: "none" },
+              height: "68px",
+            }}
             onClick={() => navigate("/")}
           />
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
