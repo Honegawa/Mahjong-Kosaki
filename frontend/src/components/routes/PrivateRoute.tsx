@@ -10,7 +10,6 @@ function PrivateRoute({ roles }: { roles: USER_ROLE[] }) {
   }
 
   const userHasRequiredRole = user && roles.includes(user.role) ? true : false;
-  console.log(user, roles)
 
   if (user) {
     if (userHasRequiredRole) {
