@@ -16,9 +16,6 @@
     width: 100%;
     align-items: center;
 
-    div {
-      width: 100%;
-    }
     button {
       width: fit-content;
     }

@@ -5,6 +5,8 @@ import {
   Button,
   Card,
   CardContent,
+  IconButton,
+  InputAdornment,
   TextField,
   Typography,
 } from "@mui/material";
@@ -16,6 +18,7 @@ import { User } from "../interfaces/user";
 import ENDPOINTS from "../utils/contants/endpoints";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import REGEX from "../utils/contants/regex";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 function Signup() {
   const [user, setUser] = useState<User>({
@@ -25,12 +28,21 @@ function Signup() {
     password: "",
   });
   const [confPwd, setConfPwd] = useState<string>("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState({ email: false, server: false });
   const navigate = useNavigate();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setUser((user: User) => ({ ...user, [name]: value }));
+  };
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -88,6 +100,7 @@ function Signup() {
                 display="flex"
                 flexDirection="column"
                 sx={{ gap: { xs: 1, md: 3 } }}
+                width={"100%"}
               >
                 <Box
                   display="flex"
@@ -130,6 +143,7 @@ function Signup() {
                 display="flex"
                 flexDirection="column"
                 sx={{ gap: { xs: 1, md: 3 } }}
+                width={"100%"}
               >
                 <TextField
                   label="Email"
@@ -141,24 +155,53 @@ function Signup() {
                     error.email ? "Cette adresse email est déjà utilisée." : ""
                   }
                   error={error.email}
+                  fullWidth
                 />
                 <TextField
                   label="Mot de passe"
                   name="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   inputProps={{ minLength: 8 }}
                   required
                   onChange={handleChange}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <Visibility /> : <VisibilityOff />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
                 />
                 <TextField
                   label="Confirmer mot de passe"
                   name="confirmPassword"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   required
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                     setConfPwd(event.target.value)
                   }
                   error={confPwd ? user.password !== confPwd : false}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <Visibility /> : <VisibilityOff />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </Box>
             </Box>

@@ -78,7 +78,6 @@ function Login() {
               onChange={handleChange}
               value={userLogin.email}
               fullWidth
-              helperText={"Cette adresse email est déjà utilisée."}
               error={false}
             />
             <TextField
