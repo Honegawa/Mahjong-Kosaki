@@ -15,6 +15,7 @@ import { useContext, useState } from "react";
 import { TABS } from "../utils/contants/dashboard";
 import { AuthContextType } from "../interfaces/user";
 import { AuthContext } from "../utils/contexts/Auth.context";
+import AccountTab from "../components/dashboardTabs/AccountTab";
 
 function Dashboard() {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -30,6 +31,16 @@ function Dashboard() {
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpenMenu(newOpen);
+  };
+
+  const renderTab = () => {
+    switch (selectedIndex) {
+      case 0:
+        return <AccountTab />;
+
+      default:
+        return <CardContent sx={{ height: "100%" }}>Erreur</CardContent>;
+    }
   };
 
   const tabList = (
@@ -87,9 +98,7 @@ function Dashboard() {
       </Box>
 
       <Box className={styles.dashboard}>
-        <Card>
-          <CardContent></CardContent>
-        </Card>
+        <Card sx={{ minHeight: "100%" }}>{renderTab()}</Card>
       </Box>
     </Box>
   );

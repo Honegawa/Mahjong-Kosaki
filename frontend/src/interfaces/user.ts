@@ -15,10 +15,20 @@ export type UserLogin = {
   password: string;
 };
 
+export type UserUpdate = {
+  firstname?: string;
+  lastname?: string;
+  email?: string;
+  phone?: string;
+  subscription?: string;
+  EMANumber?: string;
+};
+
 export interface AuthContextType {
   user: User | null;
   login: (dataForm: UserLogin) => Promise<boolean>;
   logout: () => void;
+  updateUser: (dataForm: UserUpdate) => void;
 }
 
 export enum USER_ROLE {

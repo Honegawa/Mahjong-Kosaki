@@ -1,6 +1,11 @@
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
-import { AuthContextType, UserLogin } from "../../interfaces/user";
+import {
+  AuthContextType,
+  User,
+  UserLogin,
+  UserUpdate,
+} from "../../interfaces/user";
 
 import ENDPOINTS from "../contants/endpoints";
 
@@ -9,7 +14,7 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     isAuthenticated();
@@ -49,8 +54,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setUser(null);
   };
 
+  const updateUser = (dataForm: UserUpdate) => {
+    if (user) {
+      const newUser = { ...user, ...dataForm };
+      setUser(newUser)
+      localStorage.setItem("userData", JSON.stringify(newUser));
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );
