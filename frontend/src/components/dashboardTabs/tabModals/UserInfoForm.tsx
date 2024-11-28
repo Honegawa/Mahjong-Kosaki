@@ -150,7 +150,7 @@ function UserInfoForm(props: UserInfoFormProps) {
 
   return (
     <Dialog
-      open={open === "infos"}
+      open={open === MODAL_TABS.userInfos}
       onClose={handleClose}
       PaperProps={{
         component: "form",
