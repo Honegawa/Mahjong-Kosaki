@@ -42,12 +42,12 @@ function EmailForm(props: EmailFormProps) {
     if (value.length > 0 && !REGEX.email.test(value)) {
       setError((error) => ({
         ...error,
-        old: "Email invalide.",
+        old: "Adresse email invalide.",
       }));
     } else if (value.length > 0 && value !== user.email) {
       setError((error) => ({
         ...error,
-        old: "Cet email ne corresponds pas à votre email actuel.",
+        old: "Cette adresse email ne correspond pas à votre adresse email actuelle.",
       }));
     } else {
       setError((error) => ({
@@ -67,12 +67,12 @@ function EmailForm(props: EmailFormProps) {
     if (value.length > 0 && !REGEX.email.test(value)) {
       setError((error) => ({
         ...error,
-        new: "Email invalide.",
+        new: "Adresse email invalide.",
       }));
     } else if (value.length > 0 && value === user.email) {
       setError((error) => ({
         ...error,
-        new: "Cet email est identique à votre email actuel.",
+        new: "Cet adresse email est identique à votre adresse email actuelle.",
       }));
     } else {
       setError((error) => ({
@@ -98,7 +98,8 @@ function EmailForm(props: EmailFormProps) {
     ) {
       setError((error) => ({
         ...error,
-        confirm: "Le champs ne correspond pas au nouvel email saisi.",
+        confirm:
+          "Le champs ne correspond pas à la nouvelle adresse email saisie.",
       }));
     } else {
       setError((error) => ({
@@ -155,12 +156,12 @@ function EmailForm(props: EmailFormProps) {
             new: "",
             confirm: "",
             server:
-              "Une erreur est survenue lors de la modification de l'email.",
+              "Une erreur est survenue lors de la modification de l'adresse email.",
           });
         } else if (axiosError.response?.status === 400) {
           setError({
             old: "",
-            new: "Cet email est déjà utilisé.",
+            new: "Cette adresse email est déjà utilisé.",
             confirm: "",
             server: "",
           });
@@ -179,7 +180,7 @@ function EmailForm(props: EmailFormProps) {
         onSubmit: handleSubmit,
       }}
     >
-      <DialogTitle>Modification de l'email</DialogTitle>
+      <DialogTitle>Modification de l'adresse email</DialogTitle>
       <DialogContent>
         <TextField
           autoFocus
@@ -187,7 +188,7 @@ function EmailForm(props: EmailFormProps) {
           margin="dense"
           id="oldEmail"
           name="oldEmail"
-          label="Ancien email"
+          label="Ancienne adresse email"
           type="email"
           onChange={handleChangeOldEmail}
           error={error.old.length > 0}
@@ -200,7 +201,7 @@ function EmailForm(props: EmailFormProps) {
           margin="dense"
           id="newEmail"
           name="newEmail"
-          label="Nouveau email"
+          label="Nouvelle adresse email"
           type="email"
           onChange={handleChangeNewEmail}
           error={error.new.length > 0}
@@ -213,7 +214,7 @@ function EmailForm(props: EmailFormProps) {
           margin="dense"
           id="confirmEmail"
           name="confirmEmail"
-          label="Confirmer nouveau email"
+          label="Confirmer nouvelle adresse email"
           type="email"
           onChange={handleChangeConfirmEmail}
           error={error.confirm.length > 0}
