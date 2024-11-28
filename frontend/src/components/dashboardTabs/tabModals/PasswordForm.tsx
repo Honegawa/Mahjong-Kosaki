@@ -15,6 +15,7 @@ import { useContext, useState } from "react";
 import ENDPOINTS from "../../../utils/contants/endpoints";
 import { AuthContext } from "../../../utils/contexts/Auth.context";
 import { AuthContextType } from "../../../interfaces/user";
+import { findFormError } from "../../../utils/formHelper";
 
 type PasswordFormProps = {
   open: string;
@@ -35,6 +36,22 @@ function PasswordForm(props: PasswordFormProps) {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const { name, value } = event.target;
+
+    if (
+      value.length > 0 &&
+      password.confirmPassword.length > 0 &&
+      value !== password.confirmPassword
+    ) {
+      setError({
+        password: "Le champs ne correspond pas au nouveau mot de passe.",
+        server: "",
+      });
+    } else {
+      setError({
+        password: "",
+        server: "",
+      });
+    }
 
     setPassword((password) => ({ ...password, [name]: value }));
   };
@@ -78,8 +95,7 @@ function PasswordForm(props: PasswordFormProps) {
 
     if (!user) return;
 
-    const hadError = Object.values(error).find((e) => e.length > 0);
-    if (hadError) return;
+    if (findFormError(error)) return;
 
     try {
       const formaData = {

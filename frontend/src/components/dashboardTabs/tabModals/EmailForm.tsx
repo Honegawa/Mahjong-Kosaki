@@ -13,6 +13,7 @@ import ENDPOINTS from "../../../utils/contants/endpoints";
 import { AuthContext } from "../../../utils/contexts/Auth.context";
 import { AuthContextType, UserUpdate } from "../../../interfaces/user";
 import REGEX from "../../../utils/contants/regex";
+import { findFormError } from "../../../utils/formHelper";
 
 type EmailFormProps = {
   open: string;
@@ -81,6 +82,19 @@ function EmailForm(props: EmailFormProps) {
       }));
     }
 
+    if (value.length > 0 && value !== email.confirmEmail) {
+      setError((error) => ({
+        ...error,
+        confirm:
+          "Le champs ne correspond pas à la nouvelle adresse email saisie.",
+      }));
+    } else {
+      setError((error) => ({
+        ...error,
+        confirm: "",
+      }));
+    }
+
     setEmail((email) => ({ ...email, [name]: value }));
   };
 
@@ -122,8 +136,7 @@ function EmailForm(props: EmailFormProps) {
 
     if (!user) return;
 
-    const hadError = Object.values(error).find((e) => e.length > 0);
-    if (hadError) return;
+    if (findFormError(error)) return;
 
     try {
       const formaData: UserUpdate = {

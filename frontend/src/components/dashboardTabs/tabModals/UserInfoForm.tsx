@@ -11,9 +11,12 @@ import {
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { AuthContextType, UserUpdate } from "../../../interfaces/user";
 import ENDPOINTS from "../../../utils/contants/endpoints";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../utils/contexts/Auth.context";
 import REGEX from "../../../utils/contants/regex";
+import { findFormError } from "../../../utils/formHelper";
+import cloneDeep from "lodash/cloneDeep";
+import { MODAL_TABS } from "../../../utils/contants/dashboard";
 
 type UserInfoFormProps = {
   open: string;
@@ -22,7 +25,8 @@ type UserInfoFormProps = {
 
 function UserInfoForm(props: UserInfoFormProps) {
   const { onClose, open } = props;
-  const [infos, setInfos] = useState({
+  const { user, updateUser } = useContext(AuthContext) as AuthContextType;
+  const [infos, setInfos] = useState<UserUpdate>({
     firstname: "",
     lastname: "",
     EMANumber: "",
@@ -33,7 +37,19 @@ function UserInfoForm(props: UserInfoFormProps) {
     phone: "",
     server: "",
   });
-  const { user, updateUser } = useContext(AuthContext) as AuthContextType;
+
+  useEffect(() => {
+    const userClone = cloneDeep(user);
+
+    if (userClone && open === MODAL_TABS.userInfos) {
+      setInfos({
+        firstname: userClone.firstname,
+        lastname: userClone.lastname,
+        EMANumber: userClone.EMANumber ?? "",
+        phone: userClone.phone ?? "",
+      });
+    }
+  }, [open, user]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -83,23 +99,16 @@ function UserInfoForm(props: UserInfoFormProps) {
 
     if (!user) return;
 
-    const hadError = Object.values(error).find((e) => e.length > 0);
-    if (hadError) return;
+    if (findFormError(error)) return;
 
     try {
-      const formaData: UserUpdate = {};
+      const formaData: UserUpdate = { ...infos };
 
-      if (infos.firstname) {
-        formaData.firstname = infos.firstname;
+      if (!infos.EMANumber) {
+        formaData.EMANumber = null;
       }
-      if (infos.lastname) {
-        formaData.lastname = infos.lastname;
-      }
-      if (infos.EMANumber) {
-        formaData.EMANumber = infos.EMANumber;
-      }
-      if (infos.phone) {
-        formaData.phone = infos.phone;
+      if (!infos.phone) {
+        formaData.phone = null;
       }
 
       const response: AxiosResponse = await axios.put(
@@ -167,7 +176,7 @@ function UserInfoForm(props: UserInfoFormProps) {
             label="Prénom"
             type="text"
             onChange={handleChange}
-            defaultValue={user ? user.firstname : ""}
+            value={infos.firstname}
             fullWidth
             variant="outlined"
           />
@@ -179,7 +188,7 @@ function UserInfoForm(props: UserInfoFormProps) {
             label="Nom"
             type="text"
             onChange={handleChange}
-            defaultValue={user ? user.lastname : ""}
+            value={infos.lastname}
             fullWidth
             variant="outlined"
           />
@@ -191,7 +200,7 @@ function UserInfoForm(props: UserInfoFormProps) {
           label="Numéro EMA"
           inputMode="numeric"
           onChange={handleChangeEMANumber}
-          defaultValue={user ? user.EMANumber : ""}
+          value={infos.EMANumber}
           error={error.EMANumber.length > 0}
           helperText={error.EMANumber}
           fullWidth
@@ -204,7 +213,7 @@ function UserInfoForm(props: UserInfoFormProps) {
           label="Téléphone"
           inputMode="numeric"
           onChange={handleChangePhone}
-          defaultValue={user ? user.phone : ""}
+          value={infos.phone}
           error={error.phone.length > 0}
           helperText={error.phone}
           fullWidth

@@ -3,10 +3,10 @@ export interface User {
   firstname: string;
   lastname: string;
   email: string;
-  phone?: string;
+  phone?: string | null;
   password: string;
-  subscription?: string;
-  EMANumber?: string;
+  subscription?: string | null;
+  EMANumber?: string | null;
   role?: USER_ROLE;
 }
 
@@ -19,9 +19,9 @@ export type UserUpdate = {
   firstname?: string;
   lastname?: string;
   email?: string;
-  phone?: string;
-  subscription?: string;
-  EMANumber?: string;
+  phone?: string | null;
+  subscription?: string | null;
+  EMANumber?: string | null;
 };
 
 export interface AuthContextType {

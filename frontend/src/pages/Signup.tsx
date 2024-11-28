@@ -13,12 +13,13 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import styles from "../styles/Signup.module.css";
 
-import { User } from "../interfaces/user";
+import { User, UserUpdate } from "../interfaces/user";
 
 import ENDPOINTS from "../utils/contants/endpoints";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import REGEX from "../utils/contants/regex";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { findFormError } from "../utils/formHelper";
 
 function Signup() {
   const [user, setUser] = useState<User>({
@@ -29,12 +30,113 @@ function Signup() {
   });
   const [confPwd, setConfPwd] = useState<string>("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState({ email: false, server: false });
+  const [error, setError] = useState({
+    EMANumber: "",
+    phone: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    server: "",
+  });
   const navigate = useNavigate();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setUser((user: User) => ({ ...user, [name]: value }));
+  };
+
+  const handleChangeEMANumber = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { name, value } = event.target;
+
+    if (value.length > 0 && !REGEX.EMA.test(value)) {
+      setError((error) => ({
+        ...error,
+        EMANumber: "Format incorrect. Exemple de format valide: 42123456.",
+      }));
+    } else {
+      setError((error) => ({
+        ...error,
+        EMANumber: "",
+      }));
+    }
+
+    setUser((user: User) => ({ ...user, [name]: value }));
+  };
+
+  const handleChangePhone = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+
+    if (value.length > 0 && !REGEX.phone.test(value)) {
+      setError((error) => ({
+        ...error,
+        phone: "Format incorrect. Exemple de format valide: 0123456789.",
+      }));
+    } else {
+      setError((error) => ({
+        ...error,
+        phone: "",
+      }));
+    }
+
+    setUser((user: User) => ({ ...user, [name]: value }));
+  };
+
+  const handleChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+
+    if (value.length > 0 && !REGEX.email.test(value)) {
+      setError((error) => ({
+        ...error,
+        email: "Adresse email invalide.",
+      }));
+    } else {
+      setError((error) => ({
+        ...error,
+        email: "",
+      }));
+    }
+
+    setUser((user: User) => ({ ...user, [name]: value }));
+  };
+
+  const handleChangePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+
+    if (value.length > 0 && value !== user.password) {
+      setError((error) => ({
+        ...error,
+        confirmPassword: "Le champs ne correspond pas au mot de passe.",
+      }));
+    } else {
+      setError((error) => ({
+        ...error,
+        confirmPassword: "",
+      }));
+    }
+
+    setUser((user: User) => ({ ...user, [name]: value }));
+  };
+
+  const handleChangeConfirmPassword = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { value } = event.target;
+
+    if (value.length > 0 && confPwd.length > 0 && value !== confPwd) {
+      setError((error) => ({
+        ...error,
+        confirmPassword: "Le champs ne correspond pas au mot de passe.",
+      }));
+    } else {
+      setError((error) => ({
+        ...error,
+        confirmPassword: "",
+      }));
+    }
+
+    setConfPwd(value);
   };
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -47,10 +149,23 @@ function Signup() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setError({ email: false, server: false });
+
+    if (findFormError(error)) return;
 
     try {
-      const response: AxiosResponse = await axios.post(ENDPOINTS.PERSON, user);
+      const formaData: UserUpdate = { ...user };
+
+      if (!user.EMANumber) {
+        delete formaData.EMANumber;
+      }
+      if (!user.phone) {
+        delete formaData.phone;
+      }
+
+      const response: AxiosResponse = await axios.post(
+        ENDPOINTS.PERSON,
+        formaData
+      );
       const { status } = response;
 
       if (status === 201) {
@@ -60,9 +175,15 @@ function Signup() {
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError;
         if (axiosError.response?.status === 500) {
-          setError((error) => ({ ...error, server: true }));
+          setError((error) => ({
+            ...error,
+            server: "Une erreur est survenue lors de l'envoi du formulaire.",
+          }));
         } else if (axiosError.response?.status === 400) {
-          setError((error) => ({ ...error, email: true }));
+          setError((error) => ({
+            ...error,
+            email: "Cette adresse email est déjà utilisée.",
+          }));
         }
       }
     }
@@ -95,12 +216,13 @@ function Signup() {
                 flexDirection: { xs: "column", md: "row" },
                 gap: { xs: 1, md: 3 },
               }}
+              width="100%"
             >
               <Box
                 display="flex"
                 flexDirection="column"
                 sx={{ gap: { xs: 1, md: 3 } }}
-                width={"100%"}
+                width="100%"
               >
                 <Box
                   display="flex"
@@ -110,32 +232,42 @@ function Signup() {
                   }}
                 >
                   <TextField
+                    margin="dense"
                     label="Nom"
                     name="lastname"
                     required
                     onChange={handleChange}
+                    fullWidth
                   />
                   <TextField
+                    margin="dense"
                     label="Prénom"
                     name="firstname"
                     required
                     onChange={handleChange}
+                    fullWidth
                   />
                 </Box>
                 <TextField
+                  margin="dense"
                   label="Numéro EMA"
                   name="EMANumber"
                   inputMode="numeric"
-                  inputProps={{
-                    pattern: REGEX.EMA,
-                    title: "Exemple: 42123456",
-                  }}
-                  onChange={handleChange}
+                  onChange={handleChangeEMANumber}
+                  error={error.EMANumber.length > 0}
+                  helperText={error.EMANumber}
+                  sx={{ height: { xs: "auto", md: "56px" } }}
+                  fullWidth
                 />
                 <TextField
+                  margin="dense"
                   label="Téléphone"
                   name="phone"
-                  onChange={handleChange}
+                  onChange={handleChangePhone}
+                  error={error.phone.length > 0}
+                  helperText={error.phone}
+                  sx={{ height: { xs: "auto", md: "56px" } }}
+                  fullWidth
                 />
               </Box>
 
@@ -143,27 +275,30 @@ function Signup() {
                 display="flex"
                 flexDirection="column"
                 sx={{ gap: { xs: 1, md: 3 } }}
-                width={"100%"}
+                width="100%"
               >
                 <TextField
+                  margin="dense"
                   label="Email"
                   name="email"
                   type="email"
                   required
-                  onChange={handleChange}
-                  helperText={
-                    error.email ? "Cette adresse email est déjà utilisée." : ""
-                  }
-                  error={error.email}
+                  onChange={handleChangeEmail}
+                  error={error.email.length > 0}
+                  helperText={error.email}
+                  sx={{ height: { xs: "auto", md: "56px" } }}
                   fullWidth
                 />
                 <TextField
+                  margin="dense"
                   label="Mot de passe"
                   name="password"
                   type={showPassword ? "text" : "password"}
                   inputProps={{ minLength: 8 }}
                   required
-                  onChange={handleChange}
+                  onChange={handleChangePassword}
+                  sx={{ height: { xs: "auto", md: "56px" } }}
+                  fullWidth
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
@@ -180,14 +315,15 @@ function Signup() {
                   }}
                 />
                 <TextField
+                  margin="dense"
                   label="Confirmer mot de passe"
                   name="confirmPassword"
                   type={showPassword ? "text" : "password"}
                   required
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                    setConfPwd(event.target.value)
-                  }
-                  error={confPwd ? user.password !== confPwd : false}
+                  onChange={handleChangeConfirmPassword}
+                  error={error.confirmPassword.length > 0}
+                  helperText={error.confirmPassword}
+                  sx={{ height: { xs: "auto", md: "56px" } }}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
@@ -221,10 +357,10 @@ function Signup() {
               S'inscrire
             </Button>
 
-            {error.server && (
-              <Alert severity="warning">
-                Une erreur est survenue lors de l'envoi du formulaire.
-              </Alert>
+            {error.server ? (
+              <Alert severity="warning">{error.server}</Alert>
+            ) : (
+              <></>
             )}
           </Box>
 
