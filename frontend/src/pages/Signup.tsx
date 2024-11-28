@@ -104,7 +104,20 @@ function Signup() {
   const handleChangePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
 
-    if (value.length > 0 && value !== user.password) {
+    if (value.length > 0 && !REGEX.password.test(value)) {
+      setError((error) => ({
+        ...error,
+        password:
+          "Le mot de passe doit contenir 8 caractères dont au moins 1 majuscule, 1 minuscule et un caractère spécial.",
+      }));
+    } else {
+      setError((error) => ({
+        ...error,
+        password: "",
+      }));
+    }
+
+    if (value.length > 0 && confPwd.length > 0 && value !== confPwd) {
       setError((error) => ({
         ...error,
         confirmPassword: "Le champs ne correspond pas au mot de passe.",
@@ -124,7 +137,11 @@ function Signup() {
   ) => {
     const { value } = event.target;
 
-    if (value.length > 0 && confPwd.length > 0 && value !== confPwd) {
+    if (
+      value.length > 0 &&
+      user.password.length > 0 &&
+      value !== user.password
+    ) {
       setError((error) => ({
         ...error,
         confirmPassword: "Le champs ne correspond pas au mot de passe.",
@@ -213,133 +230,121 @@ function Signup() {
             <Box
               display="flex"
               sx={{
-                flexDirection: { xs: "column", md: "row" },
+                flexDirection: { xs: "column" },
                 gap: { xs: 1, md: 3 },
               }}
               width="100%"
             >
               <Box
                 display="flex"
-                flexDirection="column"
-                sx={{ gap: { xs: 1, md: 3 } }}
-                width="100%"
+                sx={{
+                  flexDirection: { xs: "column", md: "row" },
+                  gap: { xs: 1, md: 3 },
+                }}
               >
-                <Box
-                  display="flex"
-                  sx={{
-                    flexDirection: { xs: "column", md: "row" },
-                    gap: { xs: 1, md: 3 },
-                  }}
-                >
-                  <TextField
-                    margin="dense"
-                    label="Nom"
-                    name="lastname"
-                    required
-                    onChange={handleChange}
-                    fullWidth
-                  />
-                  <TextField
-                    margin="dense"
-                    label="Prénom"
-                    name="firstname"
-                    required
-                    onChange={handleChange}
-                    fullWidth
-                  />
-                </Box>
                 <TextField
                   margin="dense"
-                  label="Numéro EMA"
-                  name="EMANumber"
-                  inputMode="numeric"
-                  onChange={handleChangeEMANumber}
-                  error={error.EMANumber.length > 0}
-                  helperText={error.EMANumber}
-                  sx={{ height: { xs: "auto", md: "56px" } }}
+                  label="Nom"
+                  name="lastname"
+                  required
+                  onChange={handleChange}
                   fullWidth
                 />
                 <TextField
                   margin="dense"
-                  label="Téléphone"
-                  name="phone"
-                  onChange={handleChangePhone}
-                  error={error.phone.length > 0}
-                  helperText={error.phone}
-                  sx={{ height: { xs: "auto", md: "56px" } }}
+                  label="Prénom"
+                  name="firstname"
+                  required
+                  onChange={handleChange}
                   fullWidth
                 />
               </Box>
+              <TextField
+                margin="dense"
+                label="Numéro EMA"
+                name="EMANumber"
+                inputMode="numeric"
+                onChange={handleChangeEMANumber}
+                error={error.EMANumber.length > 0}
+                helperText={error.EMANumber}
+                sx={{ height: { xs: "auto", md: "56px" } }}
+                fullWidth
+              />
+              <TextField
+                margin="dense"
+                label="Téléphone"
+                name="phone"
+                onChange={handleChangePhone}
+                error={error.phone.length > 0}
+                helperText={error.phone}
+                sx={{ height: { xs: "auto", md: "56px" } }}
+                fullWidth
+              />
 
-              <Box
-                display="flex"
-                flexDirection="column"
-                sx={{ gap: { xs: 1, md: 3 } }}
-                width="100%"
-              >
-                <TextField
-                  margin="dense"
-                  label="Email"
-                  name="email"
-                  type="email"
-                  required
-                  onChange={handleChangeEmail}
-                  error={error.email.length > 0}
-                  helperText={error.email}
-                  sx={{ height: { xs: "auto", md: "56px" } }}
-                  fullWidth
-                />
-                <TextField
-                  margin="dense"
-                  label="Mot de passe"
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  inputProps={{ minLength: 8 }}
-                  required
-                  onChange={handleChangePassword}
-                  sx={{ height: { xs: "auto", md: "56px" } }}
-                  fullWidth
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={handleClickShowPassword}
-                          onMouseDown={handleMouseDownPassword}
-                          edge="end"
-                        >
-                          {showPassword ? <Visibility /> : <VisibilityOff />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-                <TextField
-                  margin="dense"
-                  label="Confirmer mot de passe"
-                  name="confirmPassword"
-                  type={showPassword ? "text" : "password"}
-                  required
-                  onChange={handleChangeConfirmPassword}
-                  error={error.confirmPassword.length > 0}
-                  helperText={error.confirmPassword}
-                  sx={{ height: { xs: "auto", md: "56px" } }}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={handleClickShowPassword}
-                          onMouseDown={handleMouseDownPassword}
-                          edge="end"
-                        >
-                          {showPassword ? <Visibility /> : <VisibilityOff />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </Box>
+              <TextField
+                margin="dense"
+                label="Email"
+                name="email"
+                type="email"
+                required
+                onChange={handleChangeEmail}
+                error={error.email.length > 0}
+                helperText={error.email}
+                sx={{ height: { xs: "auto", md: "56px" } }}
+                fullWidth
+              />
+              <TextField
+                margin="dense"
+                label="Mot de passe"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                inputProps={{ minLength: 8 }}
+                required
+                onChange={handleChangePassword}
+                error={error.password.length > 0}
+                helperText={error.password}
+                sx={{ height: { xs: "auto", md: "56px" } }}
+                fullWidth
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <TextField
+                margin="dense"
+                label="Confirmer mot de passe"
+                name="confirmPassword"
+                type={showPassword ? "text" : "password"}
+                required
+                onChange={handleChangeConfirmPassword}
+                error={error.confirmPassword.length > 0}
+                helperText={error.confirmPassword}
+                sx={{ height: { xs: "auto", md: "56px" } }}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
             </Box>
 
             <Button

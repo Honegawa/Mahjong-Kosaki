@@ -16,6 +16,7 @@ import ENDPOINTS from "../../../utils/contants/endpoints";
 import { AuthContext } from "../../../utils/contexts/Auth.context";
 import { AuthContextType } from "../../../interfaces/user";
 import { findFormError } from "../../../utils/formHelper";
+import REGEX from "../../../utils/contants/regex";
 
 type PasswordFormProps = {
   open: string;
@@ -29,7 +30,7 @@ function PasswordForm(props: PasswordFormProps) {
     newPassword: "",
     confirmPassword: "",
   });
-  const [error, setError] = useState({ password: "", server: "" });
+  const [error, setError] = useState({ password: "", confirm: "", server: "" });
   const { user } = useContext(AuthContext) as AuthContextType;
 
   const handleChangeNewPassword = (
@@ -37,20 +38,33 @@ function PasswordForm(props: PasswordFormProps) {
   ) => {
     const { name, value } = event.target;
 
+    if (value.length > 0 && !REGEX.password.test(value)) {
+      setError((error) => ({
+        ...error,
+        password:
+          "Le mot de passe doit contenir 8 caractères dont au moins 1 majuscule, 1 minuscule et un caractère spécial.",
+      }));
+    } else {
+      setError((error) => ({
+        ...error,
+        password: "",
+      }));
+    }
+
     if (
       value.length > 0 &&
       password.confirmPassword.length > 0 &&
       value !== password.confirmPassword
     ) {
-      setError({
-        password: "Le champs ne correspond pas au nouveau mot de passe.",
-        server: "",
-      });
+      setError((error) => ({
+        ...error,
+        confirm: "Le champs ne correspond pas au nouveau mot de passe.",
+      }));
     } else {
-      setError({
-        password: "",
-        server: "",
-      });
+      setError((error) => ({
+        ...error,
+        confirm: "",
+      }));
     }
 
     setPassword((password) => ({ ...password, [name]: value }));
@@ -62,15 +76,15 @@ function PasswordForm(props: PasswordFormProps) {
     const { name, value } = event.target;
 
     if (value.length > 0 && value !== password.newPassword) {
-      setError({
-        password: "Le champs ne correspond pas au nouveau mot de passe.",
-        server: "",
-      });
+      setError((error) => ({
+        ...error,
+        confirm: "Le champs ne correspond pas au nouveau mot de passe.",
+      }));
     } else {
-      setError({
-        password: "",
-        server: "",
-      });
+      setError((error) => ({
+        ...error,
+        confirm: "",
+      }));
     }
 
     setPassword((password) => ({ ...password, [name]: value }));
@@ -86,7 +100,7 @@ function PasswordForm(props: PasswordFormProps) {
 
   const handleClose = () => {
     setPassword({ confirmPassword: "", newPassword: "" });
-    setError({ password: "", server: "" });
+    setError({ password: "", confirm: "", server: "" });
     onClose();
   };
 
@@ -121,6 +135,7 @@ function PasswordForm(props: PasswordFormProps) {
         ) {
           setError({
             password: "",
+            confirm: "",
             server:
               "Une erreur est survenue lors de la modification du mot de passe.",
           });
@@ -150,6 +165,8 @@ function PasswordForm(props: PasswordFormProps) {
           label="Nouveau mot de passe"
           type={showPassword ? "text" : "password"}
           onChange={handleChangeNewPassword}
+          error={error.password.length > 0}
+          helperText={error.password}
           fullWidth
           variant="outlined"
           InputProps={{
@@ -175,8 +192,8 @@ function PasswordForm(props: PasswordFormProps) {
           label="Confirmer nouveau mot de passe"
           type={showPassword ? "text" : "password"}
           onChange={handleChangeConfirmPassword}
-          error={error.password.length > 0}
-          helperText={error.password}
+          error={error.confirm.length > 0}
+          helperText={error.confirm}
           fullWidth
           variant="outlined"
           InputProps={{
