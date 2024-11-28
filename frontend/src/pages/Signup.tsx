@@ -186,7 +186,7 @@ function Signup() {
       const { status } = response;
 
       if (status === 201) {
-        navigate("/");
+        navigate("/login");
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {

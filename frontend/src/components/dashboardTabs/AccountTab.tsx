@@ -1,8 +1,11 @@
 import {
+  Alert,
   Box,
   Button,
   ButtonGroup,
   CardContent,
+  Collapse,
+  IconButton,
   Typography,
 } from "@mui/material";
 import { useContext, useState } from "react";
@@ -12,14 +15,51 @@ import PasswordForm from "./tabModals/PasswordForm";
 import EmailForm from "./tabModals/EmailForm";
 import { MODAL_TABS } from "../../utils/contants/dashboard";
 import UserInfoForm from "./tabModals/UserInfoForm";
+import DeleteDialog from "../DeleteDialog";
+import axios, { AxiosError, AxiosResponse } from "axios";
+import ENDPOINTS from "../../utils/contants/endpoints";
+import CloseIcon from "@mui/icons-material/Close";
+import { useNavigate } from "react-router-dom";
 
 function AccountTab() {
   const [openModal, setOpenModal] = useState("");
-  const { user } = useContext(AuthContext) as AuthContextType;
+  const [error, setError] = useState("");
+  const { user, logout } = useContext(AuthContext) as AuthContextType;
+  const navigate = useNavigate();
 
   const handleOpen = (modal: string) => setOpenModal(modal);
 
   const handleClose = () => setOpenModal("");
+
+  const handleDelete = async () => {
+    if (!user) return;
+
+    try {
+      const response: AxiosResponse = await axios.delete(
+        `${ENDPOINTS.PERSON}/${user.id}`,
+        { withCredentials: true }
+      );
+      const { status } = response;
+
+      if (status === 200) {
+        handleClose();
+        logout();
+        navigate("/");
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError;
+        if (
+          axiosError.response?.status === 500 ||
+          axiosError.response?.status === 403 ||
+          axiosError.response?.status === 404
+        ) {
+          setError("Une erreur est survenue lors de la suppression du compte");
+        }
+      }
+      handleClose();
+    }
+  };
 
   return (
     <CardContent>
@@ -88,8 +128,12 @@ function AccountTab() {
               <Button onClick={() => handleOpen(MODAL_TABS.userInfos)}>
                 Modifier les informations
               </Button>
+              <Button onClick={() => handleOpen(MODAL_TABS.delete)}>
+                Supprimer le compte
+              </Button>
             </ButtonGroup>
           </Box>
+
           <Box sx={{ display: { xs: "flex", md: "none" } }} alignSelf="center">
             <ButtonGroup variant="contained" orientation="vertical">
               <Button onClick={() => handleOpen(MODAL_TABS.password)}>
@@ -101,14 +145,43 @@ function AccountTab() {
               <Button onClick={() => handleOpen(MODAL_TABS.userInfos)}>
                 Modifier les informations
               </Button>
+              <Button onClick={() => handleOpen(MODAL_TABS.delete)}>
+                Supprimer le compte
+              </Button>
             </ButtonGroup>
           </Box>
+
+          {error ? (
+            <Collapse in={error.length > 0}>
+              <Alert
+                action={
+                  <IconButton
+                    color="inherit"
+                    size="small"
+                    onClick={() => setError("")}
+                  >
+                    <CloseIcon fontSize="inherit" />
+                  </IconButton>
+                }
+                severity="warning"
+              >
+                {error}
+              </Alert>
+            </Collapse>
+          ) : (
+            <></>
+          )}
         </Box>
       )}
 
       <PasswordForm open={openModal} onClose={handleClose} />
       <EmailForm open={openModal} onClose={handleClose} />
       <UserInfoForm open={openModal} onClose={handleClose} />
+      <DeleteDialog
+        open={openModal}
+        onClose={handleClose}
+        onConfirm={handleDelete}
+      />
     </CardContent>
   );
 }

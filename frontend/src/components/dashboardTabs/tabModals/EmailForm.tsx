@@ -14,6 +14,7 @@ import { AuthContext } from "../../../utils/contexts/Auth.context";
 import { AuthContextType, UserUpdate } from "../../../interfaces/user";
 import REGEX from "../../../utils/contants/regex";
 import { findFormError } from "../../../utils/formHelper";
+import { MODAL_TABS } from "../../../utils/contants/dashboard";
 
 type EmailFormProps = {
   open: string;
@@ -185,7 +186,7 @@ function EmailForm(props: EmailFormProps) {
 
   return (
     <Dialog
-      open={open === "email"}
+      open={open === MODAL_TABS.email}
       onClose={handleClose}
       PaperProps={{
         component: "form",

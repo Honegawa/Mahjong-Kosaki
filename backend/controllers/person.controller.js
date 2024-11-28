@@ -169,7 +169,6 @@ export const updateById = async (req, res) => {
     res.status(403).json({ message: "Unauthorized to update person" });
   } catch (error) {
     res.status(500).json({ error: "Error in updating person" });
-    console.log(error)
   }
 };
 

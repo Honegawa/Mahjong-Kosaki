@@ -17,6 +17,7 @@ import { AuthContext } from "../../../utils/contexts/Auth.context";
 import { AuthContextType } from "../../../interfaces/user";
 import { findFormError } from "../../../utils/formHelper";
 import REGEX from "../../../utils/contants/regex";
+import { MODAL_TABS } from "../../../utils/contants/dashboard";
 
 type PasswordFormProps = {
   open: string;
@@ -131,7 +132,7 @@ function PasswordForm(props: PasswordFormProps) {
         const axiosError = error as AxiosError;
         if (
           axiosError.response?.status === 500 ||
-          axiosError.response?.status === 400
+          axiosError.response?.status === 400 
         ) {
           setError({
             password: "",
@@ -146,7 +147,7 @@ function PasswordForm(props: PasswordFormProps) {
 
   return (
     <Dialog
-      open={open === "password"}
+      open={open === MODAL_TABS.password}
       onClose={handleClose}
       PaperProps={{
         component: "form",

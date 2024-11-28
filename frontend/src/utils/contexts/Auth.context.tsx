@@ -1,5 +1,5 @@
-import axios from "axios";
-import { createContext, useEffect, useState } from "react";
+import axios, { AxiosResponse } from "axios";
+import { createContext, useCallback, useEffect, useState } from "react";
 import {
   AuthContextType,
   User,
@@ -16,9 +16,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [user, setUser] = useState<User | null>(null);
 
+  const isAuthenticated = useCallback(async () => {
+    const userData = localStorage.getItem("userData");
+    if (userData) {
+      const parseData = JSON.parse(userData);
+
+      try {
+        const response: AxiosResponse = await axios.get(
+          `${ENDPOINTS.PERSON}/${parseData.id}`
+        );
+        const { status } = response;
+
+        if (status === 200) {
+          setUser(parseData);
+        }
+      } catch (error) {
+        localStorage.removeItem("userData");
+      }
+    }
+  }, []);
+
   useEffect(() => {
     isAuthenticated();
-  }, []);
+  }, [isAuthenticated]);
 
   const login = async (dataForm: UserLogin) => {
     let isLogged = false;
@@ -42,13 +62,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     return isLogged;
   };
 
-  const isAuthenticated = () => {
-    const userData = localStorage.getItem("userData");
-    if (userData) {
-      setUser(JSON.parse(userData));
-    }
-  };
-
   const logout = () => {
     localStorage.removeItem("userData");
     setUser(null);
@@ -57,7 +70,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const updateUser = (dataForm: UserUpdate) => {
     if (user) {
       const newUser = { ...user, ...dataForm };
-      setUser(newUser)
+      setUser(newUser);
       localStorage.setItem("userData", JSON.stringify(newUser));
     }
   };

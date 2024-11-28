@@ -55,6 +55,7 @@ export const TABS = {
 };
 
 export enum MODAL_TABS {
+  delete = "delete",
   password = "password",
   email = "email",
   userInfos = "infos",
