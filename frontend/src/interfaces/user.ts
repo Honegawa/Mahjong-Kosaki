@@ -52,3 +52,13 @@ export type RootState = {
     data: UserDataTable[];
   };
 };
+
+export type UpdatedUser = {
+  data: UserDataTable[];
+  update: UserDataTable;
+};
+
+export type DeletedUser = {
+  data: UserDataTable[];
+  id: number;
+};

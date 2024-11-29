@@ -13,6 +13,7 @@ import {
   RootState as RootStateUser,
   User,
   AuthContextType,
+  DeletedUser,
 } from "../../interfaces/user";
 import CreateIcon from "@mui/icons-material/Create";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -41,6 +42,8 @@ function UserListTab() {
   useEffect(() => {
     getUsers();
   }, []);
+
+  console.log(new Date().toLocaleTimeString(), userStore);
 
   const getUsers = async () => {
     dispatch(ACTIONS_USER.FETCH_START());
@@ -90,9 +93,7 @@ function UserListTab() {
   };
 
   const handleDelete = async () => {
-    console.log("delete", selectedPerson);
-
-    if (!selectedPerson) return;
+    if (!selectedPerson || !selectedPerson.id) return;
     if (user && user.id === selectedPerson.id) {
       setError(
         "Vous ne pouvez pas supprimer votre compte depuis cette interface."
@@ -102,6 +103,8 @@ function UserListTab() {
     }
 
     try {
+      dispatch(ACTIONS_USER.DELETE_START());
+
       const response: AxiosResponse = await axios.delete(
         `${ENDPOINTS.PERSON}/${selectedPerson.id}`,
         { withCredentials: true }
@@ -109,6 +112,13 @@ function UserListTab() {
       const { status } = response;
 
       if (status === 200) {
+        const deleteUser: DeletedUser = {
+          data: userStore,
+          id: selectedPerson.id,
+        };
+
+        dispatch(ACTIONS_USER.DELETE_SUCCESS(deleteUser));
+
         handleClose();
       }
     } catch (error) {
@@ -118,6 +128,8 @@ function UserListTab() {
           setError("Une erreur est survenue lors de la suppression du compte");
         }
       }
+
+      dispatch(ACTIONS_USER.DELETE_FAILURE());
       handleClose();
     }
   };

@@ -12,9 +12,10 @@ import {
 import { MODAL_TABS } from "../../../utils/contants/dashboard";
 import {
   AuthContextType,
+  UpdatedUser,
   USER_ROLE,
   UserDataTable,
-  UserUpdate,
+  RootState as RootStateUser,
 } from "../../../interfaces/user";
 import cloneDeep from "lodash/cloneDeep";
 import { useContext, useEffect, useState } from "react";
@@ -31,6 +32,9 @@ import { findFormError } from "../../../utils/formHelper";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import ENDPOINTS from "../../../utils/contants/endpoints";
 import { AuthContext } from "../../../utils/contexts/Auth.context";
+import { useDispatch, useSelector } from "react-redux";
+import * as ACTIONS_USER from "../../../redux/reducers/user";
+import { allUsers } from "../../../services/selectors/user.selectors";
 
 type PersonFormProps = {
   open: string;
@@ -57,6 +61,10 @@ function PersonForm(props: PersonFormProps) {
     server: "",
   });
   const { user, updateUser } = useContext(AuthContext) as AuthContextType;
+  const dispatch = useDispatch();
+  const userStore: UserDataTable[] = useSelector((state: RootStateUser) =>
+    allUsers(state)
+  );
 
   useEffect(() => {
     const userClone = cloneDeep(selectedPerson);
@@ -137,15 +145,11 @@ function PersonForm(props: PersonFormProps) {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    onClose();
-    console.log("submit personForm", person, user);
 
     if (findFormError(error)) return;
 
     try {
       const formData: UserDataTable = { ...person };
-
-      console.log("preformatted", formData);
 
       if (!person.EMANumber) {
         formData.EMANumber = null;
@@ -158,6 +162,7 @@ function PersonForm(props: PersonFormProps) {
 
       if (selectedPerson && selectedPerson.id) {
         // Update
+        dispatch(ACTIONS_USER.UPDATE_START());
 
         // Prevent existing email error
         if (person.email === selectedPerson.email) {
@@ -173,6 +178,8 @@ function PersonForm(props: PersonFormProps) {
         );
       } else {
         // Create
+        dispatch(ACTIONS_USER.POST_START());
+
         response = await axios.post(`${ENDPOINTS.PERSON}/create`, formData, {
           withCredentials: true,
         });
@@ -181,41 +188,49 @@ function PersonForm(props: PersonFormProps) {
       const { data, status } = response;
 
       if (status === 200) {
+        const { updatedPerson } = data;
+        const newUser: UserDataTable = { ...updatedPerson };
+        const updatedUser: UpdatedUser = {
+          data: userStore,
+          update: newUser,
+        };
+
         // Update context if admin updates himself from user list
         if (user && user.id === person.id) {
-          const { updatedPerson } = data;
-          const newUser: UserUpdate = {
-            firstname: updatedPerson.firstname,
-            lastname: updatedPerson.lastname,
-            email: updatedPerson.email,
-            EMANumber: updatedPerson.EMANumber,
-            phone: updatedPerson.phone,
-            subscription: updatedPerson.subscription,
-          };
-
           updateUser(newUser);
         }
+
+        dispatch(ACTIONS_USER.UPDATE_SUCCESS(updatedUser));
         onClose();
       } else if (status === 201) {
-        console.log("created");
+        const { newPerson } = data;
+
+        const newUser: UserDataTable = { ...newPerson };
+
+        dispatch(ACTIONS_USER.POST_SUCCESS(newUser));
         onClose();
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError;
-        if (axiosError.response?.status) {
+        if (axiosError.response?.status !== 400) {
           setError((error) => ({
             ...error,
             server: `Une erreur est survenue lors de la ${
               user ? "modification" : "création"
             } de la personne.`,
           }));
+        } else {
+          setError((error) => ({
+            ...error,
+            email: "Cette adresse email est déjà utilisé.",
+          }));
         }
       }
+
+      dispatch(ACTIONS_USER.POST_FAILURE());
     }
   };
-
-  console.log("personform----\n", "user:\n", user, "\npersone:\n", person);
 
   return (
     <Dialog
