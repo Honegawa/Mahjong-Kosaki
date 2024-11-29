@@ -102,18 +102,18 @@ function UserInfoForm(props: UserInfoFormProps) {
     if (findFormError(error)) return;
 
     try {
-      const formaData: UserUpdate = { ...infos };
+      const formData: UserUpdate = { ...infos };
 
       if (!infos.EMANumber) {
-        formaData.EMANumber = null;
+        formData.EMANumber = null;
       }
       if (!infos.phone) {
-        formaData.phone = null;
+        formData.phone = null;
       }
 
       const response: AxiosResponse = await axios.put(
         `${ENDPOINTS.PERSON}/${user.id}`,
-        formaData,
+        formData,
         { withCredentials: true }
       );
       const { data, status } = response;
@@ -141,7 +141,7 @@ function UserInfoForm(props: UserInfoFormProps) {
           setError((error) => ({
             ...error,
             server:
-              "Une erreur est survenue lors de la modification des informations",
+              "Une erreur est survenue lors de la modification des informations.",
           }));
         }
       }

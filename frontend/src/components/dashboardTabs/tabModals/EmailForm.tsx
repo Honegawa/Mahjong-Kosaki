@@ -140,13 +140,13 @@ function EmailForm(props: EmailFormProps) {
     if (findFormError(error)) return;
 
     try {
-      const formaData: UserUpdate = {
+      const formData: UserUpdate = {
         email: email.newEmail,
       };
 
       const response: AxiosResponse = await axios.put(
         `${ENDPOINTS.PERSON}/${user.id}`,
-        formaData,
+        formData,
         { withCredentials: true }
       );
       const { data, status } = response;

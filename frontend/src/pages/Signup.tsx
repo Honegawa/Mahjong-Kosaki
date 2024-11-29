@@ -170,18 +170,18 @@ function Signup() {
     if (findFormError(error)) return;
 
     try {
-      const formaData: UserUpdate = { ...user };
+      const formData: UserUpdate = { ...user };
 
       if (!user.EMANumber) {
-        delete formaData.EMANumber;
+        delete formData.EMANumber;
       }
       if (!user.phone) {
-        delete formaData.phone;
+        delete formData.phone;
       }
 
       const response: AxiosResponse = await axios.post(
         ENDPOINTS.PERSON,
-        formaData
+        formData
       );
       const { status } = response;
 
