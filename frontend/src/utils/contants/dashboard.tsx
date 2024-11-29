@@ -59,4 +59,6 @@ export enum MODAL_TABS {
   password = "password",
   email = "email",
   userInfos = "infos",
+  createPerson = "createPerson",
+  editPerson = "editPerson",
 }

@@ -4,10 +4,12 @@ import {
   getById,
   signup,
   signin,
+  create,
   updateById,
   deleteById,
 } from "../controllers/person.controller.js";
 import {
+  verifyAdmin,
   verifySelfOrAdmin,
   verifyToken,
 } from "../middlewares/auth.js";
@@ -18,6 +20,7 @@ router.get("/", getAll);
 router.get("/:id", getById);
 router.post("/", signup);
 router.post("/signin", signin);
+router.post("/create", verifyAdmin, create);
 router.put("/:id", verifyToken, updateById);
 router.delete("/:id", verifySelfOrAdmin, deleteById);
 

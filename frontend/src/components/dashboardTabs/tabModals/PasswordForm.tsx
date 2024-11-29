@@ -113,13 +113,13 @@ function PasswordForm(props: PasswordFormProps) {
     if (findFormError(error)) return;
 
     try {
-      const formaData = {
+      const formData = {
         password: password.newPassword,
       };
 
       const response: AxiosResponse = await axios.put(
         `${ENDPOINTS.PERSON}/${user.id}`,
-        formaData,
+        formData,
         { withCredentials: true }
       );
       const { status } = response;

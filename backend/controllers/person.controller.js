@@ -104,6 +104,40 @@ export const signup = async (req, res) => {
   }
 };
 
+export const create = async (req, res) => {
+  try {
+    const { firstname, lastname, email, phone, subscription, EMANumber, role } =
+      req.body;
+    const hashedPassword = await bcrypt.hash(env.DEFAULT_USER_PASSWORD, 10);
+
+    const person = await Person.findOne({
+      where: {
+        email: email,
+      },
+    });
+
+    if (person) {
+      return res.status(400).json({ message: "Email is already used" });
+    }
+
+    const newPerson = await Person.create({
+      firstname,
+      lastname,
+      email,
+      phone,
+      password: hashedPassword,
+      subscription,
+      EMANumber,
+      role,
+    });
+
+    res.status(201).json({ message: "Person has been created.", newPerson });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Error in creating person" });
+  }
+};
+
 export const updateById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -115,6 +149,7 @@ export const updateById = async (req, res) => {
       phone,
       subscription,
       EMANumber,
+      role,
     } = req.body;
 
     let hashedPassword;
@@ -136,34 +171,35 @@ export const updateById = async (req, res) => {
       }
     }
 
-    if (person.id === req.user.id || req.user.role === "admin") {
-      const updatedPerson = await person.update(
-        {
-          firstname,
-          lastname,
-          email,
-          phone,
-          password: hashedPassword,
-          subscription,
-          EMANumber,
-        },
-        {
-          new: true,
-        }
-      );
+    const data = {
+      firstname,
+      lastname,
+      email,
+      phone,
+      password: hashedPassword,
+      subscription,
+      EMANumber,
+    };
 
-      const token = jwt.sign({ id: person.id, role: person.role }, env.TOKEN, {
-        expiresIn: "24h",
+    let updatedPerson;
+    if (person.id === req.user.id) {
+      updatedPerson = await person.update(data, {
+        new: true,
       });
       const { password, ...other } = updatedPerson.dataValues;
 
-      return res
-        .cookie("access_token", token, { httpOnly: true })
-        .status(200)
-        .json({
-          message: "Person has been updated",
-          updatedPerson: other,
-        });
+      return res.status(200).json({
+        message: "Person has been updated",
+        updatedPerson: other,
+      });
+    } else if (req.user.role === "admin") {
+      updatedPerson = await person.update({ ...data, role }, { new: true });
+      const { password, ...other } = updatedPerson.dataValues;
+
+      return res.status(200).json({
+        message: "Person has been updated",
+        updatedPerson: other,
+      });
     }
 
     res.status(403).json({ message: "Unauthorized to update person" });
