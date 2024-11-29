@@ -81,8 +81,10 @@ function App() {
               <Route path="*" element={<Navigate to="./account" replace />} />
             </Route>
           </Route>
+
+          <Route path="forbidden" element={<div>a</div>} />
+          <Route path="*" element={<ErrorPage />} />
         </Route>
-        <Route path="*" element={<ErrorPage />} />
       </Route>
     </Routes>
   );
