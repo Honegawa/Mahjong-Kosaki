@@ -22,6 +22,7 @@ import BaseTemplate from "./templates/BaseTemplate";
 import UnLoggedRoute from "./components/routes/UnLoggedRoute";
 import PrivateRoute from "./components/routes/PrivateRoute";
 import { USER_ROLE } from "./interfaces/user";
+import { TABS } from "./utils/contants/dashboard";
 
 function App() {
   return (
@@ -52,8 +53,32 @@ function App() {
           </Route>
 
           {/*Access: logged*/}
-          <Route element={<PrivateRoute roles={[USER_ROLE.USER, USER_ROLE.ADMIN]} />}>
-            <Route path="dashboard" element={<Dashboard />}>
+          <Route
+            element={<PrivateRoute roles={[USER_ROLE.USER, USER_ROLE.ADMIN]} />}
+          >
+            <Route path="dashboard">
+              <Route path="" element={<Navigate to="./account" replace />} />
+              {Object.entries(TABS.user).map(([userTabKey, userTabValue]) => (
+                <Route
+                  path={userTabKey.toLowerCase()}
+                  element={<Dashboard tabIndex={userTabValue.index} />}
+                  key={`tab-${userTabKey}`}
+                />
+              ))}
+
+              {/*Access dashboard admin tabs */}
+              <Route element={<PrivateRoute roles={[USER_ROLE.ADMIN]} />}>
+                {Object.entries(TABS.admin).map(
+                  ([adminTabKey, adminTabValue]) => (
+                    <Route
+                      path={adminTabKey.toLowerCase()}
+                      element={<Dashboard tabIndex={adminTabValue.index} />}
+                      key={`tab-${adminTabKey}`}
+                    />
+                  )
+                )}
+              </Route>
+              <Route path="*" element={<Navigate to="./account" replace />} />
             </Route>
           </Route>
         </Route>

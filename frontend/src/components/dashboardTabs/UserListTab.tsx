@@ -43,8 +43,6 @@ function UserListTab() {
     getUsers();
   }, []);
 
-  console.log(new Date().toLocaleTimeString(), userStore);
-
   const getUsers = async () => {
     dispatch(ACTIONS_USER.FETCH_START());
 
