@@ -1,11 +1,8 @@
 import {
-  Alert,
   Box,
   Button,
   ButtonGroup,
   CardContent,
-  Collapse,
-  IconButton,
   Typography,
 } from "@mui/material";
 import { useContext, useState } from "react";
@@ -18,8 +15,8 @@ import UserInfoForm from "./tabModals/UserInfoForm";
 import DeleteDialog from "../DeleteDialog";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import ENDPOINTS from "../../utils/contants/endpoints";
-import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
+import WarningAlert from "../WarningAlert";
 
 function AccountTab() {
   const [openModal, setOpenModal] = useState("");
@@ -151,26 +148,7 @@ function AccountTab() {
             </ButtonGroup>
           </Box>
 
-          {error ? (
-            <Collapse in={error.length > 0}>
-              <Alert
-                action={
-                  <IconButton
-                    color="inherit"
-                    size="small"
-                    onClick={() => setError("")}
-                  >
-                    <CloseIcon fontSize="inherit" />
-                  </IconButton>
-                }
-                severity="warning"
-              >
-                {error}
-              </Alert>
-            </Collapse>
-          ) : (
-            <></>
-          )}
+          <WarningAlert error={error} onClick={() => setError("")} />
         </Box>
       )}
 

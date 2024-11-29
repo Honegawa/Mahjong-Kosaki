@@ -8,6 +8,9 @@ import { MUI_THEME } from "./utils/material-ui/theme.ts";
 import { AuthProvider } from "./utils/contexts/Auth.context.tsx";
 import { Provider } from "react-redux";
 import store from "./redux/store.ts";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import "dayjs/locale/fr";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -15,7 +18,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <AuthProvider>
         <Provider store={store}>
           <BrowserRouter>
-            <App />
+            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="fr">
+              <App />
+            </LocalizationProvider>
           </BrowserRouter>
         </Provider>
       </AuthProvider>

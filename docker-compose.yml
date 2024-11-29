@@ -12,6 +12,7 @@ services:
       - DB_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - DB_NAME=${MYSQL_DATABASE}
       - DB_TYPE=${MYSQL_TYPE}
+      - DEFAULT_USER_PASSWORD=${DEFAULT_USER_PASSWORD}
     volumes:
       - ./backend:/usr/local/apps/backend
       - node_modules_back:/usr/local/apps/backend/node_modules
