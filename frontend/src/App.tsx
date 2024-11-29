@@ -23,6 +23,7 @@ import UnLoggedRoute from "./components/routes/UnLoggedRoute";
 import PrivateRoute from "./components/routes/PrivateRoute";
 import { USER_ROLE } from "./interfaces/user";
 import { TABS } from "./utils/contants/dashboard";
+import ForbiddenPage from "./pages/ForbiddenPage";
 
 function App() {
   return (
@@ -82,7 +83,7 @@ function App() {
             </Route>
           </Route>
 
-          <Route path="forbidden" element={<div>a</div>} />
+          <Route path="forbidden" element={<ForbiddenPage />} />
           <Route path="*" element={<ErrorPage />} />
         </Route>
       </Route>
