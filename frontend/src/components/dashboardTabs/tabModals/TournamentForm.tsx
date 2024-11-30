@@ -233,6 +233,7 @@ function TournamentForm(props: TournamentFormProps) {
         }));
         break;
       case "maxDate":
+        setError((error) => ({ ...error, [field]: "La date doit être antérieure à la date de début." }));
         break;
       case "invalidDate":
         setError((error) => ({ ...error, [field]: "Date invalide." }));
