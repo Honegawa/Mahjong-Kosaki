@@ -107,8 +107,12 @@ export const create = async (req, res) => {
 
     res
       .status(201)
-      .json({ message: "Tournament has been created", tournament });
+      .json({
+        message: "Tournament has been created",
+        newTournament: tournament,
+      });
   } catch (error) {
+    console.log(error)
     res.status(500).json({ error: "Error in sending tournament" });
   }
 };
@@ -148,7 +152,10 @@ export const updateById = async (req, res) => {
 
     res
       .status(200)
-      .json({ message: "Tournament has been updated", tournament });
+      .json({
+        message: "Tournament has been updated",
+        updatedTournament: tournament,
+      });
   } catch (error) {
     res.status(500).json({ error: "Error in updating tournament" });
   }
