@@ -190,7 +190,7 @@ function EmailForm(props: EmailFormProps) {
       onClose={handleClose}
       PaperProps={{
         component: "form",
-        sx: { width: "400px" },
+        sx: { width: "440px" },
         onSubmit: handleSubmit,
       }}
     >

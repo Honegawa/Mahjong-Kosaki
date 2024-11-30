@@ -188,8 +188,7 @@ function PersonForm(props: PersonFormProps) {
       const { data, status } = response;
 
       if (status === 200) {
-        const { updatedPerson } = data;
-        const newUser: UserDataTable = { ...updatedPerson };
+        const newUser: UserDataTable = data.updatedPerson;
         const updatedUser: UpdatedUser = {
           data: userStore,
           update: newUser,
@@ -238,7 +237,7 @@ function PersonForm(props: PersonFormProps) {
       onClose={onClose}
       PaperProps={{
         component: "form",
-        sx: { width: "400px" },
+        sx: { width: "440px" },
         onSubmit: handleSubmit,
       }}
     >

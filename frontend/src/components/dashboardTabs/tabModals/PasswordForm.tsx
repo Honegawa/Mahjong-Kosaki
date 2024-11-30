@@ -151,7 +151,7 @@ function PasswordForm(props: PasswordFormProps) {
       onClose={handleClose}
       PaperProps={{
         component: "form",
-        sx: { width: "400px" },
+        sx: { width: "440px" },
         onSubmit: handleSubmit,
       }}
     >
