@@ -18,6 +18,7 @@ import { AuthContext } from "../utils/contexts/Auth.context";
 import AccountTab from "../components/dashboardTabs/AccountTab";
 import UserListTab from "../components/dashboardTabs/UserListTab";
 import { Link } from "react-router-dom";
+import TournamentTab from "../components/dashboardTabs/TournamentTab";
 
 type DashboardProps = {
   tabIndex: number;
@@ -27,10 +28,6 @@ function Dashboard(props: DashboardProps) {
   const { tabIndex } = props;
   const [openMenu, setOpenMenu] = useState(false);
   const { user } = useContext(AuthContext) as AuthContextType;
-
-  /*const handleListItemClick = (index: number) => {
-    setSelectedIndex(index);
-  };*/
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpenMenu(newOpen);
@@ -42,6 +39,8 @@ function Dashboard(props: DashboardProps) {
         return <AccountTab />;
       case 3:
         return <UserListTab />;
+      case 6:
+        return <TournamentTab />;
 
       default:
         return <CardContent sx={{ height: "100%" }}>Erreur</CardContent>;
