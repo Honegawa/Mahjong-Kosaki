@@ -5,8 +5,12 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
   InputAdornment,
+  InputLabel,
   MenuItem,
+  Select,
+  SelectChangeEvent,
   TextField,
 } from "@mui/material";
 import { MODAL_TABS } from "../../../utils/contants/dashboard";
@@ -24,9 +28,8 @@ import {
   PhoneIphone,
   MailOutline,
   InfoOutlined,
-  Work,
 } from "@mui/icons-material";
-import { DatePicker } from "@mui/x-date-pickers";
+import { DatePicker, DateValidationError } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import { findFormError } from "../../../utils/formHelper";
 import axios, { AxiosError, AxiosResponse } from "axios";
@@ -58,8 +61,14 @@ function PersonForm(props: PersonFormProps) {
     email: "",
     EMANumber: "",
     phone: "",
+    subscription: "",
     server: "",
   });
+  const [date, setDate] = useState<Dayjs | null>(
+    selectedPerson && selectedPerson.subscription
+      ? dayjs(selectedPerson.subscription)
+      : null
+  );
   const { user, updateUser } = useContext(AuthContext) as AuthContextType;
   const dispatch = useDispatch();
   const userStore: UserDataTable[] = useSelector((state: RootStateUser) =>
@@ -75,6 +84,11 @@ function PersonForm(props: PersonFormProps) {
   }, [open, selectedPerson]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setPerson((person) => ({ ...person, [name]: value }));
+  };
+
+  const handleSelectChange = (event: SelectChangeEvent<string>) => {
     const { name, value } = event.target;
     setPerson((person) => ({ ...person, [name]: value }));
   };
@@ -130,12 +144,14 @@ function PersonForm(props: PersonFormProps) {
   };
 
   const handleChangeSubscription = (value: Dayjs | null) => {
-    if (value) {
+    setDate(value);
+
+    if (value && value.isValid()) {
       setPerson((person) => ({
         ...person,
         subscription: value.toISOString(),
       }));
-    } else {
+    } else if (!value) {
       setPerson((person) => ({
         ...person,
         subscription: null,
@@ -188,8 +204,7 @@ function PersonForm(props: PersonFormProps) {
       const { data, status } = response;
 
       if (status === 200) {
-        const { updatedPerson } = data;
-        const newUser: UserDataTable = { ...updatedPerson };
+        const newUser: UserDataTable = data.updatedPerson;
         const updatedUser: UpdatedUser = {
           data: userStore,
           update: newUser,
@@ -232,13 +247,25 @@ function PersonForm(props: PersonFormProps) {
     }
   };
 
+  const handleErrorDate = (newError: DateValidationError) => {
+    switch (newError) {
+      case "invalidDate":
+        setError((error) => ({ ...error, subscription: "Date invalide." }));
+        break;
+
+      default:
+        setError((error) => ({ ...error, subscription: "" }));
+        break;
+    }
+  };
+
   return (
     <Dialog
       open={open === MODAL_TABS.createPerson || open === MODAL_TABS.editPerson}
       onClose={onClose}
       PaperProps={{
         component: "form",
-        sx: { width: "400px" },
+        sx: { width: "440px" },
         onSubmit: handleSubmit,
       }}
     >
@@ -359,36 +386,35 @@ function PersonForm(props: PersonFormProps) {
           <DatePicker
             name="subscription"
             label="Adhésion"
-            value={person.subscription ? dayjs(person.subscription) : null}
+            value={date}
             onChange={handleChangeSubscription}
+            onError={(newError) => handleErrorDate(newError)}
             sx={{ width: "100%", marginTop: 1 }}
             slotProps={{
               field: { clearable: true },
+              textField: {
+                helperText: error.subscription,
+              },
             }}
           />
-          <TextField
-            margin="dense"
-            id="role"
-            name="role"
-            label="Rôle"
-            select
-            value={person.role}
-            onChange={handleChange}
-            fullWidth
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Work />
-                </InputAdornment>
-              ),
-            }}
-          >
-            {Object.values(USER_ROLE).map((role) => (
-              <MenuItem key={role} value={role}>
-                {role}
-              </MenuItem>
-            ))}
-          </TextField>
+          <FormControl required margin="dense" fullWidth>
+            <InputLabel id="roleLabel">Role</InputLabel>
+            <Select
+              labelId="roleLabel"
+              id="role"
+              name="role"
+              label="Rôle"
+              onChange={handleSelectChange}
+              value={person.role}
+              variant="outlined"
+            >
+              {Object.values(USER_ROLE).map((role) => (
+                <MenuItem key={role} value={role}>
+                  {role}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Box>
       </DialogContent>
       <DialogActions>

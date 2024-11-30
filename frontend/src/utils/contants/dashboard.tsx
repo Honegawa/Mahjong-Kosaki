@@ -61,4 +61,8 @@ export enum MODAL_TABS {
   userInfos = "infos",
   createPerson = "createPerson",
   editPerson = "editPerson",
+  createTournament = "createTournament",
+  editTournament = "editTournament",
 }
+
+export const TOURNAMENT_CAPACITIES = [8, 16, 32, 64, 128];

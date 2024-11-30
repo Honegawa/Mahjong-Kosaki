@@ -1,5 +1,15 @@
 import { Add } from "@mui/icons-material";
 import { Box, Button, CardContent } from "@mui/material";
+import CreateIcon from "@mui/icons-material/Create";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { MODAL_TABS } from "../../utils/contants/dashboard";
+import {
+  Tournament,
+  RootState as RootStateTournament,
+  DeletedTournament,
+} from "../../interfaces/tournament";
 import {
   DataGrid,
   GridActionsCellItem,
@@ -7,115 +17,86 @@ import {
   GridRowId,
   GridToolbar,
 } from "@mui/x-data-grid";
-import {
-  USER_ROLE,
-  UserDataTable,
-  RootState as RootStateUser,
-  User,
-  AuthContextType,
-  DeletedUser,
-} from "../../interfaces/user";
-import CreateIcon from "@mui/icons-material/Create";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { allUsers } from "../../services/selectors/user.selectors";
-import * as ACTIONS_USER from "../../redux/reducers/user";
-import ENDPOINTS from "../../utils/contants/endpoints";
-import axios, { AxiosError, AxiosResponse } from "axios";
-import { MODAL_TABS } from "../../utils/contants/dashboard";
-import PersonForm from "./tabModals/PersonForm";
-import DeleteDialog from "../DeleteDialog";
 import WarningAlert from "../WarningAlert";
-import { AuthContext } from "../../utils/contexts/Auth.context";
+import { allTournaments } from "../../services/selectors/tournament.selector";
+import * as ACTIONS_TOURNAMENT from "../../redux/reducers/tournament";
+import axios, { AxiosError, AxiosResponse } from "axios";
+import ENDPOINTS from "../../utils/contants/endpoints";
+import DeleteDialog from "../DeleteDialog";
+import TournamentForm from "./tabModals/TournamentForm";
 
-function UserListTab() {
+function TournamentTab() {
   const [openModal, setOpenModal] = useState("");
-  const [selectedPerson, setSelectedPerson] = useState<UserDataTable>();
+  const [selectedTournament, setSelectedTournament] = useState<Tournament>();
   const [error, setError] = useState("");
   const dispatch = useDispatch();
-  const userStore: UserDataTable[] = useSelector((state: RootStateUser) =>
-    allUsers(state)
+  const tournamentStore: Tournament[] = useSelector(
+    (state: RootStateTournament) => allTournaments(state)
   );
-  const { user } = useContext(AuthContext) as AuthContextType;
 
   useEffect(() => {
-    getUsers();
+    getTournaments();
   }, []);
 
-  const getUsers = async () => {
-    dispatch(ACTIONS_USER.FETCH_START());
+  const getTournaments = async () => {
+    dispatch(ACTIONS_TOURNAMENT.FETCH_START());
 
     try {
-      const response = await axios.get(ENDPOINTS.PERSON);
+      const response = await axios.get(ENDPOINTS.TOURNAMENT);
       const { data, status } = response;
 
       if (status === 200) {
-        const formatData: UserDataTable[] = data.map((e: User) => ({
-          id: e.id,
-          firstname: e.firstname,
-          lastname: e.lastname,
-          email: e.email,
-          phone: e.phone,
-          subscription: e.subscription,
-          EMANumber: e.EMANumber,
-          role: e.role,
-        }));
-
-        dispatch(ACTIONS_USER.FETCH_SUCCESS(formatData));
+        dispatch(ACTIONS_TOURNAMENT.FETCH_SUCCESS(data));
       }
     } catch (error) {
-      dispatch(ACTIONS_USER.FETCH_FAILURE());
+      dispatch(ACTIONS_TOURNAMENT.FETCH_FAILURE());
     }
   };
 
-  const handleOpenCreate = () => setOpenModal(MODAL_TABS.createPerson);
+  const handleOpenCreate = () => setOpenModal(MODAL_TABS.createTournament);
   const handleOpenEdit = useCallback(
     (id: GridRowId) => () => {
-      setOpenModal(MODAL_TABS.editPerson);
-      setSelectedPerson(userStore.find((user) => user.id === id));
+      setOpenModal(MODAL_TABS.editTournament);
+      setSelectedTournament(
+        tournamentStore.find((tournament) => tournament.id === id)
+      );
     },
-    [userStore]
+    [tournamentStore]
   );
   const handleOpenDelete = useCallback(
     (id: GridRowId) => () => {
       setOpenModal(MODAL_TABS.delete);
-      setSelectedPerson(userStore.find((user) => user.id === id));
+      setSelectedTournament(
+        tournamentStore.find((tournament) => tournament.id === id)
+      );
     },
-    [userStore]
+    [tournamentStore]
   );
 
   const handleClose = () => {
     setOpenModal("");
-    setSelectedPerson(undefined);
+    setSelectedTournament(undefined);
   };
 
   const handleDelete = async () => {
-    if (!selectedPerson || !selectedPerson.id) return;
-    if (user && user.id === selectedPerson.id) {
-      setError(
-        "Vous ne pouvez pas supprimer votre compte depuis cette interface."
-      );
-      handleClose();
-      return;
-    }
+    if (!selectedTournament || !selectedTournament.id) return;
 
     try {
-      dispatch(ACTIONS_USER.DELETE_START());
+      dispatch(ACTIONS_TOURNAMENT.DELETE_START());
 
       const response: AxiosResponse = await axios.delete(
-        `${ENDPOINTS.PERSON}/${selectedPerson.id}`,
+        `${ENDPOINTS.TOURNAMENT}/${selectedTournament.id}`,
         { withCredentials: true }
       );
       const { status } = response;
 
       if (status === 200) {
-        const deleteUser: DeletedUser = {
-          data: userStore,
-          id: selectedPerson.id,
+        const deletedTournament: DeletedTournament = {
+          data: tournamentStore,
+          id: selectedTournament.id,
         };
 
-        dispatch(ACTIONS_USER.DELETE_SUCCESS(deleteUser));
+        dispatch(ACTIONS_TOURNAMENT.DELETE_SUCCESS(deletedTournament));
 
         handleClose();
       }
@@ -127,45 +108,66 @@ function UserListTab() {
         }
       }
 
-      dispatch(ACTIONS_USER.DELETE_FAILURE());
+      dispatch(ACTIONS_TOURNAMENT.DELETE_FAILURE());
       handleClose();
     }
   };
 
-  const columns = useMemo<GridColDef<UserDataTable>[]>(
+  const columns = useMemo<GridColDef<Tournament>[]>(
     () => [
       { field: "id", headerName: "ID", type: "number", minWidth: 120, flex: 1 },
-      { field: "lastname", headerName: "Nom", minWidth: 120, flex: 2 },
-      { field: "firstname", headerName: "Prénom", minWidth: 120, flex: 2 },
-      { field: "email", headerName: "Email", minWidth: 120, flex: 3 },
-      { field: "EMANumber", headerName: "N° EMA", minWidth: 120, flex: 2 },
-      { field: "phone", headerName: "Téléphone", minWidth: 120, flex: 2 },
+      { field: "name", headerName: "Nom", minWidth: 120, flex: 2 },
       {
-        field: "subscription",
-        headerName: "Adhésion",
+        field: "description",
+        headerName: "Description",
+        minWidth: 120,
+        flex: 4,
+      },
+      { field: "setup", headerName: "Organisation", minWidth: 120, flex: 4 },
+      {
+        field: "startDate",
+        headerName: "Date de début",
         type: "date",
         minWidth: 120,
         flex: 2,
         valueGetter: (value, row) => {
-          return row.subscription ? new Date(row.subscription) : null;
+          return new Date(row.startDate);
         },
       },
       {
-        field: "role",
-        headerName: "Admin",
-        type: "boolean",
+        field: "endDate",
+        headerName: "Date de fin",
+        type: "date",
         minWidth: 120,
-        flex: 1,
+        flex: 2,
         valueGetter: (value, row) => {
-          return row.role === USER_ROLE.ADMIN;
+          return new Date(row.endDate);
         },
       },
+      {
+        field: "registerLimitDate",
+        headerName: "Date limite",
+        type: "date",
+        minWidth: 120,
+        flex: 2,
+        valueGetter: (value, row) => {
+          return new Date(row.registerLimitDate);
+        },
+      },
+      {
+        field: "entryFee",
+        headerName: "Frais d'entrée",
+        minWidth: 120,
+        flex: 1,
+      },
+      { field: "playerLimit", headerName: "Capacité", minWidth: 120, flex: 1 },
+      { field: "location", headerName: "Lieu", minWidth: 120, flex: 4 },
       {
         field: "actions",
         headerName: "Actions",
-        type: "actions",
         minWidth: 120,
-        flex: 2,
+        type: "actions",
+        flex: 3,
         getActions: (params) => [
           <GridActionsCellItem
             icon={<CreateIcon />}
@@ -202,13 +204,13 @@ function UserListTab() {
           startIcon={<Add />}
           sx={{ width: "fit-content" }}
         >
-          Créer une personne
+          Créer un tournoi
         </Button>
 
         <WarningAlert error={error} onClick={() => setError("")} />
 
         <DataGrid
-          rows={userStore}
+          rows={tournamentStore}
           columns={columns}
           initialState={{
             pagination: {
@@ -230,12 +232,12 @@ function UserListTab() {
         />
       </Box>
 
-      {(openModal === MODAL_TABS.createPerson ||
-        openModal === MODAL_TABS.editPerson) && (
-        <PersonForm
+      {(openModal === MODAL_TABS.createTournament ||
+        openModal === MODAL_TABS.editTournament) && (
+        <TournamentForm
           open={openModal}
           onClose={handleClose}
-          selectedPerson={selectedPerson}
+          selectedTournament={selectedTournament}
         />
       )}
 
@@ -250,4 +252,4 @@ function UserListTab() {
   );
 }
 
-export default UserListTab;
+export default TournamentTab;
