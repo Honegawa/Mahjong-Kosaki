@@ -19,8 +19,12 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
   InputAdornment,
+  InputLabel,
   MenuItem,
+  Select,
+  SelectChangeEvent,
   TextField,
 } from "@mui/material";
 import { findFormError } from "../../../utils/formHelper";
@@ -29,7 +33,7 @@ import ENDPOINTS from "../../../utils/contants/endpoints";
 import { DatePicker } from "@mui/x-date-pickers";
 import { DateValidationError } from "@mui/x-date-pickers/models";
 import dayjs, { Dayjs } from "dayjs";
-import { Euro, People, Place } from "@mui/icons-material";
+import { Euro, Place } from "@mui/icons-material";
 
 type TournamentFormProps = {
   open: string;
@@ -92,6 +96,11 @@ function TournamentForm(props: TournamentFormProps) {
   }, [open, selectedTournament]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setTournament((tournament) => ({ ...tournament, [name]: value }));
+  };
+
+  const handleSelectChange = (event: SelectChangeEvent<number>) => {
     const { name, value } = event.target;
     setTournament((tournament) => ({ ...tournament, [name]: value }));
   };
@@ -235,8 +244,6 @@ function TournamentForm(props: TournamentFormProps) {
     }
   };
 
-  console.log(tournament);
-
   return (
     <Dialog
       open={
@@ -345,31 +352,24 @@ function TournamentForm(props: TournamentFormProps) {
               step: 0.25,
             }}
           />
-          <TextField
-            required
-            margin="dense"
-            id="playerLimit"
-            name="playerLimit"
-            label="Capacité"
-            select
-            onChange={handleChange}
-            value={tournament.playerLimit}
-            fullWidth
-            variant="outlined"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <People />
-                </InputAdornment>
-              ),
-            }}
-          >
-            {TOURNAMENT_CAPACITIES.map((cap) => (
-              <MenuItem key={`${cap}-capacity`} value={cap}>
-                {cap}
-              </MenuItem>
-            ))}
-          </TextField>
+          <FormControl required margin="dense" fullWidth>
+            <InputLabel id="playerLimitLabel">Capacité</InputLabel>
+            <Select
+              labelId="playerLimitLabel"
+              id="playerLimit"
+              name="playerLimit"
+              label="Capacité"
+              onChange={handleSelectChange}
+              value={tournament.playerLimit}
+              variant="outlined"
+            >
+              {TOURNAMENT_CAPACITIES.map((cap) => (
+                <MenuItem key={`${cap}-capacity`} value={cap}>
+                  {cap}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Box>
 
         <Box
