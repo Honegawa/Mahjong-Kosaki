@@ -134,16 +134,17 @@ function UserListTab() {
 
   const columns = useMemo<GridColDef<UserDataTable>[]>(
     () => [
-      { field: "id", headerName: "ID", type: "number", flex: 1 },
-      { field: "lastname", headerName: "Nom", flex: 2 },
-      { field: "firstname", headerName: "Prénom", flex: 2 },
-      { field: "email", headerName: "Email", flex: 3 },
-      { field: "EMANumber", headerName: "N° EMA", flex: 2 },
-      { field: "phone", headerName: "Téléphone", flex: 2 },
+      { field: "id", headerName: "ID", type: "number", minWidth: 120, flex: 1 },
+      { field: "lastname", headerName: "Nom", minWidth: 120, flex: 2 },
+      { field: "firstname", headerName: "Prénom", minWidth: 120, flex: 2 },
+      { field: "email", headerName: "Email", minWidth: 120, flex: 3 },
+      { field: "EMANumber", headerName: "N° EMA", minWidth: 120, flex: 2 },
+      { field: "phone", headerName: "Téléphone", minWidth: 120, flex: 2 },
       {
         field: "subscription",
         headerName: "Adhésion",
         type: "date",
+        minWidth: 120,
         flex: 2,
         valueGetter: (value, row) => {
           return row.subscription ? new Date(row.subscription) : null;
@@ -153,6 +154,7 @@ function UserListTab() {
         field: "role",
         headerName: "Admin",
         type: "boolean",
+        minWidth: 120,
         flex: 1,
         valueGetter: (value, row) => {
           return row.role === USER_ROLE.ADMIN;
@@ -161,8 +163,8 @@ function UserListTab() {
       {
         field: "actions",
         headerName: "Actions",
-        width: 120,
         type: "actions",
+        minWidth: 120,
         flex: 2,
         getActions: (params) => [
           <GridActionsCellItem

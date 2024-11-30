@@ -115,14 +115,20 @@ function TournamentTab() {
 
   const columns = useMemo<GridColDef<Tournament>[]>(
     () => [
-      { field: "id", headerName: "ID", type: "number", flex: 1 },
-      { field: "name", headerName: "Nom", flex: 2 },
-      { field: "description", headerName: "Description", flex: 4 },
-      { field: "setup", headerName: "Organisation", flex: 4 },
+      { field: "id", headerName: "ID", type: "number", minWidth: 120, flex: 1 },
+      { field: "name", headerName: "Nom", minWidth: 120, flex: 2 },
+      {
+        field: "description",
+        headerName: "Description",
+        minWidth: 120,
+        flex: 4,
+      },
+      { field: "setup", headerName: "Organisation", minWidth: 120, flex: 4 },
       {
         field: "startDate",
         headerName: "Date de début",
         type: "date",
+        minWidth: 120,
         flex: 2,
         valueGetter: (value, row) => {
           return new Date(row.startDate);
@@ -132,6 +138,7 @@ function TournamentTab() {
         field: "endDate",
         headerName: "Date de fin",
         type: "date",
+        minWidth: 120,
         flex: 2,
         valueGetter: (value, row) => {
           return new Date(row.endDate);
@@ -141,18 +148,24 @@ function TournamentTab() {
         field: "registerLimitDate",
         headerName: "Date limite",
         type: "date",
+        minWidth: 120,
         flex: 2,
         valueGetter: (value, row) => {
           return new Date(row.registerLimitDate);
         },
       },
-      { field: "entryFee", headerName: "Frais d'entrée", flex: 1 },
-      { field: "playerLimit", headerName: "Capacité", flex: 1 },
-      { field: "location", headerName: "Lieu", flex: 4 },
+      {
+        field: "entryFee",
+        headerName: "Frais d'entrée",
+        minWidth: 120,
+        flex: 1,
+      },
+      { field: "playerLimit", headerName: "Capacité", minWidth: 120, flex: 1 },
+      { field: "location", headerName: "Lieu", minWidth: 120, flex: 4 },
       {
         field: "actions",
         headerName: "Actions",
-        width: 120,
+        minWidth: 120,
         type: "actions",
         flex: 3,
         getActions: (params) => [
