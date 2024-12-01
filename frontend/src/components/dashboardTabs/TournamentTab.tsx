@@ -127,7 +127,7 @@ function TournamentTab() {
       {
         field: "startDate",
         headerName: "Date de début",
-        type: "date",
+        type: "dateTime",
         minWidth: 120,
         flex: 2,
         valueGetter: (value, row) => {
@@ -137,7 +137,7 @@ function TournamentTab() {
       {
         field: "endDate",
         headerName: "Date de fin",
-        type: "date",
+        type: "dateTime",
         minWidth: 120,
         flex: 2,
         valueGetter: (value, row) => {
@@ -147,7 +147,7 @@ function TournamentTab() {
       {
         field: "registerLimitDate",
         headerName: "Date limite",
-        type: "date",
+        type: "dateTime",
         minWidth: 120,
         flex: 2,
         valueGetter: (value, row) => {
