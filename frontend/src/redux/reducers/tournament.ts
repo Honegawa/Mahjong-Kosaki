@@ -1,16 +1,22 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { DeletedTournament, UpdatedTournament, Tournament } from "../../interfaces/tournament";
+import {
+  DeletedTournament,
+  UpdatedTournament,
+  Tournament,
+} from "../../interfaces/tournament";
 
 type TournamentInitialeState = {
   data: Tournament[];
   loading: boolean | null;
   error: boolean;
+  tabIndex: number;
 };
 
 const initialState: TournamentInitialeState = {
   data: [],
   loading: null,
   error: false,
+  tabIndex: 0,
 };
 
 export const TournamentSlice = createSlice({
@@ -87,6 +93,12 @@ export const TournamentSlice = createSlice({
       draft.loading = false;
       draft.error = true;
     },
+    TAB_UPDATE: (
+      draft: TournamentInitialeState,
+      actions: PayloadAction<number>
+    ) => {
+      draft.tabIndex = actions.payload;
+    },
   },
 });
 
@@ -103,6 +115,7 @@ export const {
   DELETE_START,
   DELETE_SUCCESS,
   DELETE_FAILURE,
+  TAB_UPDATE
 } = TournamentSlice.actions;
 
 export default TournamentSlice.reducer;
