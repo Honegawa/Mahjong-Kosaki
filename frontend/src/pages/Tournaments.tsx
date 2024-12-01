@@ -110,13 +110,18 @@ function Tournaments() {
 
         <Box className={styles.tournamentContainer}>
           <Card sx={{ minHeight: "100%" }}>
-            <CardContent>
+            <CardContent
+              sx={{
+                overflow: "auto",
+                minHeight: 600,
+                maxHeight: { xs: 600, md: 800 },
+              }}
+            >
               <Box
                 display="flex"
                 flexDirection="column"
                 gap={2}
                 sx={{
-                  minHeight: 400,
                   width: "100%",
                 }}
               >
