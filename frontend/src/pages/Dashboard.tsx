@@ -9,6 +9,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Typography,
 } from "@mui/material";
 import styles from "../styles/Dashboard.module.css";
 import { useContext, useState } from "react";
@@ -49,14 +50,17 @@ function Dashboard(props: DashboardProps) {
 
   const tabList = (
     <Box sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
-      <List component="nav" aria-label="main mailbox folders">
+      <List component="nav" aria-label="user tabs">
         {Object.entries(TABS.user).map(([userTabKey, userTabValue]) => (
           <Link
             key={userTabValue.name}
             className={styles.tabLink}
             to={`../${userTabKey.toLowerCase()}`}
           >
-            <ListItemButton selected={tabIndex === userTabValue.index}>
+            <ListItemButton
+              selected={tabIndex === userTabValue.index}
+              sx={{ borderRadius: 2 }}
+            >
               <ListItemIcon>{userTabValue.icon}</ListItemIcon>
               <ListItemText primary={userTabValue.name} />
             </ListItemButton>
@@ -66,14 +70,17 @@ function Dashboard(props: DashboardProps) {
       {user && user.role === "admin" && (
         <>
           <Divider />
-          <List component="nav" aria-label="main mailbox folders">
+          <List component="nav" aria-label="admin tabs">
             {Object.entries(TABS.admin).map(([adminTabKey, adminTabValue]) => (
               <Link
                 key={adminTabValue.name}
                 className={styles.tabLink}
                 to={`../${adminTabKey.toLowerCase()}`}
               >
-                <ListItemButton selected={tabIndex === adminTabValue.index}>
+                <ListItemButton
+                  selected={tabIndex === adminTabValue.index}
+                  sx={{ borderRadius: 2 }}
+                >
                   <ListItemIcon>{adminTabValue.icon}</ListItemIcon>
                   <ListItemText primary={adminTabValue.name} />
                 </ListItemButton>
@@ -86,27 +93,36 @@ function Dashboard(props: DashboardProps) {
   );
 
   return (
-    <Box
-      display="flex"
-      sx={{ flexDirection: { xs: "column", lg: "row" }, gap: { xs: 1, md: 4 } }}
-      width="100%"
-    >
-      <Box>
-        <Box sx={{ display: { xs: "flex", lg: "none" } }}>
-          <Button onClick={toggleDrawer(true)} variant="contained">
-            Ouvrir le menu
-          </Button>
-          <Drawer open={openMenu} onClose={toggleDrawer(false)}>
-            {tabList}
-          </Drawer>
+    <Box width="100%">
+      <Typography variant="h4" component={"h1"}>
+        Dashboard
+      </Typography>
+      <Box
+        display="flex"
+        sx={{
+          flexDirection: { xs: "column", lg: "row" },
+          gap: { xs: 1, md: 4 },
+          marginTop: { xs: 1, md: 3 },
+        }}
+        width="100%"
+      >
+        <Box>
+          <Box sx={{ display: { xs: "flex", lg: "none" } }}>
+            <Button onClick={toggleDrawer(true)} variant="contained">
+              Ouvrir le menu
+            </Button>
+            <Drawer open={openMenu} onClose={toggleDrawer(false)}>
+              {tabList}
+            </Drawer>
+          </Box>
+          <Box sx={{ display: { xs: "none", lg: "flex" }, minWidth: "220px" }}>
+            {user && tabList}
+          </Box>
         </Box>
-        <Box sx={{ display: { xs: "none", lg: "flex" }, minWidth: "220px" }}>
-          {user && tabList}
-        </Box>
-      </Box>
 
-      <Box className={styles.dashboard}>
-        <Card sx={{ minHeight: "100%" }}>{renderTab()}</Card>
+        <Box className={styles.dashboard}>
+          <Card sx={{ minHeight: "100%" }}>{renderTab()}</Card>
+        </Box>
       </Box>
     </Box>
   );

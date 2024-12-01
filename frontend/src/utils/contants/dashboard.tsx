@@ -64,5 +64,3 @@ export enum MODAL_TABS {
   createTournament = "createTournament",
   editTournament = "editTournament",
 }
-
-export const TOURNAMENT_CAPACITIES = [8, 16, 32, 64, 128];

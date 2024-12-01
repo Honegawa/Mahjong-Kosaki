@@ -8,10 +8,7 @@ import cloneDeep from "lodash/cloneDeep";
 import { useDispatch, useSelector } from "react-redux";
 import { allTournaments } from "../../../services/selectors/tournament.selector";
 import * as ACTIONS_TOURNAMENT from "../../../redux/reducers/tournament";
-import {
-  MODAL_TABS,
-  TOURNAMENT_CAPACITIES,
-} from "../../../utils/contants/dashboard";
+import { MODAL_TABS } from "../../../utils/contants/dashboard";
 import {
   Box,
   Button,
@@ -34,6 +31,7 @@ import { DatePicker } from "@mui/x-date-pickers";
 import { DateValidationError } from "@mui/x-date-pickers/models";
 import dayjs, { Dayjs } from "dayjs";
 import { Euro, Place } from "@mui/icons-material";
+import { TOURNAMENT_CAPACITIES } from "../../../utils/contants/tournament";
 
 type TournamentFormProps = {
   open: string;
@@ -233,7 +231,10 @@ function TournamentForm(props: TournamentFormProps) {
         }));
         break;
       case "maxDate":
-        setError((error) => ({ ...error, [field]: "La date doit être antérieure à la date de début." }));
+        setError((error) => ({
+          ...error,
+          [field]: "La date doit être antérieure à la date de début.",
+        }));
         break;
       case "invalidDate":
         setError((error) => ({ ...error, [field]: "Date invalide." }));

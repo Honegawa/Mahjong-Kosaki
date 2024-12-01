@@ -15,6 +15,7 @@ export interface Tournament {
 export type RootState = {
   tournaments: {
     data: Tournament[];
+    tabIndex: number;
   };
 };
 
