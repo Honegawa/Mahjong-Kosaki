@@ -12,6 +12,11 @@ export interface Tournament {
   // people: TournamentParticipant[]
 }
 
+export type TournamentDetailData = {
+  id: number;
+  data: Tournament;
+};
+
 export type RootState = {
   tournaments: {
     data: Tournament[];

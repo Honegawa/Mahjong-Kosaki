@@ -3,6 +3,7 @@ import {
   DeletedTournament,
   UpdatedTournament,
   Tournament,
+  TournamentDetailData,
 } from "../../interfaces/tournament";
 
 type TournamentInitialeState = {
@@ -32,6 +33,13 @@ export const TournamentSlice = createSlice({
     ) => {
       draft.loading = false;
       draft.data = action.payload;
+    },
+    FETCH_DETAIL: (
+      draft: TournamentInitialeState,
+      action: PayloadAction<TournamentDetailData>
+    ) => {
+      draft.loading = false;
+      draft.data = [action.payload.data];
     },
     FETCH_FAILURE: (draft: TournamentInitialeState) => {
       draft.loading = false;
@@ -106,6 +114,7 @@ export const {
   FETCH_START,
   FETCH_SUCCESS,
   FETCH_FAILURE,
+  FETCH_DETAIL,
   POST_START,
   POST_SUCCESS,
   POST_FAILURE,
@@ -115,7 +124,7 @@ export const {
   DELETE_START,
   DELETE_SUCCESS,
   DELETE_FAILURE,
-  TAB_UPDATE
+  TAB_UPDATE,
 } = TournamentSlice.actions;
 
 export default TournamentSlice.reducer;
