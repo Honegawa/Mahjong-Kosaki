@@ -1,5 +1,5 @@
 export interface Article {
-  id?: number;
+  id: number | null;
   title: string;
   content: string;
   createdAt: string;
@@ -21,4 +21,14 @@ export type RootState = {
   articles: {
     data: Article[];
   };
+};
+
+export type UpdatedArticle = {
+  data: Article[];
+  update: Article;
+};
+
+export type DeletedArticle = {
+  data: Article[];
+  id: number;
 };

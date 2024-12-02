@@ -20,6 +20,7 @@ import AccountTab from "../components/dashboardTabs/AccountTab";
 import UserListTab from "../components/dashboardTabs/UserListTab";
 import { Link } from "react-router-dom";
 import TournamentTab from "../components/dashboardTabs/TournamentTab";
+import ArticleTab from "../components/dashboardTabs/ArticleTab";
 
 type DashboardProps = {
   tabIndex: number;
@@ -40,6 +41,8 @@ function Dashboard(props: DashboardProps) {
         return <AccountTab />;
       case 3:
         return <UserListTab />;
+      case 4:
+        return <ArticleTab />;
       case 6:
         return <TournamentTab />;
 
