@@ -4,16 +4,18 @@ import {
   Tournament,
   RootState as RootStateTournament,
   TournamentDetailData,
+  TournamentParticipant,
 } from "../interfaces/tournament";
 import * as ACTIONS_TOURNAMENT from "../redux/reducers/tournament";
 import { oneTournament } from "../services/selectors/tournament.selector";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import axios from "axios";
 import ENDPOINTS from "../utils/contants/endpoints";
 import ErrorPage from "./ErrorPage";
 import { Box, Card, CardContent, Typography } from "@mui/material";
 import styles from "../styles/TournamentDetail.module.css";
 import { DATETIME_FORMATTER } from "../utils/helpers/date.helper";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
 function TournamentDetail() {
   const { id } = useParams();
@@ -50,9 +52,19 @@ function TournamentDetail() {
     }
   };
 
+  const columns = useMemo<GridColDef<TournamentParticipant>[]>(
+    () => [
+      { field: "firstname", headerName: "Prénom", minWidth: 120, flex: 2 },
+      { field: "lastname", headerName: "Nom", minWidth: 120, flex: 2 },
+      { field: "email", headerName: "Email", minWidth: 120, flex: 3 },
+      { field: "EMANumber", headerName: "N° EMA", minWidth: 120, flex: 2 },
+    ],
+    []
+  );
+
   return tournamentStore ? (
     <Box className={styles.tournamentDetailContainer}>
-      <Card sx={{ minHeight: 600 }}>
+      <Card>
         <CardContent>
           <Box
             display="flex"
@@ -87,6 +99,29 @@ function TournamentDetail() {
               <Typography>{`Lieu : ${tournamentStore.location}`}</Typography>
               <Typography>{`Description : ${tournamentStore.description}`}</Typography>
               <Typography>{`Organisation : ${tournamentStore.setup}`}</Typography>
+            </Box>
+
+            <Box maxHeight={600}>
+              <DataGrid
+                rows={tournamentStore.people}
+                columns={columns}
+                initialState={{
+                  pagination: {
+                    paginationModel: {
+                      pageSize: 10,
+                    },
+                  },
+                }}
+                pageSizeOptions={[5, 10, 25]}
+                rowSelection={false}
+                disableRowSelectionOnClick
+                autosizeOptions={{
+                  expand: true,
+                  includeHeaders: true,
+                  includeOutliers: true,
+                  outliersFactor: 2,
+                }}
+              />
             </Box>
           </Box>
         </CardContent>
