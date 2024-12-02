@@ -29,7 +29,9 @@ export const create = async (req, res) => {
   try {
     const article = await Article.create(req.body);
 
-    res.status(201).json({ message: "Article has been created", article });
+    res
+      .status(201)
+      .json({ message: "Article has been created", newArticle: article });
   } catch (error) {
     res.status(500).json({ error: "Error in sending article" });
   }
@@ -48,7 +50,9 @@ export const updateById = async (req, res) => {
 
     await article.update({ title, content });
 
-    res.status(200).json({ message: "Article has been updated", article });
+    res
+      .status(200)
+      .json({ message: "Article has been updated", updatedArticle: article });
   } catch (error) {
     res.status(500).json({ error: "Error in updating article" });
   }

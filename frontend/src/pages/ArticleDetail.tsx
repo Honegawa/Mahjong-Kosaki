@@ -67,7 +67,7 @@ function ArticleDetail() {
           flexDirection: { xs: "column", md: "row" },
         }}
       >
-        <Box maxWidth={700}>
+        <Box maxWidth={700} width="100%">
           <Typography variant="caption">{`Publié le ${new Date(
             articleStore[0].createdAt
           ).toLocaleDateString()}`}</Typography>
