@@ -116,7 +116,9 @@ function UserListTab() {
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError;
         if (axiosError.response?.status) {
-          setError("Une erreur est survenue lors de la suppression du compte");
+          setError(
+            "Une erreur est survenue lors de la suppression de lq personne."
+          );
         }
       }
 

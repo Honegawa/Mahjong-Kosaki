@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { fileURLToPath } from "url";
+import path, { dirname } from "path";
 import { env } from "./configs/config.js";
 import ContactRouter from "./routes/contact.router.js";
 import BookingRouter from "./routes/booking.router.js";
@@ -15,6 +17,8 @@ import PlayerRoundRouter from "./routes/playerRound.router.js";
 import "./models/index.js";
 
 const app = express();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const corsOptions = {
   origin: env.CLIENT_ORIGIN || "http://localhost:8081",
@@ -37,5 +41,5 @@ app.use("/api/participant", ParticipantRouter);
 app.use("/api/game", GameRouter);
 app.use("/api/round", RoundRouter);
 app.use("/api/playerRound", PlayerRoundRouter);
-
+app.use("/images", express.static(path.join(__dirname, "images")));
 export default app;

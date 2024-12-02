@@ -14,9 +14,7 @@ function ArticleListItem({ article }: { article: Article }) {
       onClick={() => navigate(`/articles/${article.id}`)}
     >
       <Img
-        src={
-          article.articlePictures ? article.articlePictures[0].picture : logo
-        }
+        src={article.pictures.length > 0 ? article.pictures[0].picture : logo}
         alt="Article cover"
         sx={{
           padding: 1,

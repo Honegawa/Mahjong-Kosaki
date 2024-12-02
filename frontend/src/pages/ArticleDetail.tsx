@@ -74,7 +74,7 @@ function ArticleDetail() {
           <Typography>{articleStore[0].content}</Typography>
         </Box>
 
-        {articleStore[0].articlePictures && (
+        {articleStore[0].pictures.length > 0 && (
           <Box
             maxWidth={400}
             display="flex"
@@ -84,15 +84,15 @@ function ArticleDetail() {
             justifyContent="center"
             gap={2}
           >
-            {articleStore[0].articlePictures?.map(
+            {articleStore[0].pictures?.map(
               (pic: ArticlePicture, index: number) => (
-                <Link to={pic.picture} target="_blank">
+                <Link to={pic.picture} key={pic.picture} target="_blank">
                   <Img
                     src={pic.picture}
                     alt={`Photo article ${index}`}
                     sx={{
-                      width: { xs: 80, md: 170 },
-                      height: { xs: 80, md: 170 },
+                      width: { xs: "100%", md: 170 },
+                      height: { md: 170 },
                       objectFit: "contain",
                     }}
                   />

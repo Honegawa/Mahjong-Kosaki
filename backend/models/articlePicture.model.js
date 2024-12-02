@@ -5,9 +5,6 @@ export default (sequelize, DataType) => {
       picture: {
         type: DataType.STRING,
         allowNull: false,
-        validate: {
-          isUrl: true,
-        },
       },
     },
     {
