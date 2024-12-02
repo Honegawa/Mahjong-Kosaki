@@ -56,7 +56,6 @@ function TournamentDetail() {
     () => [
       { field: "firstname", headerName: "Prénom", minWidth: 120, flex: 2 },
       { field: "lastname", headerName: "Nom", minWidth: 120, flex: 2 },
-      { field: "email", headerName: "Email", minWidth: 120, flex: 3 },
       { field: "EMANumber", headerName: "N° EMA", minWidth: 120, flex: 2 },
     ],
     []
