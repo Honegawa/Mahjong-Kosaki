@@ -1,0 +1,26 @@
+.tournamentContainer {
+  background-color: rgba(33, 150, 243, 0.32);
+  border-radius: 8px;
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
+  height: fit-content;
+}
+
+.tournamentCard {
+  text-align: left;
+}
+
+.tournamentCardHeader {
+  background-color: rgba(33, 150, 243, 1);
+  color: white;
+}
+
+.tournamentCardContent {
+  background-color: rgba(33, 150, 243, 0.08);
+}
+
+.tournamentCardActions {
+  background-color: rgba(33, 150, 243, 0.08);
+  justify-content: right;
+}

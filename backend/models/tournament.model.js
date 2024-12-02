@@ -19,9 +19,7 @@ export default (sequelize, DataType) => {
         allowNull: false,
         validate: {
           isBeforeEndDate(value) {
-            if (
-              new Date(value).getTime() >= new Date(this.endDate).getTime()
-            ) {
+            if (new Date(value).getTime() > new Date(this.endDate).getTime()) {
               throw new Error("startDate must be before endDate.");
             }
           },
@@ -41,7 +39,7 @@ export default (sequelize, DataType) => {
         validate: {
           isBeforeStartDate(value) {
             if (
-              new Date(value).getTime() >= new Date(this.startDate).getTime()
+              new Date(value).getTime() > new Date(this.startDate).getTime()
             ) {
               throw new Error("registerLimitDate must be before startDate.");
             }

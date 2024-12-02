@@ -12,7 +12,7 @@ export const getAll = async (req, res) => {
       include: {
         model: Person,
         as: "people",
-        attributes: ["firstname", "lastname", "email", "EMANumber"],
+        attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
         through: { attributes: [] },
       },
     });
@@ -30,7 +30,7 @@ export const getById = async (req, res) => {
       include: {
         model: Person,
         as: "people",
-        attributes: ["firstname", "lastname", "email", "EMANumber"],
+        attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
         through: { attributes: [] },
       },
     });
@@ -60,7 +60,7 @@ export const getGamesById = async (req, res) => {
             as: "playerRounds",
             include: {
               model: Person,
-              attributes: ["firstname", "lastname", "email", "EMANumber"],
+              attributes: ["id", "firstname", "lastname", "email", "EMANumber"],
             },
           },
         },
@@ -105,10 +105,12 @@ export const create = async (req, res) => {
       location,
     });
 
-    res
-      .status(201)
-      .json({ message: "Tournament has been created", tournament });
+    res.status(201).json({
+      message: "Tournament has been created",
+      newTournament: { ...tournament.dataValues, people: [] },
+    });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: "Error in sending tournament" });
   }
 };
@@ -146,9 +148,10 @@ export const updateById = async (req, res) => {
       location,
     });
 
-    res
-      .status(200)
-      .json({ message: "Tournament has been updated", tournament });
+    res.status(200).json({
+      message: "Tournament has been updated",
+      updatedTournament: tournament,
+    });
   } catch (error) {
     res.status(500).json({ error: "Error in updating tournament" });
   }

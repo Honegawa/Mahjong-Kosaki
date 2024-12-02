@@ -1,0 +1,13 @@
+footer {
+    background-color: black;
+    width: 100%;
+    box-sizing: border-box;
+    color: white;
+    padding: 20px 50px;
+    display: flex;
+    flex-direction: column;
+
+    a {
+        color: white;
+    }
+}
