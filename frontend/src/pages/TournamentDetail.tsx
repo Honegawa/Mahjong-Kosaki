@@ -13,7 +13,7 @@ import ENDPOINTS from "../utils/contants/endpoints";
 import ErrorPage from "./ErrorPage";
 import { Box, Card, CardContent, Typography } from "@mui/material";
 import styles from "../styles/TournamentDetail.module.css";
-import { DATETIME_FORMATTER } from "../utils/dateHelper";
+import { DATETIME_FORMATTER } from "../utils/helpers/date.helper";
 
 function TournamentDetail() {
   const { id } = useParams();

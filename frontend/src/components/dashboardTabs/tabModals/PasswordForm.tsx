@@ -15,7 +15,7 @@ import { useContext, useState } from "react";
 import ENDPOINTS from "../../../utils/contants/endpoints";
 import { AuthContext } from "../../../utils/contexts/Auth.context";
 import { AuthContextType } from "../../../interfaces/user";
-import { findFormError } from "../../../utils/formHelper";
+import { findFormError } from "../../../utils/helpers/form.helper";
 import REGEX from "../../../utils/contants/regex";
 import { MODAL_TABS } from "../../../utils/contants/dashboard";
 

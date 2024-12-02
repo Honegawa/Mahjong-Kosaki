@@ -19,7 +19,7 @@ import ENDPOINTS from "../utils/contants/endpoints";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import REGEX from "../utils/contants/regex";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { findFormError } from "../utils/formHelper";
+import { findFormError } from "../utils/helpers/form.helper";
 
 function Signup() {
   const [user, setUser] = useState<User>({

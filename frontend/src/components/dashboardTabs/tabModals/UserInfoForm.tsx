@@ -14,7 +14,7 @@ import ENDPOINTS from "../../../utils/contants/endpoints";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../utils/contexts/Auth.context";
 import REGEX from "../../../utils/contants/regex";
-import { findFormError } from "../../../utils/formHelper";
+import { findFormError } from "../../../utils/helpers/form.helper";
 import cloneDeep from "lodash/cloneDeep";
 import { MODAL_TABS } from "../../../utils/contants/dashboard";
 
