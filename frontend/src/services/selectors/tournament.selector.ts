@@ -4,6 +4,9 @@ import { RootState as RootStateTournament } from "../../interfaces/tournament";
 export const allTournaments = (state: RootStateTournament) =>
   state.tournaments.data;
 
+export const oneTournament = (state: RootStateTournament) =>
+  state.tournaments.data;
+
 export const filteredTournaments = createSelector(
   (state: RootStateTournament) => state.tournaments.data,
   (state: RootStateTournament) => state.tournaments.tabIndex,

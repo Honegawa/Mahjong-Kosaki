@@ -13,7 +13,7 @@ import ENDPOINTS from "../../../utils/contants/endpoints";
 import { AuthContext } from "../../../utils/contexts/Auth.context";
 import { AuthContextType, UserUpdate } from "../../../interfaces/user";
 import REGEX from "../../../utils/contants/regex";
-import { findFormError } from "../../../utils/formHelper";
+import { findFormError } from "../../../utils/helpers/form.helper";
 import { MODAL_TABS } from "../../../utils/contants/dashboard";
 
 type EmailFormProps = {

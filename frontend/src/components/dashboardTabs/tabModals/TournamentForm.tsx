@@ -24,11 +24,11 @@ import {
   SelectChangeEvent,
   TextField,
 } from "@mui/material";
-import { findFormError } from "../../../utils/formHelper";
+import { findFormError } from "../../../utils/helpers/form.helper";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import ENDPOINTS from "../../../utils/contants/endpoints";
-import { DatePicker } from "@mui/x-date-pickers";
-import { DateValidationError } from "@mui/x-date-pickers/models";
+import { DateTimePicker } from "@mui/x-date-pickers";
+import { DateTimeValidationError } from "@mui/x-date-pickers/models";
 import dayjs, { Dayjs } from "dayjs";
 import { Euro, Place } from "@mui/icons-material";
 import { TOURNAMENT_CAPACITIES } from "../../../utils/contants/tournament";
@@ -58,6 +58,7 @@ function TournamentForm(props: TournamentFormProps) {
     entryFee: "10.00",
     playerLimit: 8,
     location: "",
+    people: [],
   });
   const [date, setDate] = useState<DatePickers>({
     startDate:
@@ -117,7 +118,7 @@ function TournamentForm(props: TournamentFormProps) {
     if (value && value.isValid()) {
       setTournament((tournament) => ({
         ...tournament,
-        startDate: value.toISOString(),
+        startDate: value.set("second", 0).toISOString(),
       }));
     } else if (!value) {
       setTournament((tournament) => ({
@@ -132,7 +133,7 @@ function TournamentForm(props: TournamentFormProps) {
     if (value && value.isValid()) {
       setTournament((tournament) => ({
         ...tournament,
-        endDate: value.toISOString(),
+        endDate: value.set("second", 0).toISOString(),
       }));
     } else if (!value) {
       setTournament((tournament) => ({
@@ -147,7 +148,7 @@ function TournamentForm(props: TournamentFormProps) {
     if (value && value.isValid()) {
       setTournament((tournament) => ({
         ...tournament,
-        registerLimitDate: value.toISOString(),
+        registerLimitDate: value.set("second", 0).toISOString(),
       }));
     } else if (!value) {
       setTournament((tournament) => ({
@@ -189,6 +190,8 @@ function TournamentForm(props: TournamentFormProps) {
 
       if (status === 200) {
         const newTournament: Tournament = data.updatedTournament;
+        newTournament.people = tournament.people;
+        
         const updatedTournament: UpdatedTournament = {
           data: tournamentStore,
           update: newTournament,
@@ -219,7 +222,10 @@ function TournamentForm(props: TournamentFormProps) {
     }
   };
 
-  const handleErrorDate = (newError: DateValidationError, field: string) => {
+  const handleErrorDate = (
+    newError: DateTimeValidationError,
+    field: string
+  ) => {
     switch (newError) {
       case "minDate":
         setError((error) => ({
@@ -230,7 +236,14 @@ function TournamentForm(props: TournamentFormProps) {
               : "La date ne peut pas être antérieure à la date de début.",
         }));
         break;
+      case "minTime":
+        setError((error) => ({
+          ...error,
+          [field]: "La date ne peut pas être antérieure à la date de début.",
+        }));
+        break;
       case "maxDate":
+      case "maxTime":
         setError((error) => ({
           ...error,
           [field]: "La date doit être antérieure à la date de début.",
@@ -381,7 +394,7 @@ function TournamentForm(props: TournamentFormProps) {
             gap: { xs: 0, md: 2 },
           }}
         >
-          <DatePicker
+          <DateTimePicker
             name="startDate"
             label="Date de début"
             value={date.startDate}
@@ -396,13 +409,13 @@ function TournamentForm(props: TournamentFormProps) {
               },
             }}
           />
-          <DatePicker
+          <DateTimePicker
             name="endDate"
             label="Date de fin"
             value={date.endDate}
             onChange={handleChangeEndDate}
             onError={(newError) => handleErrorDate(newError, "endDate")}
-            minDate={
+            minDateTime={
               tournament.startDate ? dayjs(tournament.startDate) : dayjs()
             }
             sx={{ width: "100%", marginTop: 1 }}
@@ -422,7 +435,7 @@ function TournamentForm(props: TournamentFormProps) {
             gap: { xs: 0, md: 2 },
           }}
         >
-          <DatePicker
+          <DateTimePicker
             name="registerLimitDate"
             label="Date limite"
             value={date.registerLimitDate}
@@ -430,9 +443,9 @@ function TournamentForm(props: TournamentFormProps) {
             onError={(newError) =>
               handleErrorDate(newError, "registerLimitDate")
             }
-            maxDate={
+            maxDateTime={
               tournament.startDate
-                ? dayjs(tournament.startDate).subtract(1, "day")
+                ? dayjs(tournament.startDate).subtract(1, "minute")
                 : undefined
             }
             sx={{ width: "100%", marginTop: 1 }}

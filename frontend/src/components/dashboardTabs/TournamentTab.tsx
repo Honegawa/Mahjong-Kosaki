@@ -1,4 +1,4 @@
-import { Add } from "@mui/icons-material";
+import { Add, GroupAdd, GroupRemove } from "@mui/icons-material";
 import { Box, Button, CardContent } from "@mui/material";
 import CreateIcon from "@mui/icons-material/Create";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -24,6 +24,15 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import ENDPOINTS from "../../utils/contants/endpoints";
 import DeleteDialog from "../DeleteDialog";
 import TournamentForm from "./tabModals/TournamentForm";
+import AddParticipantForm from "./tabModals/AddParticipantForm";
+import {
+  User,
+  UserDataTable,
+  RootState as RootStateUser,
+} from "../../interfaces/user";
+import * as ACTIONS_USER from "../../redux/reducers/user";
+import { allUsers } from "../../services/selectors/user.selectors";
+import RemoveParticipantForm from "./tabModals/RemoveParticipantForm";
 
 function TournamentTab() {
   const [openModal, setOpenModal] = useState("");
@@ -33,9 +42,13 @@ function TournamentTab() {
   const tournamentStore: Tournament[] = useSelector(
     (state: RootStateTournament) => allTournaments(state)
   );
+  const userStore: UserDataTable[] = useSelector((state: RootStateUser) =>
+    allUsers(state)
+  );
 
   useEffect(() => {
     getTournaments();
+    getUsers();
   }, []);
 
   const getTournaments = async () => {
@@ -53,19 +66,36 @@ function TournamentTab() {
     }
   };
 
+  const getUsers = async () => {
+    dispatch(ACTIONS_USER.FETCH_START());
+
+    try {
+      const response = await axios.get(ENDPOINTS.PERSON);
+      const { data, status } = response;
+
+      if (status === 200) {
+        const formatData: UserDataTable[] = data.map((e: User) => ({
+          id: e.id,
+          firstname: e.firstname,
+          lastname: e.lastname,
+          email: e.email,
+          phone: e.phone,
+          subscription: e.subscription,
+          EMANumber: e.EMANumber,
+          role: e.role,
+        }));
+
+        dispatch(ACTIONS_USER.FETCH_SUCCESS(formatData));
+      }
+    } catch (error) {
+      dispatch(ACTIONS_USER.FETCH_FAILURE());
+    }
+  };
+
   const handleOpenCreate = () => setOpenModal(MODAL_TABS.createTournament);
-  const handleOpenEdit = useCallback(
-    (id: GridRowId) => () => {
-      setOpenModal(MODAL_TABS.editTournament);
-      setSelectedTournament(
-        tournamentStore.find((tournament) => tournament.id === id)
-      );
-    },
-    [tournamentStore]
-  );
-  const handleOpenDelete = useCallback(
-    (id: GridRowId) => () => {
-      setOpenModal(MODAL_TABS.delete);
+  const handleOpenActionModal = useCallback(
+    (id: GridRowId, modal: string) => () => {
+      setOpenModal(modal);
       setSelectedTournament(
         tournamentStore.find((tournament) => tournament.id === id)
       );
@@ -127,7 +157,7 @@ function TournamentTab() {
       {
         field: "startDate",
         headerName: "Date de début",
-        type: "date",
+        type: "dateTime",
         minWidth: 120,
         flex: 2,
         valueGetter: (value, row) => {
@@ -137,7 +167,7 @@ function TournamentTab() {
       {
         field: "endDate",
         headerName: "Date de fin",
-        type: "date",
+        type: "dateTime",
         minWidth: 120,
         flex: 2,
         valueGetter: (value, row) => {
@@ -147,7 +177,7 @@ function TournamentTab() {
       {
         field: "registerLimitDate",
         headerName: "Date limite",
-        type: "date",
+        type: "dateTime",
         minWidth: 120,
         flex: 2,
         valueGetter: (value, row) => {
@@ -160,7 +190,15 @@ function TournamentTab() {
         minWidth: 120,
         flex: 1,
       },
-      { field: "playerLimit", headerName: "Capacité", minWidth: 120, flex: 1 },
+      {
+        field: "playerLimit",
+        headerName: "Participants",
+        minWidth: 120,
+        flex: 1,
+        valueGetter: (value, row) => {
+          return `${row.people.length} / ${row.playerLimit}`;
+        },
+      },
       { field: "location", headerName: "Lieu", minWidth: 120, flex: 4 },
       {
         field: "actions",
@@ -172,17 +210,38 @@ function TournamentTab() {
           <GridActionsCellItem
             icon={<CreateIcon />}
             label="Modifier"
-            onClick={handleOpenEdit(params.id)}
+            onClick={handleOpenActionModal(
+              params.id,
+              MODAL_TABS.editTournament
+            )}
           />,
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Supprimer"
-            onClick={handleOpenDelete(params.id)}
+            onClick={handleOpenActionModal(params.id, MODAL_TABS.delete)}
+          />,
+          <GridActionsCellItem
+            icon={<GroupAdd />}
+            label="Ajouter un participant"
+            onClick={handleOpenActionModal(
+              params.id,
+              MODAL_TABS.addParticipant
+            )}
+            showInMenu
+          />,
+          <GridActionsCellItem
+            icon={<GroupRemove />}
+            label="Retirer un participant"
+            onClick={handleOpenActionModal(
+              params.id,
+              MODAL_TABS.removeParticipant
+            )}
+            showInMenu
           />,
         ],
       },
     ],
-    [handleOpenEdit, handleOpenDelete]
+    [handleOpenActionModal]
   );
 
   return (
@@ -238,6 +297,24 @@ function TournamentTab() {
           open={openModal}
           onClose={handleClose}
           selectedTournament={selectedTournament}
+        />
+      )}
+      {openModal === MODAL_TABS.addParticipant && (
+        <AddParticipantForm
+          open={openModal}
+          selectedTournament={selectedTournament}
+          onClose={handleClose}
+          tournamentStore={tournamentStore}
+          userStore={userStore}
+        />
+      )}
+      {openModal === MODAL_TABS.removeParticipant && (
+        <RemoveParticipantForm
+          open={openModal}
+          selectedTournament={selectedTournament}
+          onClose={handleClose}
+          tournamentStore={tournamentStore}
+          userStore={userStore}
         />
       )}
 

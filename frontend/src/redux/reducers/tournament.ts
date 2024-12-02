@@ -3,6 +3,7 @@ import {
   DeletedTournament,
   UpdatedTournament,
   Tournament,
+  TournamentDetailData,
 } from "../../interfaces/tournament";
 
 type TournamentInitialeState = {
@@ -33,6 +34,13 @@ export const TournamentSlice = createSlice({
       draft.loading = false;
       draft.data = action.payload;
     },
+    FETCH_DETAIL: (
+      draft: TournamentInitialeState,
+      action: PayloadAction<TournamentDetailData>
+    ) => {
+      draft.loading = false;
+      draft.data = [action.payload.data];
+    },
     FETCH_FAILURE: (draft: TournamentInitialeState) => {
       draft.loading = false;
       draft.error = true;
@@ -59,14 +67,14 @@ export const TournamentSlice = createSlice({
       actions: PayloadAction<UpdatedTournament>
     ) => {
       const newTournament = actions.payload.update;
-      const users = actions.payload.data;
+      const tournaments = actions.payload.data;
       const newTournaments: Tournament[] = [];
 
-      users.map((user: Tournament) => {
-        if (user.id === newTournament.id) {
+      tournaments.map((tournament: Tournament) => {
+        if (tournament.id === newTournament.id) {
           newTournaments.push(newTournament);
         } else {
-          newTournaments.push(user);
+          newTournaments.push(tournament);
         }
       });
 
@@ -86,7 +94,7 @@ export const TournamentSlice = createSlice({
     ) => {
       draft.loading = false;
       draft.data = actions.payload.data.filter(
-        (user: Tournament) => user.id !== actions.payload.id
+        (tournament: Tournament) => tournament.id !== actions.payload.id
       );
     },
     DELETE_FAILURE: (draft: TournamentInitialeState) => {
@@ -106,6 +114,7 @@ export const {
   FETCH_START,
   FETCH_SUCCESS,
   FETCH_FAILURE,
+  FETCH_DETAIL,
   POST_START,
   POST_SUCCESS,
   POST_FAILURE,
@@ -115,7 +124,7 @@ export const {
   DELETE_START,
   DELETE_SUCCESS,
   DELETE_FAILURE,
-  TAB_UPDATE
+  TAB_UPDATE,
 } = TournamentSlice.actions;
 
 export default TournamentSlice.reducer;
