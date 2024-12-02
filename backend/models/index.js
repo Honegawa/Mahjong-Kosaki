@@ -52,7 +52,7 @@ Article.hasMany(ArticlePicture, {
   foreignKey: { allowNull: false },
   onDelete: "CASCADE",
 });
-ArticlePicture.belongsTo(Article);
+ArticlePicture.belongsTo(Article, { onDelete: "CASCADE" });
 
 // Person => Contact
 Person.hasMany(Contact, { as: "contacts" });

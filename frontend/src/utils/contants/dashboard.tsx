@@ -68,3 +68,5 @@ export enum MODAL_TABS {
   addParticipant = "addParticipant",
   removeParticipant = "removeParticipant",
 }
+
+export const MAX_UPLOAD_FILES = 5;

@@ -4,8 +4,19 @@ export interface Article {
   content: string;
   createdAt: string;
   updatedAt: string;
-  articlePictures: ArticlePicture[];
+  pictures: ArticlePicture[];
 }
+
+export type ArticleFormData = {
+  id: number | null;
+  title: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  pictures: ArticlePicture[];
+  uploads: FileList | null;
+  removedPictures: ArticlePicture[] | null;
+};
 
 export type ArticleDetailData = {
   id: number;

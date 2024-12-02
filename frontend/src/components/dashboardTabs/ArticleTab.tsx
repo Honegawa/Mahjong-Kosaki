@@ -93,7 +93,9 @@ function ArticleTab() {
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError;
         if (axiosError.response?.status) {
-          setError("Une erreur est survenue lors de la suppression du compte");
+          setError(
+            "Une erreur est survenue lors de la suppression de l'article."
+          );
         }
       }
 
@@ -166,7 +168,7 @@ function ArticleTab() {
           startIcon={<Add />}
           sx={{ width: "fit-content" }}
         >
-          Créer un tournoi
+          Créer un article
         </Button>
 
         <WarningAlert error={error} onClick={() => setError("")} />
