@@ -8,10 +8,12 @@ import {
   Typography,
 } from "@mui/material";
 import { Tournament } from "../interfaces/tournament";
-import { memo } from "react";
-import { DATETIME_FORMATTER } from "../utils/dateHelper";
+import { memo, useContext } from "react";
+import { DATETIME_FORMATTER } from "../utils/helpers/date.helper";
 import styles from "../styles/Tournaments.module.css";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../utils/contexts/Auth.context";
+import { AuthContextType } from "../interfaces/user";
 
 type TournamentCardProps = {
   tournament: Tournament;
@@ -21,6 +23,15 @@ type TournamentCardProps = {
 function TournamentCard(props: TournamentCardProps) {
   const { tournament, tabIndex } = props;
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext) as AuthContextType;
+
+  const isParticipating = () => {
+    if (!user) return false;
+    const participant = tournament.people.find(
+      (person) => person.id === user.id
+    );
+    return participant ? true : false;
+  };
 
   return (
     <Card className={styles.tournamentCard}>
@@ -55,7 +66,7 @@ function TournamentCard(props: TournamentCardProps) {
         </Button>
         {tabIndex <= 1 &&
           new Date().toISOString() < tournament.registerLimitDate && (
-            <Button variant="contained" color="success">
+            <Button variant="contained" color={isParticipating() ? "error" : "success"}>
               Participer
             </Button>
           )}

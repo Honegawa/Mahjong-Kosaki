@@ -63,4 +63,6 @@ export enum MODAL_TABS {
   editPerson = "editPerson",
   createTournament = "createTournament",
   editTournament = "editTournament",
+  addParticipant = "addParticipant",
+  removeParticipant = "removeParticipant",
 }

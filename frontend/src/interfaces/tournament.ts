@@ -9,12 +9,20 @@ export interface Tournament {
   entryFee: string;
   playerLimit: number;
   location: string;
-  // people: TournamentParticipant[]
+  people: TournamentParticipant[];
 }
 
 export type TournamentDetailData = {
   id: number;
   data: Tournament;
+};
+
+export type TournamentParticipant = {
+  id: number | null;
+  firstname: string;
+  lastname: string;
+  email: string;
+  EMANumber: string | null;
 };
 
 export type RootState = {
@@ -33,5 +41,3 @@ export type DeletedTournament = {
   data: Tournament[];
   id: number;
 };
-
-// export type TournamentParticipant

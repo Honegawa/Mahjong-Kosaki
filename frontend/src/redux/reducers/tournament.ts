@@ -67,14 +67,14 @@ export const TournamentSlice = createSlice({
       actions: PayloadAction<UpdatedTournament>
     ) => {
       const newTournament = actions.payload.update;
-      const users = actions.payload.data;
+      const tournaments = actions.payload.data;
       const newTournaments: Tournament[] = [];
 
-      users.map((user: Tournament) => {
-        if (user.id === newTournament.id) {
+      tournaments.map((tournament: Tournament) => {
+        if (tournament.id === newTournament.id) {
           newTournaments.push(newTournament);
         } else {
-          newTournaments.push(user);
+          newTournaments.push(tournament);
         }
       });
 
@@ -94,7 +94,7 @@ export const TournamentSlice = createSlice({
     ) => {
       draft.loading = false;
       draft.data = actions.payload.data.filter(
-        (user: Tournament) => user.id !== actions.payload.id
+        (tournament: Tournament) => tournament.id !== actions.payload.id
       );
     },
     DELETE_FAILURE: (draft: TournamentInitialeState) => {

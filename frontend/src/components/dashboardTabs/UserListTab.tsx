@@ -70,16 +70,9 @@ function UserListTab() {
   };
 
   const handleOpenCreate = () => setOpenModal(MODAL_TABS.createPerson);
-  const handleOpenEdit = useCallback(
-    (id: GridRowId) => () => {
-      setOpenModal(MODAL_TABS.editPerson);
-      setSelectedPerson(userStore.find((user) => user.id === id));
-    },
-    [userStore]
-  );
-  const handleOpenDelete = useCallback(
-    (id: GridRowId) => () => {
-      setOpenModal(MODAL_TABS.delete);
+  const handleOpenActionModal = useCallback(
+    (id: GridRowId, modal: string) => () => {
+      setOpenModal(modal);
       setSelectedPerson(userStore.find((user) => user.id === id));
     },
     [userStore]
@@ -170,17 +163,17 @@ function UserListTab() {
           <GridActionsCellItem
             icon={<CreateIcon />}
             label="Modifier"
-            onClick={handleOpenEdit(params.id)}
+            onClick={handleOpenActionModal(params.id, MODAL_TABS.editPerson)}
           />,
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Supprimer"
-            onClick={handleOpenDelete(params.id)}
+            onClick={handleOpenActionModal(params.id, MODAL_TABS.delete)}
           />,
         ],
       },
     ],
-    [handleOpenEdit, handleOpenDelete]
+    [handleOpenActionModal]
   );
 
   return (

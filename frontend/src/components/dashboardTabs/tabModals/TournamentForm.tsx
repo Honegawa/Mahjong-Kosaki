@@ -24,7 +24,7 @@ import {
   SelectChangeEvent,
   TextField,
 } from "@mui/material";
-import { findFormError } from "../../../utils/formHelper";
+import { findFormError } from "../../../utils/helpers/form.helper";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import ENDPOINTS from "../../../utils/contants/endpoints";
 import { DateTimePicker } from "@mui/x-date-pickers";
@@ -58,6 +58,7 @@ function TournamentForm(props: TournamentFormProps) {
     entryFee: "10.00",
     playerLimit: 8,
     location: "",
+    people: [],
   });
   const [date, setDate] = useState<DatePickers>({
     startDate:
@@ -189,6 +190,8 @@ function TournamentForm(props: TournamentFormProps) {
 
       if (status === 200) {
         const newTournament: Tournament = data.updatedTournament;
+        newTournament.people = tournament.people;
+        
         const updatedTournament: UpdatedTournament = {
           data: tournamentStore,
           update: newTournament,
