@@ -38,6 +38,7 @@ function Tournaments() {
 
   const getTournaments = async () => {
     dispatch(ACTIONS_TOURNAMENT.FETCH_START());
+    dispatch(ACTIONS_TOURNAMENT.TAB_UPDATE(selectedIndex));
 
     try {
       const response = await axios.get(ENDPOINTS.TOURNAMENT);
