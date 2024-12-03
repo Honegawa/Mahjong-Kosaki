@@ -27,15 +27,26 @@ export const getById = async (req, res) => {
 
 export const create = async (req, res) => {
   try {
-    const { date, type, format } = req.body;
+    const { date, type, format, PersonId } = req.body;
+
+    if (PersonId) {
+      const person = await Person.findByPk(PersonId);
+
+      if (!person) {
+        return res.status(404).json({ message: "Person not found" });
+      }
+    }
+    
     const booking = await Booking.create({
       date,
       type,
       format,
-      PersonId: req.user.id,
+      PersonId: PersonId ? PersonId : req.user.id,
     });
 
-    res.status(201).json({ message: "Booking has been created", booking });
+    res
+      .status(201)
+      .json({ message: "Booking has been created", newBooking: booking });
   } catch (error) {
     res.status(500).json({ error: "Error in sending booking" });
   }
@@ -59,7 +70,7 @@ export const updateById = async (req, res) => {
       await booking.update({ date, type, format });
       return res
         .status(200)
-        .json({ message: "Booking has been updated", booking });
+        .json({ message: "Booking has been updated", updatedBooking: booking });
     }
 
     res
@@ -80,7 +91,7 @@ export const deleteById = async (req, res) => {
     }
 
     if (
-      (req.user && req.user.id === booking.PersonId)||
+      (req.user && req.user.id === booking.PersonId) ||
       (req.user && req.user.role === "admin")
     ) {
       await booking.destroy();

@@ -21,6 +21,7 @@ import UserListTab from "../components/dashboardTabs/UserListTab";
 import { Link } from "react-router-dom";
 import TournamentTab from "../components/dashboardTabs/TournamentTab";
 import ArticleTab from "../components/dashboardTabs/ArticleTab";
+import BookingTab from "../components/dashboardTabs/BookingTab";
 
 type DashboardProps = {
   tabIndex: number;
@@ -45,6 +46,8 @@ function Dashboard(props: DashboardProps) {
         return <ArticleTab />;
       case 6:
         return <TournamentTab />;
+      case 7:
+        return <BookingTab/>;
 
       default:
         return <CardContent sx={{ height: "100%" }}>Erreur</CardContent>;

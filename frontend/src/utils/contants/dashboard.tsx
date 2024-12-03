@@ -67,6 +67,8 @@ export enum MODAL_TABS {
   editTournament = "editTournament",
   addParticipant = "addParticipant",
   removeParticipant = "removeParticipant",
+  createBooking = "createBooking",
+  editBooking = "editBooking",
 }
 
 export const MAX_UPLOAD_FILES = 5;
