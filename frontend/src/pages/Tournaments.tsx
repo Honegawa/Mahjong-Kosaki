@@ -83,7 +83,7 @@ function Tournaments() {
 
   return (
     <Box width="100%">
-      <Typography variant="h4" component={"h1"}>
+      <Typography variant="h4" component={"h1"} fontWeight={600}>
         Tournois
       </Typography>
       <Box
@@ -110,7 +110,7 @@ function Tournaments() {
         </Box>
 
         <Box className={styles.tournamentContainer}>
-          <Card sx={{ minHeight: "100%" }}>
+          <Card>
             <CardContent
               sx={{
                 overflow: "auto",

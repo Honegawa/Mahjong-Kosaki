@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import {
   Booking,
   DeletedBooking,
@@ -11,11 +11,10 @@ import * as ACTIONS_BOOKING from "../../redux/reducers/booking";
 import { allBookings } from "../../services/selectors/booking.selector";
 import {
   UserDataTable,
-  RootState as RootStateUser,
   User,
+  AuthContextType,
 } from "../../interfaces/user";
 import * as ACTIONS_USER from "../../redux/reducers/user";
-import { allUsers } from "../../services/selectors/user.selectors";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import ENDPOINTS from "../../utils/contants/endpoints";
 import { MODAL_TABS } from "../../utils/contants/dashboard";
@@ -31,17 +30,17 @@ import { Add } from "@mui/icons-material";
 import WarningAlert from "../WarningAlert";
 import DeleteDialog from "../DeleteDialog";
 import BookingForm from "./tabModals/BookingForm";
+import { AuthContext } from "../../utils/contexts/Auth.context";
 
 function BookingTab() {
   const [openModal, setOpenModal] = useState("");
   const [selectedBooking, setSelectedBooking] = useState<Booking>();
   const [error, setError] = useState("");
+  const { user } = useContext(AuthContext) as AuthContextType;
+
   const dispatch = useDispatch();
   const bookingStore: Booking[] = useSelector((state: RootStateBooking) =>
     allBookings(state)
-  );
-  const userStore: UserDataTable[] = useSelector((state: RootStateUser) =>
-    allUsers(state)
   );
 
   useEffect(() => {
@@ -150,10 +149,7 @@ function BookingTab() {
         width: 160,
         flex: 3,
         valueGetter: (value, row) => {
-          const person = userStore.find((person) => person.id === row.PersonId);
-          return person
-            ? `${person.firstname} ${person.lastname}`
-            : "Personne non trouvée";
+          return `${row.Person.firstname} ${row.Person.lastname}`;
         },
       },
       { field: "type", headerName: "Type", minWidth: 120, flex: 2 },
@@ -186,7 +182,7 @@ function BookingTab() {
         ],
       },
     ],
-    [handleOpenActionModal, userStore]
+    [handleOpenActionModal]
   );
 
   return (
@@ -242,7 +238,7 @@ function BookingTab() {
           open={openModal}
           onClose={handleClose}
           selectedBooking={selectedBooking}
-          userStore={userStore}
+          role={user ? user.role : undefined}
         />
       )}
 

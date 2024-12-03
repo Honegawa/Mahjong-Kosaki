@@ -56,7 +56,7 @@ function News() {
       className={styles.news}
       sx={{ display: "flex", flexDirection: "column", gap: 2 }}
     >
-      <Typography variant="h4" component={"h1"}>
+      <Typography variant="h4" component={"h1"} fontWeight={600}>
         Actualités
       </Typography>
       {filteredArticles.map((article: Article) => (
