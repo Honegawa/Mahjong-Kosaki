@@ -100,7 +100,7 @@ function Dashboard(props: DashboardProps) {
 
   return (
     <Box width="100%">
-      <Typography variant="h4" component={"h1"}>
+      <Typography variant="h4" component={"h1"} fontWeight={600}>
         Dashboard
       </Typography>
       <Box

@@ -54,7 +54,7 @@ function ArticleDetail() {
 
   return articleStore[0] ? (
     <Container sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-      <Typography variant="h4" component={"h1"}>
+      <Typography variant="h4" component={"h1"} fontWeight={600}>
         {articleStore[0].title}
       </Typography>
 

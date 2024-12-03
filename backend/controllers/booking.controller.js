@@ -2,7 +2,12 @@ import { Booking, Person } from "../models/index.js";
 
 export const getAll = async (req, res) => {
   try {
-    const bookings = await Booking.findAll();
+    const bookings = await Booking.findAll({
+      include: {
+        model: Person,
+        attributes: ["id", "firstname", "lastname", "email"],
+      },
+    });
 
     res.status(200).json(bookings);
   } catch (error) {
@@ -13,7 +18,12 @@ export const getAll = async (req, res) => {
 export const getById = async (req, res) => {
   try {
     const { id } = req.params;
-    const booking = await Booking.findByPk(id);
+    const booking = await Booking.findByPk(id, {
+      include: {
+        model: Person,
+        attributes: ["id", "firstname", "lastname", "email"],
+      },
+    });
 
     if (!booking) {
       return res.status(404).json({ message: "Booking not found" });
@@ -29,24 +39,35 @@ export const create = async (req, res) => {
   try {
     const { date, type, format, PersonId } = req.body;
 
-    if (PersonId) {
-      const person = await Person.findByPk(PersonId);
-
-      if (!person) {
-        return res.status(404).json({ message: "Person not found" });
-      }
+    let id = PersonId;
+    if (!PersonId) {
+      id = req.user.id;
     }
-    
+    const person = await Person.findByPk(id);
+
+    if (!person) {
+      return res.status(404).json({ message: "Person not found" });
+    }
+
     const booking = await Booking.create({
       date,
       type,
       format,
-      PersonId: PersonId ? PersonId : req.user.id,
+      PersonId: id,
     });
 
-    res
-      .status(201)
-      .json({ message: "Booking has been created", newBooking: booking });
+    res.status(201).json({
+      message: "Booking has been created",
+      newBooking: {
+        ...booking.dataValues,
+        Person: {
+          id,
+          firstname: person.firstname,
+          lastname: person.lastname,
+          email: person.email,
+        },
+      },
+    });
   } catch (error) {
     res.status(500).json({ error: "Error in sending booking" });
   }
@@ -57,7 +78,12 @@ export const updateById = async (req, res) => {
     const { id } = req.params;
     const { date, type, format } = req.body;
 
-    const booking = await Booking.findByPk(id);
+    const booking = await Booking.findByPk(id, {
+      include: {
+        model: Person,
+        attributes: ["id", "firstname", "lastname", "email"],
+      },
+    });
 
     if (!booking) {
       return res.status(404).json({ message: "Booking not found" });

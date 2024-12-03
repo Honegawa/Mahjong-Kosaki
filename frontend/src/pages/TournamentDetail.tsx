@@ -73,7 +73,7 @@ function TournamentDetail() {
               width: "100%",
             }}
           >
-            <Typography variant="h4" component={"h1"}>
+            <Typography variant="h4" component={"h1"} fontWeight={600}>
               {tournamentStore.name}
             </Typography>
             <Box>

@@ -29,27 +29,37 @@ import { useDispatch, useSelector } from "react-redux";
 import { allBookings } from "../../../services/selectors/booking.selector";
 import * as ACTIONS_BOOKING from "../../../redux/reducers/booking";
 import ENDPOINTS from "../../../utils/contants/endpoints";
-import { UserDataTable } from "../../../interfaces/user";
+import {
+  USER_ROLE,
+  UserDataTable,
+  RootState as RootStateUser,
+} from "../../../interfaces/user";
+import { allUsers } from "../../../services/selectors/user.selectors";
 
 type BookingFormProps = {
   open: string;
   onClose: () => void;
   selectedBooking?: Booking;
-  userStore: UserDataTable[];
+  role?: USER_ROLE;
+  calendarDate?: Dayjs;
 };
 
 function BookingForm(props: BookingFormProps) {
-  const { open, selectedBooking, userStore, onClose } = props;
+  const { open, selectedBooking, role, calendarDate, onClose } = props;
   const [booking, setBooking] = useState<BookingFormData>({
     id: null,
-    date: dayjs().add(1, "day").set("second", 0).toISOString(),
+    date: calendarDate
+      ? calendarDate.toISOString()
+      : dayjs().add(1, "day").set("second", 0).toISOString(),
     type: "",
-    format: "",
+    format: 4,
     PersonId: undefined,
   });
   const [date, setDate] = useState<Dayjs | null>(
     selectedBooking && selectedBooking.date
       ? dayjs(selectedBooking.date)
+      : calendarDate
+      ? calendarDate
       : dayjs().add(1, "day").set("second", 0)
   );
   const [error, setError] = useState({
@@ -60,6 +70,9 @@ function BookingForm(props: BookingFormProps) {
   const dispatch = useDispatch();
   const bookingStore: Booking[] = useSelector((state: RootStateBooking) =>
     allBookings(state)
+  );
+  const userStore: UserDataTable[] = useSelector((state: RootStateUser) =>
+    allUsers(state)
   );
 
   useEffect(() => {
@@ -102,8 +115,6 @@ function BookingForm(props: BookingFormProps) {
       if (selectedBooking && selectedBooking.id) {
         // Update
         dispatch(ACTIONS_BOOKING.UPDATE_START());
-
-        console.log(booking);
 
         response = await axios.put(
           `${ENDPOINTS.BOOKING}/${selectedBooking.id}`,
@@ -199,7 +210,7 @@ function BookingForm(props: BookingFormProps) {
         {!selectedBooking ? "Création" : "Modification"} de la réservation
       </DialogTitle>
       <DialogContent>
-        {!selectedBooking && (
+        {role === USER_ROLE.ADMIN && !selectedBooking && (
           <FormControl required margin="dense" fullWidth>
             <InputLabel id="PersonIdLabel">Personne</InputLabel>
             <Select

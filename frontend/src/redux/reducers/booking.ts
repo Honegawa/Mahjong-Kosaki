@@ -5,17 +5,20 @@ import {
   DeletedBooking,
   UpdatedBooking,
 } from "../../interfaces/booking";
+import dayjs from "dayjs";
 
 type BookingInitialeState = {
   data: Booking[];
   loading: boolean | null;
   error: boolean;
+  date: string;
 };
 
 const initialState: BookingInitialeState = {
   data: [],
   loading: null,
   error: false,
+  date: dayjs().toISOString(),
 };
 
 export const BookingSlice = createSlice({
@@ -99,6 +102,12 @@ export const BookingSlice = createSlice({
       draft.loading = false;
       draft.error = true;
     },
+    DATE_UPDATE: (
+      draft: BookingInitialeState,
+      actions: PayloadAction<string>
+    ) => {
+      draft.date = actions.payload;
+    },
   },
 });
 
@@ -116,6 +125,7 @@ export const {
   DELETE_START,
   DELETE_SUCCESS,
   DELETE_FAILURE,
+  DATE_UPDATE,
 } = BookingSlice.actions;
 
 export default BookingSlice.reducer;

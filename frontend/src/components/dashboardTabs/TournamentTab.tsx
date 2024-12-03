@@ -134,7 +134,9 @@ function TournamentTab() {
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError;
         if (axiosError.response?.status) {
-          setError("Une erreur est survenue lors de la suppression du tournoi.");
+          setError(
+            "Une erreur est survenue lors de la suppression du tournoi."
+          );
         }
       }
 
@@ -228,6 +230,7 @@ function TournamentTab() {
               MODAL_TABS.addParticipant
             )}
             showInMenu
+            disabled={params.row.people.length === params.row.playerLimit}
           />,
           <GridActionsCellItem
             icon={<GroupRemove />}
@@ -237,6 +240,7 @@ function TournamentTab() {
               MODAL_TABS.removeParticipant
             )}
             showInMenu
+            disabled={params.row.people.length === 0}
           />,
         ],
       },

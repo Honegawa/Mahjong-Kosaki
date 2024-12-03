@@ -42,6 +42,7 @@ function TournamentCard(props: TournamentCardProps) {
   const tournamentStore: Tournament[] = useSelector(
     (state: RootStateTournament) => allTournaments(state)
   );
+  const today = new Date().toISOString();
 
   useEffect(() => {
     let participate = false;
@@ -141,6 +142,36 @@ function TournamentCard(props: TournamentCardProps) {
     }
   };
 
+  const renderParticipationButton = () => {
+    if (isParticipating) {
+      return (
+        <Button variant="contained" color="error" onClick={handleParticipate}>
+          Se retirer
+        </Button>
+      );
+    } else if (
+      !isParticipating &&
+      tournament.people.length < tournament.playerLimit
+    ) {
+      return (
+        <Button variant="contained" color="success" onClick={handleParticipate}>
+          Participer
+        </Button>
+      );
+    } else {
+      return (
+        <Button
+          variant="contained"
+          color="success"
+          onClick={handleParticipate}
+          disabled
+        >
+          Participer
+        </Button>
+      );
+    }
+  };
+
   return (
     <Card className={styles.tournamentCard}>
       <CardHeader
@@ -177,15 +208,8 @@ function TournamentCard(props: TournamentCardProps) {
           Consulter
         </Button>
         {tabIndex <= 1 &&
-          new Date().toISOString() < tournament.registerLimitDate && (
-            <Button
-              variant="contained"
-              color={isParticipating ? "error" : "success"}
-              onClick={handleParticipate}
-            >
-              {isParticipating ? "Se retirer" : "Participer"}
-            </Button>
-          )}
+          today < tournament.registerLimitDate &&
+          renderParticipationButton()}
       </CardActions>
     </Card>
   );

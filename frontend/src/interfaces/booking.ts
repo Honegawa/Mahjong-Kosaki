@@ -2,17 +2,25 @@ export interface Booking {
   id: number | null;
   date: string;
   type: string;
-  format: string;
+  format: number;
   PersonId: number | null;
+  Person: BookingPerson;
 }
 
 export interface BookingFormData {
   id: number | null;
   date: string;
   type: string;
-  format: string;
+  format: number;
   PersonId?: number;
 }
+
+export type BookingPerson = {
+  id: number;
+  firstname: string;
+  lastname: string;
+  email: string;
+};
 
 export type BookingDetailData = {
   id: number;
@@ -22,6 +30,7 @@ export type BookingDetailData = {
 export type RootState = {
   bookings: {
     data: Booking[];
+    date: string;
   };
 };
 

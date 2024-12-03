@@ -25,7 +25,7 @@ function ArticleListItem({ article }: { article: Article }) {
       />
       <CardContent className={styles.articlesCardContent}>
         <Box>
-          <Typography variant="h5" component="h2">
+          <Typography variant="h5" component="h2" fontWeight={600}>
             {article.title}
           </Typography>
           <Typography
