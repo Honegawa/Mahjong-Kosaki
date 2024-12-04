@@ -141,7 +141,7 @@ function UserListTab() {
         type: "date",
         minWidth: 120,
         flex: 2,
-        valueGetter: (value, row) => {
+        valueGetter: (_value, row) => {
           return row.subscription ? new Date(row.subscription) : null;
         },
       },
@@ -151,7 +151,7 @@ function UserListTab() {
         type: "boolean",
         minWidth: 120,
         flex: 1,
-        valueGetter: (value, row) => {
+        valueGetter: (_value, row) => {
           return row.role === USER_ROLE.ADMIN;
         },
       },
