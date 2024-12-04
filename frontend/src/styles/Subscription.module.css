@@ -1,0 +1,22 @@
+.subscriptionPage {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.subscriptionContainer {
+  background-color: rgba(33, 150, 243, 0.32);
+  border-radius: 8px;
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
+  height: fit-content;
+}
+
+.subscriptionCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 300px;
+}

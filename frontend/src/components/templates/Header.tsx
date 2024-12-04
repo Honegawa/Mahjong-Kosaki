@@ -110,7 +110,6 @@ function Header() {
                 display: { xs: "flex", md: "none" },
                 height: "68px",
               }}
-              onClick={() => navigate("/")}
             />
           </Link>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>

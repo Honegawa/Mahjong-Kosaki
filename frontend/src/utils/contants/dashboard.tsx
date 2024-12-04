@@ -1,9 +1,9 @@
 import PersonIcon from "@mui/icons-material/Person";
-import SettingsIcon from "@mui/icons-material/Settings";
+// import SettingsIcon from "@mui/icons-material/Settings";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import PeopleIcon from "@mui/icons-material/People";
 import FormatAlignLeftIcon from "@mui/icons-material/FormatAlignLeft";
-import PlayCircleOutlinedIcon from "@mui/icons-material/PlayCircleOutlined";
+// import PlayCircleOutlinedIcon from "@mui/icons-material/PlayCircleOutlined";
 import TitleOutlinedIcon from "@mui/icons-material/TitleOutlined";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 
@@ -14,11 +14,11 @@ export const TABS = {
       icon: <PersonIcon />,
       index: 0,
     },
-    settings: {
+    /*settings: {
       name: "Préférence",
       icon: <SettingsIcon />,
       index: 1,
-    },
+    },*/
     subscription: {
       name: "Adhésion",
       icon: <InfoOutlinedIcon />,
@@ -36,11 +36,11 @@ export const TABS = {
       icon: <FormatAlignLeftIcon />,
       index: 4,
     },
-    gameList: {
+    /*gameList: {
       name: "Liste des matchs",
       index: 5,
       icon: <PlayCircleOutlinedIcon />,
-    },
+    },*/
     tournamentList: {
       name: "Liste des tournois",
       icon: <TitleOutlinedIcon />,

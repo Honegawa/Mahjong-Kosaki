@@ -14,6 +14,7 @@ import ParticipantRouter from "./routes/participant.router.js";
 import GameRouter from "./routes/game.router.js";
 import RoundRouter from "./routes/round.router.js";
 import PlayerRoundRouter from "./routes/playerRound.router.js";
+import DownloadRouter from "./routes/download.router.js";
 import "./models/index.js";
 
 const app = express();
@@ -41,5 +42,6 @@ app.use("/api/participant", ParticipantRouter);
 app.use("/api/game", GameRouter);
 app.use("/api/round", RoundRouter);
 app.use("/api/playerRound", PlayerRoundRouter);
+app.use("/api/download", DownloadRouter);
 app.use("/images", express.static(path.join(__dirname, "images")));
 export default app;
