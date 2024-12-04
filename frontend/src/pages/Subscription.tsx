@@ -21,6 +21,8 @@ import PDFStep from "../components/SubscriptionStep/PDFStep";
 import { Dayjs } from "dayjs";
 import { DateValidationError } from "@mui/x-date-pickers";
 import { findFormError } from "../utils/helpers/form.helper";
+import ENDPOINTS from "../utils/contants/endpoints";
+import { Link } from "react-router-dom";
 
 function Subscription() {
   const { user } = useContext(AuthContext) as AuthContextType;
@@ -220,59 +222,87 @@ function Subscription() {
         Adhésion
       </Typography>
 
-      <Stepper activeStep={activeStep} alternativeLabel>
-        {SUBSCRIPTION_STEPS.map((label) => {
-          const stepProps: { completed?: boolean } = {};
-
-          return (
-            <Step key={label} {...stepProps}>
-              <StepLabel>{label}</StepLabel>
-            </Step>
-          );
-        })}
-      </Stepper>
-
       <Box sx={{ flex: "1 0 auto" }} />
-
-      <Box className={styles.subscriptionContainer}>
+      {/* Mobile */}
+      <Box
+        className={styles.subscriptionContainer}
+        sx={{
+          display: { xs: "flex", md: "none" },
+        }}
+        flexDirection={"column"}
+      >
         <Card>
           <CardContent className={styles.subscriptionCard}>
-            {renderStep()}
+            <FinalStep />
 
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                pt: 2,
-                justifyContent: "center",
-              }}
-            >
-              <Button
-                color="inherit"
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                sx={{ mr: 1 }}
-                variant="contained"
-              >
-                Retour
-              </Button>
-              {activeStep < 2 && (
-                <Button
-                  onClick={handleNext}
-                  variant="contained"
-                  disabled={
-                    activeStep === 0 &&
-                    (!!findFormError(error) || findEmptyField())
-                  }
-                >
-                  {activeStep === SUBSCRIPTION_STEPS.length - 1
-                    ? "Fin"
-                    : "Suivant"}
-                </Button>
-              )}
-            </Box>
+            <Link to={ENDPOINTS.SUBSCRIPTION_FORM}>
+              <Button variant="contained">Télécharger</Button>
+            </Link>
+            <Box sx={{ flex: "1 0 auto" }} />
           </CardContent>
         </Card>
+      </Box>
+
+      {/* PC */}
+      <Box
+        sx={{ display: { xs: "none", md: "flex" } }}
+        flexDirection={"column"}
+        gap={2}
+      >
+        <Stepper activeStep={activeStep} alternativeLabel>
+          {SUBSCRIPTION_STEPS.map((label) => {
+            const stepProps: { completed?: boolean } = {};
+
+            return (
+              <Step key={label} {...stepProps}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            );
+          })}
+        </Stepper>
+
+        <Box sx={{ flex: "1 0 auto" }} />
+
+        <Box className={styles.subscriptionContainer}>
+          <Card>
+            <CardContent className={styles.subscriptionCard}>
+              {renderStep()}
+
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  pt: 2,
+                  justifyContent: "center",
+                }}
+              >
+                <Button
+                  color="inherit"
+                  disabled={activeStep === 0}
+                  onClick={handleBack}
+                  sx={{ mr: 1 }}
+                  variant="contained"
+                >
+                  Retour
+                </Button>
+                {activeStep < 2 && (
+                  <Button
+                    onClick={handleNext}
+                    variant="contained"
+                    disabled={
+                      activeStep === 0 &&
+                      (!!findFormError(error) || findEmptyField())
+                    }
+                  >
+                    {activeStep === SUBSCRIPTION_STEPS.length - 1
+                      ? "Fin"
+                      : "Suivant"}
+                  </Button>
+                )}
+              </Box>
+            </CardContent>
+          </Card>
+        </Box>
       </Box>
       <Box sx={{ flex: "1 0 auto" }} />
     </Box>

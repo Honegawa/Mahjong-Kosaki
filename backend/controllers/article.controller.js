@@ -1,7 +1,6 @@
 import { Article, ArticlePicture } from "../models/index.js";
 import sharp from "sharp";
 import fs from "fs";
-import { log } from "console";
 
 export const getAll = async (req, res) => {
   try {
