@@ -18,7 +18,7 @@ function SubscriptionTab() {
         render = (
           <Box display="flex" flexDirection="column" gap={2}>
             <Typography>
-              Vous n’avez pas encore adhéré à l’association.
+              Vous n&apos;avez pas encore adhéré à l&apos;association.
             </Typography>
             <Link to={"/subscription"}>
               <Button variant="contained">Adhérer</Button>
@@ -33,7 +33,7 @@ function SubscriptionTab() {
           render = (
             <Box display="flex" flexDirection="column" gap={2}>
               <Typography>
-                Votre adhésion à l’association a expiré le
+                Votre adhésion à l&apos;association a expiré le
                 <Typography fontWeight={600}>
                   {DATE_FORMATTER.format(new Date(subDate.toISOString()))}.
                 </Typography>
@@ -47,7 +47,7 @@ function SubscriptionTab() {
           render = (
             <Box display="flex" flexDirection="column" gap={2}>
               <Typography>
-                Votre adhésion à l’association expire le
+                Votre adhésion à l&apos;association expire le
                 <Typography fontWeight={600}>
                   {DATE_FORMATTER.format(new Date(subDate.toISOString()))}.
                 </Typography>

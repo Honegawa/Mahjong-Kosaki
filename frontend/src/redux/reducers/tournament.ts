@@ -3,13 +3,13 @@ import {
   DeletedTournament,
   UpdatedTournament,
   Tournament,
-  TournamentDetailData,
 } from "../../interfaces/tournament";
 
 type TournamentInitialeState = {
   data: Tournament[];
   loading: boolean | null;
   error: boolean;
+  id: number;
   tabIndex: number;
 };
 
@@ -17,6 +17,7 @@ const initialState: TournamentInitialeState = {
   data: [],
   loading: null,
   error: false,
+  id: 0,
   tabIndex: 0,
 };
 
@@ -36,10 +37,10 @@ export const TournamentSlice = createSlice({
     },
     FETCH_DETAIL: (
       draft: TournamentInitialeState,
-      action: PayloadAction<TournamentDetailData>
+      action: PayloadAction<number>
     ) => {
       draft.loading = false;
-      draft.data = [action.payload.data];
+      draft.id = action.payload;
     },
     FETCH_FAILURE: (draft: TournamentInitialeState) => {
       draft.loading = false;

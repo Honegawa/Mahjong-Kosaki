@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   Article,
-  ArticleDetailData,
   DeletedArticle,
   UpdatedArticle,
 } from "../../interfaces/article";
@@ -10,12 +9,14 @@ type ArticleInitialeState = {
   data: Article[];
   loading: boolean | null;
   error: boolean;
+  id: number;
 };
 
 const initialState: ArticleInitialeState = {
   data: [],
   loading: null,
   error: false,
+  id: 0,
 };
 
 export const ArticleSlice = createSlice({
@@ -34,10 +35,10 @@ export const ArticleSlice = createSlice({
     },
     FETCH_DETAIL: (
       draft: ArticleInitialeState,
-      action: PayloadAction<ArticleDetailData>
+      action: PayloadAction<number>
     ) => {
       draft.loading = false;
-      draft.data = [action.payload.data];
+      draft.id = action.payload;
     },
     FETCH_FAILURE: (draft: ArticleInitialeState) => {
       draft.loading = false;

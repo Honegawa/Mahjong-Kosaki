@@ -12,11 +12,6 @@ export interface Tournament {
   people: TournamentParticipant[];
 }
 
-export type TournamentDetailData = {
-  id: number;
-  data: Tournament;
-};
-
 export type TournamentParticipant = {
   id: number | null;
   firstname: string;
@@ -28,6 +23,7 @@ export type TournamentParticipant = {
 export type RootState = {
   tournaments: {
     data: Tournament[];
+    id: number;
     tabIndex: number;
   };
 };
