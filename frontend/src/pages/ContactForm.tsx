@@ -4,6 +4,8 @@ import {
   Button,
   Card,
   CardContent,
+  Collapse,
+  IconButton,
   Snackbar,
   SnackbarCloseReason,
   TextField,
@@ -16,6 +18,7 @@ import axios, { AxiosResponse } from "axios";
 import ENDPOINTS from "../utils/contants/endpoints";
 
 import styles from "../styles/Contact.module.css";
+import { GridCloseIcon } from "@mui/x-data-grid";
 
 function ContactForm() {
   const [contact, setContact] = useState<Contact>({
@@ -64,9 +67,9 @@ function ContactForm() {
 
   const handleClose = (
     event: React.SyntheticEvent | Event,
-    reason?: SnackbarCloseReason,
+    reason?: SnackbarCloseReason
   ) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
 
@@ -175,20 +178,33 @@ function ContactForm() {
             </Button>
 
             {error && (
-              <Alert severity="warning">
-                Une erreur est survenue lors de l'envoi du formulaire.
-              </Alert>
+              <Collapse in={error}>
+                <Alert
+                  action={
+                    <IconButton
+                      color="inherit"
+                      size="small"
+                      onClick={() => setError(false)}
+                    >
+                      <GridCloseIcon fontSize="inherit" />
+                    </IconButton>
+                  }
+                  severity="warning"
+                >
+                  Une erreur est survenue lors de l'envoi du formulaire.
+                </Alert>
+              </Collapse>
             )}
           </Box>
         </CardContent>
       </Card>
-      
+
       <Snackbar
         open={isSent}
         autoHideDuration={3000}
         onClose={handleClose}
         message="Votre message vient d'être envoyé."
-        anchorOrigin={{vertical: "bottom", horizontal: "right"}}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       />
     </Box>
   );
