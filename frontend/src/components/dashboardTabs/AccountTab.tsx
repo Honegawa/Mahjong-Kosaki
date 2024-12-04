@@ -66,6 +66,7 @@ function AccountTab() {
           flexDirection="column"
           justifyContent="space-between"
           gap={2}
+          minHeight={340}
         >
           <Box display="flex" flexDirection="column" gap={2}>
             <Box
