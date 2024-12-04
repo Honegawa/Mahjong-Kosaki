@@ -56,10 +56,7 @@ function Tournaments() {
     setOpenMenu(newOpen);
   };
 
-  const handleListItemClick = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    index: number
-  ) => {
+  const handleListItemClick = (index: number) => {
     setSelectedIndex(index);
     dispatch(ACTIONS_TOURNAMENT.TAB_UPDATE(index));
   };
@@ -71,7 +68,7 @@ function Tournaments() {
           <ListItemButton
             key={tab}
             selected={selectedIndex === index}
-            onClick={(event) => handleListItemClick(event, index)}
+            onClick={() => handleListItemClick(index)}
             sx={{ borderRadius: 2 }}
           >
             <ListItemText primary={tab} />

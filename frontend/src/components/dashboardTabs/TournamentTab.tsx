@@ -162,7 +162,7 @@ function TournamentTab() {
         type: "dateTime",
         minWidth: 120,
         flex: 2,
-        valueGetter: (value, row) => {
+        valueGetter: (_value, row) => {
           return new Date(row.startDate);
         },
       },
@@ -172,7 +172,7 @@ function TournamentTab() {
         type: "dateTime",
         minWidth: 120,
         flex: 2,
-        valueGetter: (value, row) => {
+        valueGetter: (_value, row) => {
           return new Date(row.endDate);
         },
       },
@@ -182,7 +182,7 @@ function TournamentTab() {
         type: "dateTime",
         minWidth: 120,
         flex: 2,
-        valueGetter: (value, row) => {
+        valueGetter: (_value, row) => {
           return new Date(row.registerLimitDate);
         },
       },
@@ -197,7 +197,7 @@ function TournamentTab() {
         headerName: "Participants",
         minWidth: 120,
         flex: 1,
-        valueGetter: (value, row) => {
+        valueGetter: (_value, row) => {
           return `${row.people.length} / ${row.playerLimit}`;
         },
       },
