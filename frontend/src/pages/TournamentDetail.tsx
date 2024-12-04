@@ -3,12 +3,11 @@ import { useParams } from "react-router-dom";
 import {
   Tournament,
   RootState as RootStateTournament,
-  TournamentDetailData,
   TournamentParticipant,
 } from "../interfaces/tournament";
 import * as ACTIONS_TOURNAMENT from "../redux/reducers/tournament";
 import { oneTournament } from "../services/selectors/tournament.selector";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import ENDPOINTS from "../utils/contants/endpoints";
 import ErrorPage from "./ErrorPage";
@@ -18,16 +17,33 @@ import { DATETIME_FORMATTER } from "../utils/helpers/date.helper";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
 function TournamentDetail() {
+  const [loading, setLoading] = useState(true);
   const { id } = useParams();
   const dispatch = useDispatch();
 
-  const tournamentStore: Tournament = useSelector(
-    (state: RootStateTournament) => oneTournament(state)[0]
+  const singleTournamentStore: Tournament | undefined = useSelector(
+    (state: RootStateTournament) => oneTournament(state)
   );
 
   useEffect(() => {
+    getTournaments();
     getTournamentDetail();
   }, []);
+
+  const getTournaments = async () => {
+    dispatch(ACTIONS_TOURNAMENT.FETCH_START());
+
+    try {
+      const response = await axios.get(ENDPOINTS.TOURNAMENT);
+      const { data, status } = response;
+
+      if (status === 200) {
+        dispatch(ACTIONS_TOURNAMENT.FETCH_SUCCESS(data));
+      }
+    } catch (error) {
+      dispatch(ACTIONS_TOURNAMENT.FETCH_FAILURE());
+    }
+  };
 
   const getTournamentDetail = async () => {
     dispatch(ACTIONS_TOURNAMENT.FETCH_START());
@@ -35,20 +51,18 @@ function TournamentDetail() {
     try {
       if (id && id.match(/^[1-9]\d*$/)) {
         const response = axios.get(`${ENDPOINTS.TOURNAMENT}/${id}`);
-        const { data, status } = await response;
+        const { status } = await response;
 
         if (status === 200) {
-          const tournamentDetail: TournamentDetailData = {
-            data: data,
-            id: Number(id),
-          };
-          dispatch(ACTIONS_TOURNAMENT.FETCH_DETAIL(tournamentDetail));
+          dispatch(ACTIONS_TOURNAMENT.FETCH_DETAIL(Number(id)));
+          setLoading(false);
         }
       } else {
         throw new Error("Tournament doesn't exist.");
       }
     } catch (error) {
       dispatch(ACTIONS_TOURNAMENT.FETCH_FAILURE());
+      setLoading(false);
     }
   };
 
@@ -61,7 +75,7 @@ function TournamentDetail() {
     []
   );
 
-  return tournamentStore ? (
+  return singleTournamentStore ? (
     <Box className={styles.tournamentDetailContainer}>
       <Card>
         <CardContent>
@@ -73,36 +87,40 @@ function TournamentDetail() {
               width: "100%",
             }}
           >
-            <Typography variant="h4" component={"h1"}>
-              {tournamentStore.name}
+            <Typography variant="h4" component={"h1"} fontWeight={600}>
+              {singleTournamentStore.name}
             </Typography>
             <Box>
               <Typography>
                 {"Période : du "}
-                {DATETIME_FORMATTER.format(new Date(tournamentStore.startDate))}
+                {DATETIME_FORMATTER.format(
+                  new Date(singleTournamentStore.startDate)
+                )}
                 {" au "}
-                {DATETIME_FORMATTER.format(new Date(tournamentStore.endDate))}
+                {DATETIME_FORMATTER.format(
+                  new Date(singleTournamentStore.endDate)
+                )}
               </Typography>
               <Typography>
                 {"Date limite d’inscription : "}
                 {DATETIME_FORMATTER.format(
-                  new Date(tournamentStore.registerLimitDate)
+                  new Date(singleTournamentStore.registerLimitDate)
                 )}
               </Typography>
               <Typography>
-                {`Frais d’entrée : ${tournamentStore.entryFee}€`}
+                {`Frais d’entrée : ${singleTournamentStore.entryFee}€`}
               </Typography>
               <Typography>
-                {`Limite de joueurs : ${tournamentStore.playerLimit}`}
+                {`Limite de joueurs : ${singleTournamentStore.playerLimit}`}
               </Typography>
-              <Typography>{`Lieu : ${tournamentStore.location}`}</Typography>
-              <Typography>{`Description : ${tournamentStore.description}`}</Typography>
-              <Typography>{`Organisation : ${tournamentStore.setup}`}</Typography>
+              <Typography>{`Lieu : ${singleTournamentStore.location}`}</Typography>
+              <Typography>{`Description : ${singleTournamentStore.description}`}</Typography>
+              <Typography>{`Organisation : ${singleTournamentStore.setup}`}</Typography>
             </Box>
 
             <Box maxHeight={600}>
               <DataGrid
-                rows={tournamentStore.people}
+                rows={singleTournamentStore.people}
                 columns={columns}
                 initialState={{
                   pagination: {
@@ -126,6 +144,8 @@ function TournamentDetail() {
         </CardContent>
       </Card>
     </Box>
+  ) : loading ? (
+    <></>
   ) : (
     <ErrorPage />
   );

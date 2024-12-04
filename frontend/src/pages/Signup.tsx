@@ -216,7 +216,7 @@ function Signup() {
           className={styles.signupContent}
           sx={{ backgroundColor: "white", gap: { xs: 1, md: 3 } }}
         >
-          <Typography variant="h4" component={"h1"}>
+          <Typography variant="h4" component={"h1"} fontWeight={600}>
             Inscription
           </Typography>
 

@@ -38,6 +38,7 @@ function Tournaments() {
 
   const getTournaments = async () => {
     dispatch(ACTIONS_TOURNAMENT.FETCH_START());
+    dispatch(ACTIONS_TOURNAMENT.TAB_UPDATE(selectedIndex));
 
     try {
       const response = await axios.get(ENDPOINTS.TOURNAMENT);
@@ -55,10 +56,7 @@ function Tournaments() {
     setOpenMenu(newOpen);
   };
 
-  const handleListItemClick = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    index: number
-  ) => {
+  const handleListItemClick = (index: number) => {
     setSelectedIndex(index);
     dispatch(ACTIONS_TOURNAMENT.TAB_UPDATE(index));
   };
@@ -70,7 +68,7 @@ function Tournaments() {
           <ListItemButton
             key={tab}
             selected={selectedIndex === index}
-            onClick={(event) => handleListItemClick(event, index)}
+            onClick={() => handleListItemClick(index)}
             sx={{ borderRadius: 2 }}
           >
             <ListItemText primary={tab} />
@@ -82,7 +80,7 @@ function Tournaments() {
 
   return (
     <Box width="100%">
-      <Typography variant="h4" component={"h1"}>
+      <Typography variant="h4" component={"h1"} fontWeight={600}>
         Tournois
       </Typography>
       <Box
@@ -109,7 +107,7 @@ function Tournaments() {
         </Box>
 
         <Box className={styles.tournamentContainer}>
-          <Card sx={{ minHeight: "100%" }}>
+          <Card>
             <CardContent
               sx={{
                 overflow: "auto",

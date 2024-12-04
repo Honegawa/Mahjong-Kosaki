@@ -1,15 +1,21 @@
 export interface Article {
-  id?: number;
+  id: number | null;
   title: string;
   content: string;
   createdAt: string;
   updatedAt: string;
-  articlePictures: ArticlePicture[];
+  pictures: ArticlePicture[];
 }
 
-export type ArticleDetailData = {
-  id: number;
-  data: Article;
+export type ArticleFormData = {
+  id: number | null;
+  title: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  pictures: ArticlePicture[];
+  uploads: FileList | null;
+  removedPictures: ArticlePicture[] | null;
 };
 
 export interface ArticlePicture {
@@ -20,5 +26,16 @@ export interface ArticlePicture {
 export type RootState = {
   articles: {
     data: Article[];
+    id: number;
   };
+};
+
+export type UpdatedArticle = {
+  data: Article[];
+  update: Article;
+};
+
+export type DeletedArticle = {
+  data: Article[];
+  id: number;
 };

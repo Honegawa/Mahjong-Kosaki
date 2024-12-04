@@ -20,6 +20,9 @@ import AccountTab from "../components/dashboardTabs/AccountTab";
 import UserListTab from "../components/dashboardTabs/UserListTab";
 import { Link } from "react-router-dom";
 import TournamentTab from "../components/dashboardTabs/TournamentTab";
+import ArticleTab from "../components/dashboardTabs/ArticleTab";
+import BookingTab from "../components/dashboardTabs/BookingTab";
+import SubscriptionTab from "../components/dashboardTabs/SubscriptionTab";
 
 type DashboardProps = {
   tabIndex: number;
@@ -38,10 +41,16 @@ function Dashboard(props: DashboardProps) {
     switch (tabIndex) {
       case 0:
         return <AccountTab />;
+      case 2:
+        return <SubscriptionTab />;
       case 3:
         return <UserListTab />;
+      case 4:
+        return <ArticleTab />;
       case 6:
         return <TournamentTab />;
+      case 7:
+        return <BookingTab/>;
 
       default:
         return <CardContent sx={{ height: "100%" }}>Erreur</CardContent>;
@@ -94,7 +103,7 @@ function Dashboard(props: DashboardProps) {
 
   return (
     <Box width="100%">
-      <Typography variant="h4" component={"h1"}>
+      <Typography variant="h4" component={"h1"} fontWeight={600}>
         Dashboard
       </Typography>
       <Box

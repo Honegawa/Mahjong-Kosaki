@@ -24,7 +24,7 @@ function News() {
   const NB_PAGES = Math.ceil(articleStore.length / LIMIT_ITEMS);
   const sortedArticles = sortBy(articleStore, ["createdAt"]).reverse();
   const filteredArticles = sortedArticles.filter(
-    (article: Article, index: number) =>
+    (_article: Article, index: number) =>
       index >= LIMIT_ITEMS * (page - 1) && index < LIMIT_ITEMS * page
   );
 
@@ -47,7 +47,7 @@ function News() {
     }
   };
 
-  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
+  const handleChange = (_event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
   };
 
@@ -56,7 +56,7 @@ function News() {
       className={styles.news}
       sx={{ display: "flex", flexDirection: "column", gap: 2 }}
     >
-      <Typography variant="h4" component={"h1"}>
+      <Typography variant="h4" component={"h1"} fontWeight={600}>
         Actualités
       </Typography>
       {filteredArticles.map((article: Article) => (

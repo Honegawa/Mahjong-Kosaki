@@ -116,7 +116,9 @@ function UserListTab() {
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError;
         if (axiosError.response?.status) {
-          setError("Une erreur est survenue lors de la suppression du compte");
+          setError(
+            "Une erreur est survenue lors de la suppression de lq personne."
+          );
         }
       }
 
@@ -139,7 +141,7 @@ function UserListTab() {
         type: "date",
         minWidth: 120,
         flex: 2,
-        valueGetter: (value, row) => {
+        valueGetter: (_value, row) => {
           return row.subscription ? new Date(row.subscription) : null;
         },
       },
@@ -149,7 +151,7 @@ function UserListTab() {
         type: "boolean",
         minWidth: 120,
         flex: 1,
-        valueGetter: (value, row) => {
+        valueGetter: (_value, row) => {
           return row.role === USER_ROLE.ADMIN;
         },
       },

@@ -1,8 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   Article,
-  ArticleDetailData,
   ArticlePicture,
   RootState as RootStateArticle,
 } from "../interfaces/article";
@@ -19,15 +18,33 @@ import { Img } from "../components/templates/Img";
 import ErrorPage from "./ErrorPage";
 
 function ArticleDetail() {
+  const [loading, setLoading] = useState(true);
   const { id } = useParams();
   const dispatch = useDispatch();
-  const articleStore: Article[] = useSelector((state: RootStateArticle) =>
-    oneArticle(state)
+
+  const singleArticleStore: Article | undefined = useSelector(
+    (state: RootStateArticle) => oneArticle(state)
   );
 
   useEffect(() => {
+    getArticles();
     getArticleDetail();
   }, []);
+
+  const getArticles = async () => {
+    dispatch(ACTIONS_ARTICLE.FETCH_START());
+
+    try {
+      const response = await axios.get(ENDPOINTS.ARTICLE);
+      const { data, status } = response;
+
+      if (status === 200) {
+        dispatch(ACTIONS_ARTICLE.FETCH_SUCCESS(data));
+      }
+    } catch (error) {
+      dispatch(ACTIONS_ARTICLE.FETCH_FAILURE());
+    }
+  };
 
   const getArticleDetail = async () => {
     dispatch(ACTIONS_ARTICLE.FETCH_START());
@@ -35,27 +52,25 @@ function ArticleDetail() {
     try {
       if (id && id.match(/^[1-9]\d*$/)) {
         const response = axios.get(`${ENDPOINTS.ARTICLE}/${id}`);
-        const { data, status } = await response;
+        const { status } = await response;
 
         if (status === 200) {
-          const articleDetail: ArticleDetailData = {
-            data: data,
-            id: Number(id),
-          };
-          dispatch(ACTIONS_ARTICLE.FETCH_DETAIL(articleDetail));
+          dispatch(ACTIONS_ARTICLE.FETCH_DETAIL(Number(id)));
+          setLoading(false);
         }
       } else {
         throw new Error("Article doesn't exist.");
       }
     } catch (error) {
       dispatch(ACTIONS_ARTICLE.FETCH_FAILURE());
+      setLoading(false);
     }
   };
 
-  return articleStore[0] ? (
+  return singleArticleStore ? (
     <Container sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-      <Typography variant="h4" component={"h1"}>
-        {articleStore[0].title}
+      <Typography variant="h4" component={"h1"} fontWeight={600}>
+        {singleArticleStore.title}
       </Typography>
 
       <Box
@@ -67,14 +82,14 @@ function ArticleDetail() {
           flexDirection: { xs: "column", md: "row" },
         }}
       >
-        <Box maxWidth={700}>
+        <Box maxWidth={700} width="100%">
           <Typography variant="caption">{`Publié le ${new Date(
-            articleStore[0].createdAt
+            singleArticleStore.createdAt
           ).toLocaleDateString()}`}</Typography>
-          <Typography>{articleStore[0].content}</Typography>
+          <Typography>{singleArticleStore.content}</Typography>
         </Box>
 
-        {articleStore[0].articlePictures && (
+        {singleArticleStore.pictures.length > 0 && (
           <Box
             maxWidth={400}
             display="flex"
@@ -84,15 +99,15 @@ function ArticleDetail() {
             justifyContent="center"
             gap={2}
           >
-            {articleStore[0].articlePictures?.map(
+            {singleArticleStore.pictures?.map(
               (pic: ArticlePicture, index: number) => (
-                <Link to={pic.picture} target="_blank">
+                <Link to={pic.picture} key={pic.picture} target="_blank">
                   <Img
                     src={pic.picture}
                     alt={`Photo article ${index}`}
                     sx={{
-                      width: { xs: 80, md: 170 },
-                      height: { xs: 80, md: 170 },
+                      width: { xs: "100%", md: 170 },
+                      height: { md: 170 },
                       objectFit: "contain",
                     }}
                   />
@@ -103,6 +118,8 @@ function ArticleDetail() {
         )}
       </Box>
     </Container>
+  ) : loading ? (
+    <></>
   ) : (
     <ErrorPage />
   );

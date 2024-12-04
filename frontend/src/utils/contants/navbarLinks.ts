@@ -11,10 +11,10 @@ export const PAGES = [
     name: "Règles et Formats",
     link: "rules-formats",
   },
-  {
+  /*{
     name: "Matchs",
     link: "games",
-  },
+  },*/
   {
     name: "Tournois",
     link: "tournaments",
@@ -26,5 +26,9 @@ export const PAGES = [
   {
     name: "Contact",
     link: "contact",
+  },
+  {
+    name: "Adhésion",
+    link: "subscription",
   },
 ];

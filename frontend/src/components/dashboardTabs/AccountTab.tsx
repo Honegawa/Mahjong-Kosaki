@@ -51,7 +51,7 @@ function AccountTab() {
           axiosError.response?.status === 403 ||
           axiosError.response?.status === 404
         ) {
-          setError("Une erreur est survenue lors de la suppression du compte");
+          setError("Une erreur est survenue lors de la suppression du compte<");
         }
       }
       handleClose();
@@ -66,6 +66,7 @@ function AccountTab() {
           flexDirection="column"
           justifyContent="space-between"
           gap={2}
+          minHeight={340}
         >
           <Box display="flex" flexDirection="column" gap={2}>
             <Box

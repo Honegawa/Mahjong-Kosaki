@@ -10,6 +10,7 @@ const ENDPOINTS = {
   GAME: `${API_BASE_URL}/game`,
   ROUND: `${API_BASE_URL}/round`,
   PLAYER_ROUND: `${API_BASE_URL}/playerRound`,
+  SUBSCRIPTION_FORM: `${API_BASE_URL}/download/form`,
 };
 
 export default ENDPOINTS;

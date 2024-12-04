@@ -5,6 +5,7 @@ const REGEX = {
   password: new RegExp(
     /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/
   ),
+  postalCode: new RegExp(/^\d{5}$/),
 };
 
 export default REGEX;

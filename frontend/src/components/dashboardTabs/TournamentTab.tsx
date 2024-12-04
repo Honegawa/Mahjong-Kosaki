@@ -134,7 +134,9 @@ function TournamentTab() {
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError;
         if (axiosError.response?.status) {
-          setError("Une erreur est survenue lors de la suppression du compte");
+          setError(
+            "Une erreur est survenue lors de la suppression du tournoi."
+          );
         }
       }
 
@@ -160,7 +162,7 @@ function TournamentTab() {
         type: "dateTime",
         minWidth: 120,
         flex: 2,
-        valueGetter: (value, row) => {
+        valueGetter: (_value, row) => {
           return new Date(row.startDate);
         },
       },
@@ -170,7 +172,7 @@ function TournamentTab() {
         type: "dateTime",
         minWidth: 120,
         flex: 2,
-        valueGetter: (value, row) => {
+        valueGetter: (_value, row) => {
           return new Date(row.endDate);
         },
       },
@@ -180,7 +182,7 @@ function TournamentTab() {
         type: "dateTime",
         minWidth: 120,
         flex: 2,
-        valueGetter: (value, row) => {
+        valueGetter: (_value, row) => {
           return new Date(row.registerLimitDate);
         },
       },
@@ -195,7 +197,7 @@ function TournamentTab() {
         headerName: "Participants",
         minWidth: 120,
         flex: 1,
-        valueGetter: (value, row) => {
+        valueGetter: (_value, row) => {
           return `${row.people.length} / ${row.playerLimit}`;
         },
       },
@@ -228,6 +230,7 @@ function TournamentTab() {
               MODAL_TABS.addParticipant
             )}
             showInMenu
+            disabled={params.row.people.length === params.row.playerLimit}
           />,
           <GridActionsCellItem
             icon={<GroupRemove />}
@@ -237,6 +240,7 @@ function TournamentTab() {
               MODAL_TABS.removeParticipant
             )}
             showInMenu
+            disabled={params.row.people.length === 0}
           />,
         ],
       },

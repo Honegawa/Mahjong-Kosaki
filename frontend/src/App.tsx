@@ -11,8 +11,8 @@ import LegalMentions from "./pages/LegalMentions";
 import Calendar from "./pages/Calendar";
 import Contact from "./pages/ContactForm";
 import Dashboard from "./pages/Dashboard";
-import Games from "./pages/Games";
-import GameDetail from "./pages/GameDetail";
+// import Games from "./pages/Games";
+// import GameDetail from "./pages/GameDetail";
 import Subscription from "./pages/Subscription";
 import Tournaments from "./pages/Tournaments";
 import TournamentDetail from "./pages/TournamentDetail";
@@ -37,8 +37,10 @@ function App() {
           <Route path="news" element={<News />} />
           <Route path="articles" element={<Navigate to="../news" replace />} />
           <Route path="articles/:id" element={<ArticleDetail />} />
+          {/*
           <Route path="games" element={<Games />} />
           <Route path="games/:id" element={<GameDetail />} />
+           */}
           <Route path="tournaments" element={<Tournaments />} />
           <Route path="tournaments/:id" element={<TournamentDetail />} />
           <Route path="calendar" element={<Calendar />} />

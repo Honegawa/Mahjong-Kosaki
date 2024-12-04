@@ -11,8 +11,9 @@ import {
   Typography,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Img } from "./Img";
+import styles from "../../styles/Header.module.css";
 
 import logo from "../../assets/logo.svg";
 import { PAGES } from "../../utils/contants/navbarLinks";
@@ -29,11 +30,8 @@ function Header() {
     setAnchorElNav(event.currentTarget);
   };
 
-  const handleCloseNavMenu = (link: string) => {
+  const handleCloseNavMenu = () => {
     setAnchorElNav(null);
-    if (link) {
-      navigate(link);
-    }
   };
 
   const handleLogout = () => {
@@ -45,12 +43,13 @@ function Header() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar sx={{ padding: 1 }}>
-          <Img
-            src={logo}
-            alt="logo"
-            sx={{ display: { xs: "none", md: "flex" } }}
-            onClick={() => navigate("/")}
-          />
+          <Link to="">
+            <Img
+              src={logo}
+              alt="logo"
+              sx={{ display: { xs: "none", md: "flex" } }}
+            />
+          </Link>
           <Box
             sx={{
               flexGrow: { xs: 0, md: 1 },
@@ -80,55 +79,63 @@ function Header() {
                 horizontal: "left",
               }}
               open={Boolean(anchorElNav)}
-              onClose={() => handleCloseNavMenu("")}
+              onClose={() => handleCloseNavMenu()}
               sx={{
                 display: { xs: "block", md: "none" },
               }}
             >
               {PAGES.map((page) => (
-                <MenuItem
-                  key={page.name}
-                  onClick={() => handleCloseNavMenu(page.link)}
-                >
-                  <Typography textAlign="center">{page.name}</Typography>
-                </MenuItem>
+                <Link to={page.link} key={page.name} className={styles.link}>
+                  <MenuItem onClick={() => handleCloseNavMenu()}>
+                    <Typography textAlign="center">{page.name}</Typography>
+                  </MenuItem>
+                </Link>
               ))}
-              <MenuItem onClick={() => handleCloseNavMenu("dashboard")}>
-                <Typography textAlign="center">{"Dashboard"}</Typography>
-              </MenuItem>
+
+              {user && (
+                <Link to={"dashboard"} className={styles.link}>
+                  <MenuItem onClick={() => handleCloseNavMenu()}>
+                    <Typography textAlign="center">{"Dashboard"}</Typography>
+                  </MenuItem>
+                </Link>
+              )}
             </Menu>
           </Box>
-          <Img
-            src={logo}
-            alt="logo"
-            sx={{
-              flexGrow: 1,
-              display: { xs: "flex", md: "none" },
-              height: "68px",
-            }}
-            onClick={() => navigate("/")}
-          />
+          <Link to="">
+            <Img
+              src={logo}
+              alt="logo"
+              sx={{
+                flexGrow: 1,
+                display: { xs: "flex", md: "none" },
+                height: "68px",
+              }}
+            />
+          </Link>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {PAGES.map((page) => (
-              <Button
-                key={page.name}
-                onClick={() => handleCloseNavMenu(page.link)}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page.name}
-              </Button>
+              <Link to={page.link} key={page.name} className={styles.link}>
+                <Button sx={{ my: 2, color: "white", display: "block" }}>
+                  {page.name}
+                </Button>
+              </Link>
             ))}
           </Box>
 
-          <Box sx={{ flexGrow: 0, display: "flex" }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexGrow: { xs: 1, md: 0 },
+              justifyContent: "right",
+            }}
+          >
             {user && (
               <>
-                <Button
-                  onClick={() => navigate("dashboard")}
-                  sx={{ my: 2, color: "white", display: "block" }}
-                >
-                  Dashboard
-                </Button>
+                <Link to={"dashboard"} className={styles.link}>
+                  <Button sx={{ my: 2, color: "white", display: "block" }}>
+                    Dashboard
+                  </Button>
+                </Link>
                 <Button
                   onClick={handleLogout}
                   variant="contained"
@@ -141,14 +148,15 @@ function Header() {
             )}
 
             {!user && (
-              <Button
-                onClick={() => navigate("/login")}
-                variant="contained"
-                color="inherit"
-                sx={{ my: 2, color: "black", display: "block" }}
-              >
-                Connexion
-              </Button>
+              <Link to="login" className={styles.link}>
+                <Button
+                  variant="contained"
+                  color="inherit"
+                  sx={{ my: 2, color: "black", display: "block" }}
+                >
+                  Connexion
+                </Button>
+              </Link>
             )}
           </Box>
         </Toolbar>

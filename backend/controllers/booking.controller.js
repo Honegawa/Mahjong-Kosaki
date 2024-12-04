@@ -2,7 +2,12 @@ import { Booking, Person } from "../models/index.js";
 
 export const getAll = async (req, res) => {
   try {
-    const bookings = await Booking.findAll();
+    const bookings = await Booking.findAll({
+      include: {
+        model: Person,
+        attributes: ["id", "firstname", "lastname", "email"],
+      },
+    });
 
     res.status(200).json(bookings);
   } catch (error) {
@@ -13,7 +18,12 @@ export const getAll = async (req, res) => {
 export const getById = async (req, res) => {
   try {
     const { id } = req.params;
-    const booking = await Booking.findByPk(id);
+    const booking = await Booking.findByPk(id, {
+      include: {
+        model: Person,
+        attributes: ["id", "firstname", "lastname", "email"],
+      },
+    });
 
     if (!booking) {
       return res.status(404).json({ message: "Booking not found" });
@@ -27,15 +37,37 @@ export const getById = async (req, res) => {
 
 export const create = async (req, res) => {
   try {
-    const { date, type, format } = req.body;
+    const { date, type, format, PersonId } = req.body;
+
+    let id = PersonId;
+    if (!PersonId) {
+      id = req.user.id;
+    }
+    const person = await Person.findByPk(id);
+
+    if (!person) {
+      return res.status(404).json({ message: "Person not found" });
+    }
+
     const booking = await Booking.create({
       date,
       type,
       format,
-      PersonId: req.user.id,
+      PersonId: id,
     });
 
-    res.status(201).json({ message: "Booking has been created", booking });
+    res.status(201).json({
+      message: "Booking has been created",
+      newBooking: {
+        ...booking.dataValues,
+        Person: {
+          id,
+          firstname: person.firstname,
+          lastname: person.lastname,
+          email: person.email,
+        },
+      },
+    });
   } catch (error) {
     res.status(500).json({ error: "Error in sending booking" });
   }
@@ -46,7 +78,12 @@ export const updateById = async (req, res) => {
     const { id } = req.params;
     const { date, type, format } = req.body;
 
-    const booking = await Booking.findByPk(id);
+    const booking = await Booking.findByPk(id, {
+      include: {
+        model: Person,
+        attributes: ["id", "firstname", "lastname", "email"],
+      },
+    });
 
     if (!booking) {
       return res.status(404).json({ message: "Booking not found" });
@@ -59,7 +96,7 @@ export const updateById = async (req, res) => {
       await booking.update({ date, type, format });
       return res
         .status(200)
-        .json({ message: "Booking has been updated", booking });
+        .json({ message: "Booking has been updated", updatedBooking: booking });
     }
 
     res
@@ -80,7 +117,7 @@ export const deleteById = async (req, res) => {
     }
 
     if (
-      (req.user && req.user.id === booking.PersonId)||
+      (req.user && req.user.id === booking.PersonId) ||
       (req.user && req.user.role === "admin")
     ) {
       await booking.destroy();
