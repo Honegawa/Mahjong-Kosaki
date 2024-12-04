@@ -7,8 +7,6 @@ import fs from "fs";
 export const downloadForm = async (req, res) => {
   const filePath = `${DOWNLOAD_DIRECTORY}/${FORM}`;
 
-  console.log(filePath);
-
   if (!fs.existsSync(filePath)) {
     return res.status(400).json({ error: "File not found." });
   }
