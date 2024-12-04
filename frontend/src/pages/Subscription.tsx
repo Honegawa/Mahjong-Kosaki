@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { SubscriptionFormData } from "../interfaces/subscriptions";
 import { AuthContext } from "../utils/contexts/Auth.context";
 import { AuthContextType } from "../interfaces/user";
@@ -26,11 +26,11 @@ function Subscription() {
   const { user } = useContext(AuthContext) as AuthContextType;
   const [activeStep, setActiveStep] = useState(0);
   const [subscription, setSubscription] = useState<SubscriptionFormData>({
-    firstname: user ? user.firstname : "",
-    lastname: user ? user.lastname : "",
-    email: user ? user.email : "",
-    EMANumber: user ? user.EMANumber : "",
-    phone: user ? user.phone : "",
+    firstname: "",
+    lastname: "",
+    email: "",
+    EMANumber: "",
+    phone: "",
     birthdate: "",
     address: "",
     postalCode: "",
@@ -44,6 +44,19 @@ function Subscription() {
     postalCode: "",
     birthdate: "",
   });
+
+  useEffect(() => {
+    if (user) {
+      setSubscription((subcription) => ({
+        ...subcription,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+        EMANumber: user.EMANumber,
+        phone: user.phone,
+      }));
+    }
+  }, [user]);
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);

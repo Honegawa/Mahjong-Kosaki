@@ -189,6 +189,8 @@ function FormStep(props: FormStepProps) {
           type="text"
           onChange={handlePostalCode}
           value={subscription.postalCode}
+          error={error.postalCode.length > 0}
+          helperText={error.postalCode}
           fullWidth
           variant="outlined"
         />
