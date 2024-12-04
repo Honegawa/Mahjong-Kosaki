@@ -18,11 +18,6 @@ export type ArticleFormData = {
   removedPictures: ArticlePicture[] | null;
 };
 
-export type ArticleDetailData = {
-  id: number;
-  data: Article;
-};
-
 export interface ArticlePicture {
   id?: number;
   picture: string;
@@ -31,6 +26,7 @@ export interface ArticlePicture {
 export type RootState = {
   articles: {
     data: Article[];
+    id: number;
   };
 };
 

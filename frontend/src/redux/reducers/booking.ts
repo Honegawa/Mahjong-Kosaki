@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   Booking,
-  BookingDetailData,
   DeletedBooking,
   UpdatedBooking,
 } from "../../interfaces/booking";
@@ -34,13 +33,6 @@ export const BookingSlice = createSlice({
     ) => {
       draft.loading = false;
       draft.data = action.payload;
-    },
-    FETCH_DETAIL: (
-      draft: BookingInitialeState,
-      action: PayloadAction<BookingDetailData>
-    ) => {
-      draft.loading = false;
-      draft.data = [action.payload.data];
     },
     FETCH_FAILURE: (draft: BookingInitialeState) => {
       draft.loading = false;
@@ -114,7 +106,6 @@ export const BookingSlice = createSlice({
 export const {
   FETCH_START,
   FETCH_SUCCESS,
-  FETCH_DETAIL,
   FETCH_FAILURE,
   POST_START,
   POST_SUCCESS,

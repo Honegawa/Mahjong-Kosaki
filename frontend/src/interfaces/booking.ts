@@ -22,11 +22,6 @@ export type BookingPerson = {
   email: string;
 };
 
-export type BookingDetailData = {
-  id: number;
-  data: Booking;
-};
-
 export type RootState = {
   bookings: {
     data: Booking[];
