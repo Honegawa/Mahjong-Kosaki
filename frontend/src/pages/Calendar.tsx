@@ -223,10 +223,15 @@ function Calendar() {
             flexDirection: { xs: "column", lg: "row" },
             gap: { xs: 1, md: 4 },
           }}
+          alignItems="center"
         >
-          <DateCalendar value={date} onChange={handleChangeDate} />
+          <DateCalendar
+            value={date}
+            onChange={handleChangeDate}
+            sx={{ minWidth: "fit-content" }}
+          />
 
-          <Box flexGrow={1} className={styles.calendarContainer}>
+          <Box flexGrow={1} maxWidth={700} className={styles.calendarContainer}>
             <Card>
               <CardContent>
                 <Box
@@ -234,8 +239,7 @@ function Calendar() {
                   flexDirection="column"
                   gap={2}
                   sx={{
-                    minHeight: { xs: 336, md: 336 },
-                    maxHeight: { xs: 500, md: 500 },
+                    height: 400,
                     width: "100%",
                   }}
                 >

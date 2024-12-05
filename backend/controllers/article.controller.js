@@ -67,7 +67,7 @@ export const create = async (req, res) => {
       .json({ message: "Article has been created", newArticle: article });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: "Error in sending article" });
+    res.status(500).json({ error: "Error in creating article" });
   }
 };
 

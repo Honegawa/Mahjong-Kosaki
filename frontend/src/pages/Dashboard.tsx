@@ -50,7 +50,7 @@ function Dashboard(props: DashboardProps) {
       case 6:
         return <TournamentTab />;
       case 7:
-        return <BookingTab/>;
+        return <BookingTab />;
 
       default:
         return <CardContent sx={{ height: "100%" }}>Erreur</CardContent>;
@@ -102,7 +102,7 @@ function Dashboard(props: DashboardProps) {
   );
 
   return (
-    <Box width="100%">
+    <Box sx={{ width: { xs: "100%", lg: 1000 } }}>
       <Typography variant="h4" component={"h1"} fontWeight={600}>
         Dashboard
       </Typography>
@@ -129,7 +129,13 @@ function Dashboard(props: DashboardProps) {
           </Box>
         </Box>
 
-        <Box className={styles.dashboard}>
+        <Box
+          className={styles.dashboard}
+          sx={{
+            maxWidth: { xs: "100%", lg: "80%", xl: 800 },
+            minWidth: { xs: "100%", lg: 800 },
+          }}
+        >
           <Card sx={{ minHeight: "100%" }}>{renderTab()}</Card>
         </Box>
       </Box>
