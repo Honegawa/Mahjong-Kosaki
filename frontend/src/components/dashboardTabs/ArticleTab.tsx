@@ -114,7 +114,7 @@ function ArticleTab() {
         headerName: "Créé le",
         type: "dateTime",
         width: 140,
-        valueGetter: (value, row) => {
+        valueGetter: (_value, row) => {
           return new Date(row.createdAt);
         },
       },
@@ -123,7 +123,7 @@ function ArticleTab() {
         headerName: "Mise à jour le",
         type: "dateTime",
         width: 140,
-        valueGetter: (value, row) => {
+        valueGetter: (_value, row) => {
           return new Date(row.updatedAt);
         },
       },
