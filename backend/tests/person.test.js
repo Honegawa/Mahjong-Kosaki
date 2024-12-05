@@ -535,7 +535,7 @@ describe("Tests for update", () => {
     });
   });
 
-  it("Not participant user : should return status 403 with a specific message", async () => {
+  it("Not person user : should return status 403 with a specific message", async () => {
     await updateById(wrongUserReq, res);
     expect(Person.findByPk).toHaveBeenCalledTimes(1);
     expect(res.status).toHaveBeenCalledWith(403);

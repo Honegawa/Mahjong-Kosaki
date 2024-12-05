@@ -39,9 +39,9 @@ export const create = async (req, res) => {
   try {
     const { date, type, format, PersonId } = req.body;
 
-    let id = PersonId;
-    if (!PersonId) {
-      id = req.user.id;
+    let id = req.user.id;
+    if (PersonId && req.user.role === "admin") {
+      id = PersonId;
     }
     const person = await Person.findByPk(id);
 
@@ -69,7 +69,7 @@ export const create = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({ error: "Error in sending booking" });
+    res.status(500).json({ error: "Error in creating booking" });
   }
 };
 
@@ -103,6 +103,7 @@ export const updateById = async (req, res) => {
       .status(401)
       .json({ message: "Unable to update booking with your privilege" });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: "Error in updating booking" });
   }
 };
