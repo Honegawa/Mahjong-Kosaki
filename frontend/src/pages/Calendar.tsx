@@ -159,7 +159,7 @@ function Calendar() {
         headerName: "Personne",
         width: 160,
         flex: 3,
-        valueGetter: (value, row) => {
+        valueGetter: (_value, row) => {
           return `${row.Person.firstname} ${row.Person.lastname}`;
         },
       },
@@ -170,7 +170,7 @@ function Calendar() {
         headerName: "Date",
         type: "dateTime",
         width: 140,
-        valueGetter: (value, row) => {
+        valueGetter: (_value, row) => {
           return new Date(row.date);
         },
       },
