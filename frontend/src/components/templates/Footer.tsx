@@ -1,10 +1,10 @@
 import { Typography } from "@mui/material";
-import "../../styles/Footer.module.css";
+import styles from "../../styles/Footer.module.css";
 import { Link } from "react-router-dom";
 
 function Footer() {
   return (
-    <footer>
+    <footer className={styles.footer}>
       <Typography>
         Copyright 2024 ©MahjongKosaki - Tous droits réservés.
       </Typography>

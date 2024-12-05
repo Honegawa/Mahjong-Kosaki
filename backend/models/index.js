@@ -15,11 +15,16 @@ const sequelize = new Sequelize(env.DB_NAME, env.DB_USER, env.DB_PASSWORD, {
   host: env.DB_HOST,
   dialect: env.DB_TYPE,
 });
-try {
-  await sequelize.authenticate();
-  console.log("Connection to DB succeed");
-} catch (error) {
-  console.log(error);
+
+if (env.NODE_ENV === "test") {
+  console.log("Running in TEST mode - Database connection skipped.");
+} else {
+  try {
+    await sequelize.authenticate();
+    console.log("Connection to DB succeed in env :", env.NODE_ENV);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 contactModel(sequelize, Sequelize);
@@ -90,8 +95,10 @@ Round.hasMany(PlayerRound, { as: "playerRounds" });
 PlayerRound.belongsTo(Person);
 PlayerRound.belongsTo(Round);
 
-await sequelize.sync({ alter: false, force: false });
-console.log("Sync ok");
+if (env.NODE_ENV !== "test") {
+  await sequelize.sync({ alter: false, force: false });
+  console.log("Sync ok");
+}
 
 export {
   Contact,
