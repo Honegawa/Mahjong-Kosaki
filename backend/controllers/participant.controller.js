@@ -35,7 +35,7 @@ export const getByIdTAndIdP = async (req, res) => {
     const person = await Person.findByPk(idP);
 
     if (!person) {
-      return res.status(404).json({ message: "Person not founds" });
+      return res.status(404).json({ message: "Person not found" });
     }
 
     const participant = await Participant.findOne({
@@ -119,7 +119,7 @@ export const create = async (req, res) => {
       .status(403)
       .json({ message: "Unable to create participant with your privilege" });
   } catch (error) {
-    res.status(500).json({ error: "Error in sending participant" });
+    res.status(500).json({ error: "Error in creating participant" });
   }
 };
 

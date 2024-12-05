@@ -489,6 +489,10 @@ describe("Tests for update", () => {
     return { params: { id: 1 }, body: toUpdateObject, user: { role: "admin" } };
   };
   const adminReq = adminMockedRequest();
+  const wrongUserMockedRequest = () => {
+    return { params: { id: 1 }, body: toUpdateObject, user: { id: 2 } };
+  };
+  const wrongUserReq = wrongUserMockedRequest();
 
   beforeEach(() => {
     Person.findByPk = jest.fn();
@@ -528,6 +532,15 @@ describe("Tests for update", () => {
     expect(res.json).toHaveBeenCalledWith({
       message: "Person has been updated",
       updatedPerson,
+    });
+  });
+
+  it("Not participant user : should return status 403 with a specific message", async () => {
+    await updateById(wrongUserReq, res);
+    expect(Person.findByPk).toHaveBeenCalledTimes(1);
+    expect(res.status).toHaveBeenCalledWith(403);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "Unauthorized to update person",
     });
   });
 

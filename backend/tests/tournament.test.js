@@ -234,7 +234,6 @@ describe("Tests for update", () => {
     expect(foundTournament1.update).toHaveBeenCalledWith(toUpdateObject);
     expect(res.status).toHaveBeenCalledWith(200);
     const { password, ...updatedTournament } = foundTournament1;
-    console.warn(updatedTournament);
     expect(res.json).toHaveBeenCalledWith({
       message: "Tournament has been updated",
       updatedTournament,
@@ -290,7 +289,7 @@ describe("Tests for delete", () => {
     foundTournament1.destroy = jest.fn();
   });
 
-  it("Found tournament : should return status 200 with a message", async () => {
+  it("Deleted tournament : should return status 200 with a message", async () => {
     await deleteById(req, res);
     expect(Tournament.findByPk).toHaveBeenCalledTimes(1);
     expect(foundTournament1.destroy).toHaveBeenCalledTimes(1);
