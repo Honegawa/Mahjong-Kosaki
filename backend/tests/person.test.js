@@ -376,7 +376,7 @@ describe("Tests for signup", () => {
  * CREATE
  */
 
-describe("Tests for signup", () => {
+describe("Tests for create", () => {
   const mockedResponse = () => {
     const res = {};
     res.status = jest.fn().mockReturnValue(res);
