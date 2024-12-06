@@ -79,7 +79,7 @@ function Tournaments() {
   );
 
   return (
-    <Box width="100%">
+    <Box sx={{ width: { sx: "100%", md: 800, lg: 1200 } }}>
       <Typography variant="h4" component={"h1"} fontWeight={600}>
         Tournois
       </Typography>

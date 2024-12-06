@@ -222,7 +222,6 @@ function Subscription() {
         Adhésion
       </Typography>
 
-      <Box sx={{ flex: "1 0 auto" }} />
       {/* Mobile */}
       <Box
         className={styles.subscriptionContainer}
@@ -304,7 +303,6 @@ function Subscription() {
           </Card>
         </Box>
       </Box>
-      <Box sx={{ flex: "1 0 auto" }} />
     </Box>
   );
 }

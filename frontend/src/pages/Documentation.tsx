@@ -194,6 +194,13 @@ function Documentation() {
                   >
                     Sega Mahjong (Japonais)
                   </ListItem>
+                  <ListItem
+                    component="a"
+                    href="https://tenhou.net/4/"
+                    target="_blank"
+                  >
+                    Tenhou
+                  </ListItem>
                 </List>
               </Box>
             </Box>

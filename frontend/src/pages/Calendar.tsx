@@ -204,7 +204,7 @@ function Calendar() {
   );
 
   return (
-    <Box width="100%">
+    <Box sx={{ width: { xs: "100%", md: 800, lg: 1000 } }}>
       <Typography variant="h4" component={"h1"} fontWeight={600}>
         Agenda
       </Typography>
@@ -213,7 +213,7 @@ function Calendar() {
         display="flex"
         flexDirection="column"
         sx={{
-          gap: { xs: 1, md: 4 },
+          gap: 4,
           marginTop: { xs: 1, md: 3 },
         }}
       >
@@ -231,7 +231,7 @@ function Calendar() {
             sx={{ minWidth: "fit-content" }}
           />
 
-          <Box flexGrow={1} maxWidth={700} className={styles.calendarContainer}>
+          <Box flexGrow={1} maxWidth={688} className={styles.calendarContainer}>
             <Card>
               <CardContent>
                 <Box
