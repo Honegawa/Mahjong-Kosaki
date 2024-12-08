@@ -155,7 +155,6 @@ function Subscription() {
   };
 
   const handleErrorDate = (newError: DateValidationError) => {
-    console.log(newError);
     switch (newError) {
       case "minDate":
         setError((error) => ({ ...error, birthdate: "Date invalide." }));

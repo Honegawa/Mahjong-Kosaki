@@ -5,7 +5,7 @@ import { Person } from "../models/index.js";
 export const verifyToken = (req, res, next) => {
   const token = req.cookies.access_token;
   if (!token) {
-    return next(res.status(401).json({ error: "Acces Denied" }));
+    return next(res.status(401).json({ error: "Access Denied" }));
   }
 
   jwt.verify(token, env.TOKEN, (err, user) => {
@@ -23,7 +23,7 @@ export const verifyToken = (req, res, next) => {
 export const verifyAdmin = async (req, res, next) => {
   const token = req.cookies.access_token;
   if (!token) {
-    return next(res.status(401).json({ error: "Acces Denied" }));
+    return next(res.status(401).json({ error: "Access Denied" }));
   }
 
   jwt.verify(token, env.TOKEN, (err, user) => {
@@ -55,7 +55,7 @@ export const verifyAdmin = async (req, res, next) => {
 export const verifySelfOrAdmin = async (req, res, next) => {
   const token = req.cookies.access_token;
   if (!token) {
-    return next(res.status(401).json({ error: "Acces Denied" }));
+    return next(res.status(401).json({ error: "Access Denied" }));
   }
 
   jwt.verify(token, env.TOKEN, (err, user) => {
