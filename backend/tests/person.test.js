@@ -216,10 +216,13 @@ describe("Tests for signin", () => {
     expect(res.json).toHaveBeenCalledWith(person);
     expect(res.cookie).toHaveBeenCalledWith("access_token", mockedJWToken, {
       httpOnly: true,
+      secure: true,
+      sameSite: "None",
+      partitioned: true,
     });
   });
 
-  it("Not found pereson : should return status 404 with a specific message", async () => {
+  it("Not found person : should return status 404 with a specific message", async () => {
     Person.findOne.mockImplementation(() => {
       return null;
     });

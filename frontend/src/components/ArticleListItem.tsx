@@ -14,7 +14,11 @@ function ArticleListItem({ article }: { article: Article }) {
       onClick={() => navigate(`/articles/${article.id}`)}
     >
       <Img
-        src={article.pictures.length > 0 ? article.pictures[0].picture : logo}
+        src={
+          article.pictures.length > 0
+            ? article.pictures[article.pictures.length - 1].picture
+            : logo
+        }
         alt="Article cover"
         sx={{
           padding: 1,
@@ -24,8 +28,19 @@ function ArticleListItem({ article }: { article: Article }) {
         }}
       />
       <CardContent className={styles.articlesCardContent}>
-        <Box>
-          <Typography variant="h5" component="h2" fontWeight={600}>
+        <Box sx={{ maxHeight: { xs: 120, md: 192 } }}>
+          <Typography
+            variant="h5"
+            component="h2"
+            fontWeight={600}
+            sx={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              display: "-webkit-box",
+              WebkitLineClamp: "1",
+              WebkitBoxOrient: "vertical",
+            }}
+          >
             {article.title}
           </Typography>
           <Typography
@@ -33,7 +48,7 @@ function ArticleListItem({ article }: { article: Article }) {
               overflow: "hidden",
               textOverflow: "ellipsis",
               display: "-webkit-box",
-              WebkitLineClamp: "4",
+              WebkitLineClamp: { xs: "1", md: "3", lg: "4" },
               WebkitBoxOrient: "vertical",
             }}
           >

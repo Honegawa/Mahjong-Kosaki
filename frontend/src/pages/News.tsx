@@ -9,7 +9,7 @@ import axios from "axios";
 import * as ACTIONS_ARTICLE from "../redux/reducers/article";
 import ArticleListItem from "../components/ArticleListItem";
 
-import { Container, Pagination, Typography } from "@mui/material";
+import { Box, Container, Pagination, Typography } from "@mui/material";
 import styles from "../styles/News.module.css";
 
 import { sortBy } from "lodash";
@@ -52,24 +52,23 @@ function News() {
   };
 
   return (
-    <Container
-      className={styles.news}
-      sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-    >
+    <Container className={styles.news}>
       <Typography variant="h4" component={"h1"} fontWeight={600}>
         Actualités
       </Typography>
-      {filteredArticles.map((article: Article) => (
-        <ArticleListItem key={article.id} article={article} />
-      ))}
-      <Pagination
-        count={NB_PAGES}
-        page={page}
-        onChange={handleChange}
-        color="primary"
-        showFirstButton
-        showLastButton
-      />
+      <Box sx={{ height: { xs: 692, md: 1022 } }} className={styles.newsContent}>
+        {filteredArticles.map((article: Article) => (
+          <ArticleListItem key={article.id} article={article} />
+        ))}
+        <Pagination
+          count={NB_PAGES}
+          page={page}
+          onChange={handleChange}
+          color="primary"
+          showFirstButton
+          showLastButton
+        />
+      </Box>
     </Container>
   );
 }

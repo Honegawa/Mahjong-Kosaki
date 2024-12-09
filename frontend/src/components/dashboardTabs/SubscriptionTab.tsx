@@ -12,7 +12,7 @@ function SubscriptionTab() {
   const renderContent = () => {
     let render;
     if (!user) {
-      render = <>Erreur</>;
+      render = <></>;
     } else {
       if (!user.subscription) {
         render = (
@@ -34,9 +34,9 @@ function SubscriptionTab() {
             <Box display="flex" flexDirection="column" gap={2}>
               <Typography>
                 Votre adhésion à l&apos;association a expiré le
-                <Typography fontWeight={600}>
-                  {DATE_FORMATTER.format(new Date(subDate.toISOString()))}.
-                </Typography>
+              </Typography>
+              <Typography fontWeight={600}>
+                {DATE_FORMATTER.format(new Date(subDate.toISOString()))}.
               </Typography>
               <Link to={"/subscription"}>
                 <Button variant="contained">Renouveler</Button>
@@ -48,9 +48,9 @@ function SubscriptionTab() {
             <Box display="flex" flexDirection="column" gap={2}>
               <Typography>
                 Votre adhésion à l&apos;association expire le
-                <Typography fontWeight={600}>
-                  {DATE_FORMATTER.format(new Date(subDate.toISOString()))}.
-                </Typography>
+              </Typography>
+              <Typography fontWeight={600}>
+                {DATE_FORMATTER.format(new Date(subDate.toISOString()))}.
               </Typography>
             </Box>
           );

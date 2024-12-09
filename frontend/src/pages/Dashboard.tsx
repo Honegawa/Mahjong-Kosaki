@@ -53,7 +53,7 @@ function Dashboard(props: DashboardProps) {
         return <BookingTab />;
 
       default:
-        return <CardContent sx={{ height: "100%" }}>Erreur</CardContent>;
+        return <CardContent sx={{ height: "100%" }}></CardContent>;
     }
   };
 
@@ -102,7 +102,7 @@ function Dashboard(props: DashboardProps) {
   );
 
   return (
-    <Box sx={{ width: { xs: "100%", lg: 1000 } }}>
+    <Box sx={{ width: { xs: "100%", lg: 1200 } }}>
       <Typography variant="h4" component={"h1"} fontWeight={600}>
         Dashboard
       </Typography>
@@ -132,8 +132,8 @@ function Dashboard(props: DashboardProps) {
         <Box
           className={styles.dashboard}
           sx={{
-            maxWidth: { xs: "100%", lg: "80%", xl: 800 },
-            minWidth: { xs: "100%", lg: 800 },
+            maxWidth: { xs: "100%", lg: "80%", xl: 1000 },
+            minWidth: { xs: "100%", lg: 800, xl: 1000 },
           }}
         >
           <Card sx={{ minHeight: "100%" }}>{renderTab()}</Card>
