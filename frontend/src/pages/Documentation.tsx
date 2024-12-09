@@ -11,7 +11,7 @@ import styles from "../styles/Documentation.module.css";
 
 function Documentation() {
   return (
-    <Box sx={{ width: { xs: "100%", md: 800 } }}>
+    <Box sx={{ width: { xs: "100%", md: 800, lg: 1000 } }}>
       <Typography variant="h4" component={"h1"} fontWeight={600}>
         Documentation
       </Typography>

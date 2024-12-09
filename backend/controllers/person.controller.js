@@ -59,7 +59,12 @@ export const signin = async (req, res) => {
     const { password, ...other } = person.dataValues;
 
     res
-      .cookie("access_token", token, { httpOnly: true })
+      .cookie("access_token", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+        partitioned: true,
+      })
       .status(200)
       .json(other);
   } catch (error) {

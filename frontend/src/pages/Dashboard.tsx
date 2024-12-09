@@ -53,7 +53,7 @@ function Dashboard(props: DashboardProps) {
         return <BookingTab />;
 
       default:
-        return <CardContent sx={{ height: "100%" }}>Erreur</CardContent>;
+        return <CardContent sx={{ height: "100%" }}></CardContent>;
     }
   };
 
