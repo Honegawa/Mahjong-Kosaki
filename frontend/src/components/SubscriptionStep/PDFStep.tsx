@@ -148,7 +148,7 @@ function PDFStep(props: PDFStepProps) {
 
 Font.register({
   family: "Dosis",
-  src: `http://fonts.gstatic.com/s/dosis/v6/guC5lwT5Dw7anV_xfpCGqw.ttf`,
+  src: `https://fonts.gstatic.com/s/dosis/v6/guC5lwT5Dw7anV_xfpCGqw.ttf`,
 });
 
 const styles = StyleSheet.create({
