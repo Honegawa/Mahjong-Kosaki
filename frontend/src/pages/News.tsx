@@ -56,10 +56,15 @@ function News() {
       <Typography variant="h4" component={"h1"} fontWeight={600}>
         Actualités
       </Typography>
-      <Box sx={{ height: { xs: 692, md: 1022 } }} className={styles.newsContent}>
-        {filteredArticles.map((article: Article) => (
-          <ArticleListItem key={article.id} article={article} />
-        ))}
+      <Box
+        sx={{ height: { xs: 692, md: 1022 } }}
+        className={styles.newsContent}
+      >
+        <Box display="flex" flexDirection="column" gap={1}>
+          {filteredArticles.map((article: Article) => (
+            <ArticleListItem key={article.id} article={article} />
+          ))}
+        </Box>
         <Pagination
           count={NB_PAGES}
           page={page}
