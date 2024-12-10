@@ -7,7 +7,12 @@ export default (sequelize, DataType) => {
         allowNull: false,
       },
       type: {
-        type: DataType.ENUM(["Casual", "Classée", "Entrainement"]),
+        type: DataType.ENUM([
+          "Initiation",
+          "Casual",
+          "Classée",
+          "Entrainement",
+        ]),
         allowNull: false,
       },
       format: {

@@ -105,11 +105,7 @@ function ArticleDetail() {
                   <Img
                     src={pic.picture}
                     alt={`Photo article ${index}`}
-                    sx={{
-                      width: { xs: "100%", md: 170 },
-                      height: { md: 170 },
-                      objectFit: "contain",
-                    }}
+                    sx={{ width: 170, height: 170, objectFit: "contain" }}
                   />
                 </Link>
               )

@@ -40,6 +40,10 @@ export const signin = async (req, res) => {
       return res.status(404).json({ message: "Person not found" });
     }
 
+    if (!req.body.password) {
+      return res.status(400).json({ message: "Empty password" });
+    }
+
     const comparePassword = await bcrypt.compare(
       req.body.password,
       person.password
@@ -55,7 +59,12 @@ export const signin = async (req, res) => {
     const { password, ...other } = person.dataValues;
 
     res
-      .cookie("access_token", token, { httpOnly: true })
+      .cookie("access_token", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+        partitioned: true,
+      })
       .status(200)
       .json(other);
   } catch (error) {
@@ -75,6 +84,10 @@ export const signup = async (req, res) => {
       subscription,
       EMANumber,
     } = req.body;
+
+    if (!password) {
+      return res.status(400).json({ message: "Empty password." });
+    }
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const person = await Person.findOne({
@@ -84,7 +97,7 @@ export const signup = async (req, res) => {
     });
 
     if (person) {
-      return res.status(400).json({ message: "Email is already used" });
+      return res.status(400).json({ message: "Email is already used." });
     }
 
     const newPerson = await Person.create({

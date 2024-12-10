@@ -32,7 +32,13 @@ import ENDPOINTS from "../utils/contants/endpoints";
 import dayjs, { Dayjs } from "dayjs";
 import { DateCalendar } from "@mui/x-date-pickers";
 import { AuthContext } from "../utils/contexts/Auth.context";
-import { AuthContextType, USER_ROLE } from "../interfaces/user";
+import {
+  AuthContextType,
+  User,
+  USER_ROLE,
+  UserDataTable,
+} from "../interfaces/user";
+import * as ACTIONS_USER from "../redux/reducers/user";
 import { MODAL_TABS } from "../utils/contants/dashboard";
 import { useNavigate } from "react-router-dom";
 import {
@@ -64,6 +70,7 @@ function Calendar() {
 
   useEffect(() => {
     getBookings();
+    getUsers();
   }, []);
 
   const getBookings = async () => {
@@ -79,6 +86,32 @@ function Calendar() {
       }
     } catch (error) {
       dispatch(ACTIONS_BOOKING.FETCH_FAILURE());
+    }
+  };
+
+  const getUsers = async () => {
+    dispatch(ACTIONS_USER.FETCH_START());
+
+    try {
+      const response = await axios.get(ENDPOINTS.PERSON);
+      const { data, status } = response;
+
+      if (status === 200) {
+        const formatData: UserDataTable[] = data.map((e: User) => ({
+          id: e.id,
+          firstname: e.firstname,
+          lastname: e.lastname,
+          email: e.email,
+          phone: e.phone,
+          subscription: e.subscription,
+          EMANumber: e.EMANumber,
+          role: e.role,
+        }));
+
+        dispatch(ACTIONS_USER.FETCH_SUCCESS(formatData));
+      }
+    } catch (error) {
+      dispatch(ACTIONS_USER.FETCH_FAILURE());
     }
   };
 
@@ -180,8 +213,9 @@ function Calendar() {
         width: 120,
         type: "actions",
         getActions: (params) =>
-          (user && user.id === params.row.PersonId) ||
-          (user && user.role === USER_ROLE.ADMIN)
+          date.isAfter(dayjs().set("hour", 0)) &&
+          ((user && user.id === params.row.PersonId) ||
+            (user && user.role === USER_ROLE.ADMIN))
             ? [
                 <GridActionsCellItem
                   icon={<CreateIcon />}
@@ -204,7 +238,7 @@ function Calendar() {
   );
 
   return (
-    <Box width="100%">
+    <Box sx={{ width: { xs: "100%", md: 800, lg: 1000 } }}>
       <Typography variant="h4" component={"h1"} fontWeight={600}>
         Agenda
       </Typography>
@@ -213,7 +247,7 @@ function Calendar() {
         display="flex"
         flexDirection="column"
         sx={{
-          gap: { xs: 1, md: 4 },
+          gap: 4,
           marginTop: { xs: 1, md: 3 },
         }}
       >
@@ -223,10 +257,15 @@ function Calendar() {
             flexDirection: { xs: "column", lg: "row" },
             gap: { xs: 1, md: 4 },
           }}
+          alignItems="center"
         >
-          <DateCalendar value={date} onChange={handleChangeDate} />
+          <DateCalendar
+            value={date}
+            onChange={handleChangeDate}
+            sx={{ minWidth: "fit-content" }}
+          />
 
-          <Box flexGrow={1} className={styles.calendarContainer}>
+          <Box flexGrow={1} maxWidth={688} className={styles.calendarContainer}>
             <Card>
               <CardContent>
                 <Box
@@ -234,8 +273,7 @@ function Calendar() {
                   flexDirection="column"
                   gap={2}
                   sx={{
-                    minHeight: { xs: 336, md: 336 },
-                    maxHeight: { xs: 500, md: 500 },
+                    height: 400,
                     width: "100%",
                   }}
                 >

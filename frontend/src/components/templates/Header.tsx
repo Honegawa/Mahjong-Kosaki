@@ -148,15 +148,26 @@ function Header() {
             )}
 
             {!user && (
-              <Link to="login" className={styles.link}>
-                <Button
-                  variant="contained"
-                  color="inherit"
-                  sx={{ my: 2, color: "black", display: "block" }}
-                >
-                  Connexion
-                </Button>
-              </Link>
+              <Box display="flex" flexDirection="row"gap={1}> 
+                <Link to="login" className={styles.link}>
+                  <Button
+                    variant="contained"
+                    color="inherit"
+                    sx={{ my: 2, color: "black", display: "block" }}
+                  >
+                    Connexion
+                  </Button>
+                </Link>
+                <Link to="signup" className={styles.link}>
+                  <Button
+                    variant="contained"
+                    color="inherit"
+                    sx={{ my: 2, color: "black", display: "block" }}
+                  >
+                    Inscription
+                  </Button>
+                </Link>
+              </Box>
             )}
           </Box>
         </Toolbar>

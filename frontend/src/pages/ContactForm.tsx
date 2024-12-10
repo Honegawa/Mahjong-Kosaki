@@ -77,7 +77,7 @@ function ContactForm() {
   };
 
   return (
-    <Box sx={{ minWidth: { xs: "100%", md: 720 } }}>
+    <Box sx={{ minWidth: { xs: "100%", md: 800 } }}>
       <Card
         className={styles.contact}
         sx={{

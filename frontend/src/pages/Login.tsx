@@ -50,7 +50,8 @@ function Login() {
   };
 
   return (
-    <Box sx={{ minWidth: { xs: "100%", md: 460 } }}>
+    <Box display="flex" flexDirection="column" sx={{ minWidth: { xs: "100%", md: 460 } }}>
+      <Box sx={{ flex: "1 0 auto" }} />
       <Card
         className={styles.login}
         sx={{ backgroundColor: "rgba(33, 150, 243, 0.32)" }}
@@ -123,6 +124,7 @@ function Login() {
           </div>
         </CardContent>
       </Card>
+      <Box sx={{ flex: "1 0 auto" }} />
     </Box>
   );
 }

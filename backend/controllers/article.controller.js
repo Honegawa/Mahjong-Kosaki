@@ -67,7 +67,7 @@ export const create = async (req, res) => {
       .json({ message: "Article has been created", newArticle: article });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: "Error in sending article" });
+    res.status(500).json({ error: "Error in creating article" });
   }
 };
 
@@ -98,14 +98,6 @@ export const updateById = async (req, res) => {
       });
     }
 
-    // Remove pictures
-    parsedRemovedPictures.map((pic) => {
-      const filename = pic.picture.split("/images/")[1];
-      fs.unlink(`images/${filename}`, () =>
-        console.log(`${filename} has been deleted.`)
-      );
-    });
-
     const article = await Article.findByPk(id, {
       include: {
         model: ArticlePicture,
@@ -118,6 +110,14 @@ export const updateById = async (req, res) => {
     }
 
     await article.update({ title, content });
+
+    // Remove pictures
+    parsedRemovedPictures.map((pic) => {
+      const filename = pic.picture.split("/images/")[1];
+      fs.unlink(`images/${filename}`, () =>
+        console.log(`${filename} has been deleted.`)
+      );
+    });
 
     // Create association records
     await Promise.all(

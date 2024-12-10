@@ -16,4 +16,5 @@ export const env = {
   MAIL_PASSWORD: process.env.MAIL_PASSWORD,
   MAIL_FROM: process.env.MAIL_FROM,
   DEFAULT_USER_PASSWORD: process.env.DEFAULT_USER_PASSWORD,
+  NODE_ENV: process.env.NODE_ENV,
 };
