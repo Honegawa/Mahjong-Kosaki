@@ -1,0 +1,28 @@
+.home {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.link {
+  text-decoration: none;
+  color: black;
+}
+
+.divider {
+  width: 300px;
+  height: 2px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background-color: rgba(0, 0, 0, 0.56);
+}
+
+.homeContainer {
+  background-color: rgba(33, 150, 243, 0.32);
+  border-radius: 8px;
+  padding: 20px;
+  box-sizing: border-box;
+}
